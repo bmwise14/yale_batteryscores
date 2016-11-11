@@ -11,6 +11,7 @@ def poms(input, nonresp):
 
     # Resources USED:
     """GSP Scales Notebook - Holmes Lab"""
+    """http://www.mhs.com/product.aspx?gr=cli&id=overview&prod=poms2"""
 
     # SCORING:
     """
@@ -19,9 +20,10 @@ def poms(input, nonresp):
     Then the final score is the Total Mood Disturbance Score, which is the sum of
     all factor scores minus the vigor score.
 
-    2. Any Prefer Not To Answer selection was not counted toward the subscales or final score.
+    2. How to handle missing values is not explicitly mentioned in the primary resources above, so
+    if any value is left blank or prefer not to answer, those missing values will be replaced with the average
+    score on that particular subscale and then added to the final subscore total (Avram).
 
-    3. Any Question left blank was not counted toward the subscale or final score.
     """
     try:
         # NOT AT ALL - A LITTLE - MODERATELY - QUITE A BIT - EXTREMELY - PREFER NOT TO ANSWER
@@ -50,10 +52,10 @@ def poms(input, nonresp):
         tension_anxiety_score = tension_anxiety[(tension_anxiety[tension_anxiety_keys] >=0) &
                                                 (tension_anxiety[tension_anxiety_keys] <=4)].sum(axis=1)
 
-        tenanxall = pd.DataFrame(
-            {'POMS_Tension/Anxiety_Score': tension_anxiety_score, 'POMS_Tension/Anxiety_Left_Blank': tension_leftblank,
-             'POMS_Tension/Anxiety_Prefer_Not_to_Answer': tension_prefernotanswer})
-
+        # If there are values missing, multiply the number of unanswered questions by the total subscale score.
+        # Then divide that by the total number of questions in the subscale.
+        # Add all of this to to the original drive score.
+        tension_anxiety_score = tension_anxiety_score + (tension_anxiety_unanswered * tension_anxiety_score / (len(tension_anxiety_keys)))
 
         # ------------------------------------------------------------------------------
         # DEPRESSION / DEJECTION SCORE - ALL FORWARD NO REVERSE
@@ -70,9 +72,10 @@ def poms(input, nonresp):
         depression_dejection_score = depression_dejection[(depression_dejection[depression_dejection_keys] >= 0) &
                                                           (depression_dejection[depression_dejection_keys] <= 4)].sum(axis=1)
 
-        depdejall = pd.DataFrame(
-            {'POMS_Depresssion/Dejection_Score': depression_dejection_score, 'POMS_Depresssion/Dejection_Left_Blank': depression_dejection_leftblank,
-             'POMS_Depresssion/Dejection_Prefer_Not_to_Answer': depression_dejection_prefernotanswer})
+        # If there are values missing, multiply the number of unanswered questions by the total subscale score.
+        # Then divide that by the total number of questions in the subscale.
+        # Add all of this to to the original drive score.
+        depression_dejection_score = depression_dejection_score + (depression_dejection_unanswered * depression_dejection_score / (len(depression_dejection_keys)))
 
 
         # ------------------------------------------------------------------------------
@@ -90,11 +93,10 @@ def poms(input, nonresp):
         anger_hostility_score = anger_hostility[(anger_hostility[anger_hostility_keys] >= 0) &
                                                 (anger_hostility[anger_hostility_keys] <= 4)].sum(axis=1)
 
-        anghosall = pd.DataFrame(
-            {'POMS_Anger/Hostility_Score': anger_hostility_score, 'POMS_Anger/Hostility_Left_Blank': anger_hostility_leftblank,
-             'POMS_Anger/Hostility_Prefer_Not_to_Answer': anger_hostility_prefernotanswer})
-
-
+        # If there are values missing, multiply the number of unanswered questions by the total subscale score.
+        # Then divide that by the total number of questions in the subscale.
+        # Add all of this to to the original drive score.
+        anger_hostility_score = anger_hostility_score + (anger_hostility_unanswered * anger_hostility_score / (len(anger_hostility_keys)))
 
         # ------------------------------------------------------------------------------
         # VIGOR / ACTIVITY SCORE - ALL FORWARD NO REVERSE
@@ -111,9 +113,11 @@ def poms(input, nonresp):
         vigor_activity_score = vigor_activity[(vigor_activity[vigor_activity_keys] >= 0) &
                                               (vigor_activity[vigor_activity_keys] <= 4)].sum(axis=1)
 
-        vigactall = pd.DataFrame(
-            {'POMS_Vigor/Activity_Score': vigor_activity_score, 'POMS_Vigor/Activity_Left_Blank': vigor_activity_leftblank,
-             'POMS_Vigor/Activity_Prefer_Not_to_Answer': vigor_activity_prefernotanswer})
+
+        # If there are values missing, multiply the number of unanswered questions by the total subscale score.
+        # Then divide that by the total number of questions in the subscale.
+        # Add all of this to to the original drive score.
+        vigor_activity_score = vigor_activity_score + (vigor_activity_unanswered * vigor_activity_score / (len(vigor_activity_keys)))
 
         # ------------------------------------------------------------------------------
         # FATIGUE / INERTIA SCORE - ALL FORWARD NO REVERSE
@@ -130,10 +134,11 @@ def poms(input, nonresp):
         fatigue_inertia_score = fatigue_inertia[(fatigue_inertia[fatigue_inertia_keys] >= 0) &
                                                 (fatigue_inertia[fatigue_inertia_keys] <= 4)].sum(axis=1)
 
-        fatinertall = pd.DataFrame(
-            {'POMS_Fatigue/Inertia_Score': fatigue_inertia_score, 'POMS_Fatigue/Inertia_Left_Blank': fatigue_inertia_leftblank,
-             'POMS_Fatigue/Inertia_Prefer_Not_to_Answer': fatigue_inertia_prefernotanswer})
 
+        # If there are values missing, multiply the number of unanswered questions by the total subscale score.
+        # Then divide that by the total number of questions in the subscale.
+        # Add all of this to to the original drive score.
+        fatigue_inertia_score = fatigue_inertia_score + (fatigue_inertia_unanswered * fatigue_inertia_score / (len(fatigue_inertia_keys)))
 
         # ------------------------------------------------------------------------------
         # CONFUSION / BEWILDERMENT SCORE - ALL FORWARD NO REVERSE
@@ -150,19 +155,67 @@ def poms(input, nonresp):
         confusion_bewilderment_score = confusion_bewilderment[(confusion_bewilderment[confusion_bewilderment_keys] >= 0) &
                                                               (confusion_bewilderment[confusion_bewilderment_keys] <= 4)].sum(axis=1)
 
-        confbewildall = pd.DataFrame(
-            {'POMS_Confusion/Bewilderment_Score': confusion_bewilderment_score, 'POMS_Confusion/Bewilderment_Left_Blank': confusion_bewilderment_leftblank,
-             'POMS_Confusion/Bewilderment_Prefer_Not_to_Answer': confusion_bewilderment_prefernotanswer})
-
+        # If there are values missing, multiply the number of unanswered questions by the total subscale score.
+        # Then divide that by the total number of questions in the subscale.
+        # Add all of this to to the original drive score.
+        confusion_bewilderment_score = confusion_bewilderment_score + (confusion_bewilderment_unanswered * confusion_bewilderment_score / (len(confusion_bewilderment_keys)))
 
         # ------------------------------------------------------------------------------
         # TOTAL MOOD DISTURBANCE SCORE
         # (T + D + A + F + C) - V
         # (TENSION + DEPRESSION + ANGER + FATIGUE + CONFUSION) - VIGOR
 
-        totalmoodscore = pd.DataFrame({'POMS_Total_Mood_Disturbance': (tension_anxiety_score + depression_dejection_score +
-                                                                       anger_hostility_score + fatigue_inertia_score +
-                                                                       confusion_bewilderment_score) - vigor_activity_score})
+        totalmoodscore = (tension_anxiety_score + depression_dejection_score +
+                          anger_hostility_score + fatigue_inertia_score +
+                          confusion_bewilderment_score) - vigor_activity_score
+
+        # Discard any value below -20 and above 100
+        totalmoodscore = ['Discard' if x < -20
+                       else 'Discard' if x > 100 else x for x in totalmoodscore]
+
+
+        totalmoodscore = pd.DataFrame({'POMS_Total_Mood_Disturbance': totalmoodscore})
+
+        # ------------------------------------------------------------------------------
+        # POMS SCORES
+
+        # Discard any value below 0 and above 20
+        tension_anxiety_score = ['Discard' if x < 0 else 'Discard' if x > 20 else x for x in tension_anxiety_score]
+        tenanxall = pd.DataFrame(
+            {'POMS_Tension/Anxiety_Score': tension_anxiety_score, 'POMS_Tension/Anxiety_Left_Blank': tension_leftblank,
+             'POMS_Tension/Anxiety_Prefer_Not_to_Answer': tension_prefernotanswer})
+
+
+        # Discard any value below 0 and above 20
+        depression_dejection_score = ['Discard' if x < 0 else 'Discard' if x > 20 else x for x in depression_dejection_score]
+        depdejall = pd.DataFrame(
+            {'POMS_Depresssion/Dejection_Score': depression_dejection_score, 'POMS_Depresssion/Dejection_Left_Blank': depression_dejection_leftblank,
+             'POMS_Depresssion/Dejection_Prefer_Not_to_Answer': depression_dejection_prefernotanswer})
+
+
+        # Discard any value below 0 and above 20
+        anger_hostility_score = ['Discard' if x < 0 else 'Discard' if x > 20 else x for x in anger_hostility_score]
+        anghosall = pd.DataFrame(
+            {'POMS_Anger/Hostility_Score': anger_hostility_score, 'POMS_Anger/Hostility_Left_Blank': anger_hostility_leftblank,
+             'POMS_Anger/Hostility_Prefer_Not_to_Answer': anger_hostility_prefernotanswer})
+
+        # Discard any value below 0 and above 20
+        vigor_activity_score = ['Discard' if x < 0 else 'Discard' if x > 20 else x for x in vigor_activity_score]
+        vigactall = pd.DataFrame(
+            {'POMS_Vigor/Activity_Score': vigor_activity_score, 'POMS_Vigor/Activity_Left_Blank': vigor_activity_leftblank,
+             'POMS_Vigor/Activity_Prefer_Not_to_Answer': vigor_activity_prefernotanswer})
+
+        # Discard any value below 0 and above 20
+        fatigue_inertia_score = ['Discard' if x < 0 else 'Discard' if x > 20 else x for x in fatigue_inertia_score]
+        fatinertall = pd.DataFrame(
+            {'POMS_Fatigue/Inertia_Score': fatigue_inertia_score, 'POMS_Fatigue/Inertia_Left_Blank': fatigue_inertia_leftblank,
+             'POMS_Fatigue/Inertia_Prefer_Not_to_Answer': fatigue_inertia_prefernotanswer})
+
+        # Discard any value below 0 and above 20
+        confusion_bewilderment_score = ['Discard' if x < 0 else 'Discard' if x > 20 else x for x in confusion_bewilderment_score]
+        confbewildall = pd.DataFrame(
+            {'POMS_Confusion/Bewilderment_Score': confusion_bewilderment_score, 'POMS_Confusion/Bewilderment_Left_Blank': confusion_bewilderment_leftblank,
+             'POMS_Confusion/Bewilderment_Prefer_Not_to_Answer': confusion_bewilderment_prefernotanswer})
 
         # ------------------------------------------------------------------------------
         # Put the scores into one frame

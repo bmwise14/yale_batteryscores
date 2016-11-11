@@ -12,6 +12,7 @@ def pss(input):
     # RESOURCES USED:
     """Rdoc Scales Notebook - Holmes Lab"""
     """http://www.mindgarden.com/documents/PerceivedStressScale.pdf"""
+    """http://www.psy.cmu.edu/~scohen/scales.html"""
 
     # TYPICAL SCORING
     """
@@ -19,9 +20,9 @@ def pss(input):
     This battery will take your 1-5 range values and replace them with range 0-4.
     Questions that should be reverse scored are reverse scored.
 
-    2. Any Prefer Not To Answer selection was not counted toward the subscales or final score.
-
-    3. Any Question left blank was not counted toward the subscale or final score.
+    2. How to handle missing values is not explicitly mentioned in the primary resources above, so
+    if any value is left blank or prefer not to answer, those missing values will be replaced with the average
+    score on that particular subscale and then added to the final subscore total (Avram).
     """
     try:
         # NEVER         ALMOST NEVER        SOMETIMES       FAIRLY OFTEN    VERY OFTEN
@@ -48,6 +49,11 @@ def pss(input):
         # sum the reversed scores together to get the PSS Reverse
         reverse_pss_score = pss_reverse[pss_reverse[pss_positive_keys_rev] <= 4].rsub(4).sum(axis=1, skipna=True)
 
+        # If there are values missing, multiply the number of unanswered questions by the total subscale score.
+        # Then divide that by the total number of questions in the subscale.
+        # Add all of this to to the original drive score.
+        reverse_pss_score = reverse_pss_score + (pss_rev_leftblank * reverse_pss_score / (len(pss_positive_keys_rev)))
+
         # ------------------------------------------------------------------------------
         # PSS Forward Scoring
 
@@ -62,12 +68,23 @@ def pss(input):
         forward_pss_score = pss_forward[(pss_forward[pss_negative_keys_for] >= 0) &
                                         (pss_forward[pss_negative_keys_for] <= 4)].sum(axis=1)
 
+        # If there are values missing, multiply the number of unanswered questions by the total subscale score.
+        # Then divide that by the total number of questions in the subscale.
+        # Add all of this to to the original drive score.
+        forward_pss_score = forward_pss_score + (pss_forward_leftblank * forward_pss_score / (len(pss_negative_keys_for)))
+
+
+        # ------------------------------------------------------------------------------
         # Get the total PSS Score
         total_pss_score = reverse_pss_score + forward_pss_score
+
+        total_pss_score = ['Discard' if x < 0 else 'Discard' if x > 40 else x for x in total_pss_score]
 
 
         # TOTAL ANSWERS LEFT BLANK
         total_pss_leftblank = pss_rev_leftblank + pss_forward_leftblank
+
+
 
 
         pssall = pd.DataFrame({'PSS Score': total_pss_score, 'PSS Left Blank': total_pss_leftblank})

@@ -16,8 +16,11 @@ each self-report function in your dataset in some way.
 
 def reader(datafilepath, columndictionary):
     # Read your raw data and the column dictionary
-    raw_data_frame = pd.read_csv(datafilepath)
-    question_dict = pd.read_csv(columndictionary)
+    try:
+        raw_data_frame = pd.read_csv(datafilepath)
+        question_dict = pd.read_csv(columndictionary)
+    except IOError:
+        print "IO ERROR: one of the pathnames for your column dictionary or datafile does not exist. Please type in a valid pathname for both."
 
 
     # Turn the raw data frame into a pandas dataframe

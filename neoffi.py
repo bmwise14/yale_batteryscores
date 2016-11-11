@@ -16,12 +16,20 @@ def neoffi(input, nonresp):
 
     # SCORING:
     """
-    1. Raw subscores are computed by summing each subscale. This scale replaces your Qualtrics Scale with the Scale below.
+    1. Raw subscores are computed by summing each subscale. This battery will take your 1-5 range values and replace them with range 0-4.
        Questions that should be reverse scored are reverse scored.
 
-    2. Any Prefer Not To Answer selection was not counted toward final score.
+    2. How to handle missing values is not explicitly mentioned in the primary resources above, so
+    if any value is left blank or prefer not to answer, those missing values will be replaced with the average
+    score on that particular subscale and then added to the final subscore total (Avram).
 
-    3. Any Question left blank was not counted toward the subscale or final score.
+     3. If the score is below a minimum value range or above a maximum value range for the subscale, it will be discarded.
+                                                        Min     Max
+                                            NEO_N       0       48
+                                            NEO_E       0       48
+                                            NEO_O       0       48
+                                            NEO_A       0       48
+                                            NEO_C       0       48
     """
 
     try:
@@ -74,14 +82,17 @@ def neoffi(input, nonresp):
         # TOTAL ANSWERS LEFT BLANK
         total_neuroticism_leftblank = neuroticism_forward_leftblank + neuroticism_reverse_leftblank
 
-        neurodropit = ['DISCARD' if x > 2 else 'KEEP' for x in total_neuroticism_leftblank]
-
-        neurodrop = pd.DataFrame({'Drop_Neurotocism_Score': neurodropit})
-        neurodrop.index+=1
-
-
         #TOTAL ANSWERS PREFER NOT TO ANSWER
         total_neuroticism_prefernotanswer = neuroticism_forward_prefernotanswer + neuroticism_reverse_prefernotanswer
+
+        # If there are values missing, multiply the number of unanswered questions by the total subscale score.
+        # Then divide that by the total number of questions in the subscale.
+        # Add all of this to to the original drive score.
+        total_neuroticism_score = total_neuroticism_score + (total_neuroticism_unanswered * total_neuroticism_score / (len(neo_neuroticism_keys)+len(neo_neuroticism_rev_keys)))
+
+        # Discard any value below 0 and above 48
+        total_neuroticism_score = ['Discard' if x < 0
+                       else 'Discard' if x > 48 else x for x in total_neuroticism_score]
 
 
         neuroall = pd.DataFrame(
@@ -121,15 +132,18 @@ def neoffi(input, nonresp):
         # TOTAL ANSWERS LEFT BLANK
         total_extroversion_leftblank = extroversion_forward_leftblank + extroversion_reverse_leftblank
 
-        extrodropit = ['DISCARD' if x > 2 else 'KEEP' for x in total_extroversion_leftblank]
-
-        extrodrop = pd.DataFrame({'Drop_Extroversion_Score': extrodropit})
-        extrodrop.index+=1
-
-
-
         #TOTAL ANSWERS PREFER NOT TO ANSWER
         total_extroversion_prefernotanswer = extroversion_forward_prefernotanswer + extroversion_reverse_prefernotanswer
+
+
+        # If there are values missing, multiply the number of unanswered questions by the total subscale score.
+        # Then divide that by the total number of questions in the subscale.
+        # Add all of this to to the original drive score.
+        total_extroversion_score = total_extroversion_score + (total_extroversion_unanswered * total_extroversion_score / (len(neo_extroversion_keys)+len(neo_extroversion_rev_keys)))
+
+        # Discard any value below 0 and above 48
+        total_extroversion_score = ['Discard' if x < 0
+                       else 'Discard' if x > 48 else x for x in total_extroversion_score]
 
 
         extroversall = pd.DataFrame(
@@ -169,15 +183,20 @@ def neoffi(input, nonresp):
 
         # TOTAL ANSWERS LEFT BLANK
         total_openness_leftblank = openness_forward_leftblank + openness_reverse_leftblank
-        opendropit = ['DISCARD' if x > 2 else 'KEEP' for x in total_openness_leftblank]
-
-        opendrop = pd.DataFrame({'Drop_Openness_Score': opendropit})
-        opendrop.index+=1
 
 
         #TOTAL ANSWERS PREFER NOT TO ANSWER
         total_openness_prefernotanswer = openness_forward_prefernotanswer + openness_reverse_prefernotanswer
 
+
+        # If there are values missing, multiply the number of unanswered questions by the total subscale score.
+        # Then divide that by the total number of questions in the subscale.
+        # Add all of this to to the original drive score.
+        total_openness_score = total_openness_score + (total_openness_unanswered * total_openness_score / (len(neo_openness_keys)+len(neo_openness_rev_keys)))
+
+        # Discard any value below 0 and above 48
+        total_openness_score = ['Discard' if x < 0
+                       else 'Discard' if x > 48 else x for x in total_openness_score]
 
         opennessall = pd.DataFrame(
             {'NEO_Openness_Score': total_openness_score, 'NEO_Openness_Left_Blank': total_openness_leftblank,
@@ -216,14 +235,21 @@ def neoffi(input, nonresp):
 
         # TOTAL ANSWERS LEFT BLANK
         total_agree_leftblank = agree_forward_leftblank + agree_reverse_leftblank
-        agreedropit = ['DISCARD' if x > 2 else 'KEEP' for x in total_agree_leftblank]
-
-        agreedrop = pd.DataFrame({'Drop_Agreeableness_Score': agreedropit})
-        agreedrop.index+=1
-
 
         #TOTAL ANSWERS PREFER NOT TO ANSWER
         total_agree_prefernotanswer = agree_forward_prefernotanswer + agree_reverse_prefernotanswer
+
+
+        # If there are values missing, multiply the number of unanswered questions by the total subscale score.
+        # Then divide that by the total number of questions in the subscale.
+        # Add all of this to to the original drive score.
+        total_agree_score = total_agree_score + (total_agree_unanswered * total_agree_score / (len(neo_agreeableness_keys)+len(neo_agreeableness_rev_keys)))
+
+        # Discard any value below 0 and above 48
+        total_agree_score = ['Discard' if x < 0
+                       else 'Discard' if x > 48 else x for x in total_agree_score]
+
+
 
         agreeall = pd.DataFrame(
             {'NEO_Agreeableness_Score': total_agree_score, 'NEO_Agreeableness_Left_Blank': total_agree_leftblank,
@@ -263,13 +289,19 @@ def neoffi(input, nonresp):
 
         # TOTAL ANSWERS LEFT BLANK
         total_conscien_leftblank = conscien_forward_leftblank + conscien_reverse_leftblank
-        condropit = ['DISCARD' if x > 2 else 'KEEP' for x in total_conscien_leftblank]
-
-        consciendrop = pd.DataFrame({'Drop_Conscientousness_Score': condropit})
-        consciendrop.index+=1
 
         #TOTAL ANSWERS PREFER NOT TO ANSWER
         total_conscien_prefernotanswer = conscien_forward_prefernotanswer + conscien_reverse_prefernotanswer
+
+
+        # If there are values missing, multiply the number of unanswered questions by the total subscale score.
+        # Then divide that by the total number of questions in the subscale.
+        # Add all of this to to the original drive score.
+        total_conscien_score = total_conscien_score + (total_conscien_unanswered * total_conscien_score / (len(neo_conscientiousness_keys)+len(neo_conscientiousness_rev_keys)))
+
+        # Discard any value below 0 and above 48
+        total_conscien_score = ['Discard' if x < 0
+                       else 'Discard' if x > 48 else x for x in total_conscien_score]
 
         conscienall = pd.DataFrame(
             {'NEO_Conscientousness_Score': total_conscien_score, 'NEO_Conscientousness_Left_Blank': total_conscien_leftblank,
@@ -278,7 +310,7 @@ def neoffi(input, nonresp):
 
         # ------------------------------------------------------------------------------
         # Put all the scores into one frame
-        frames = [neuroall, extroversall, opennessall, agreeall, conscienall, neurodrop, consciendrop]
+        frames = [neuroall, extroversall, opennessall, agreeall, conscienall]
         result = pd.concat(frames, axis=1)
         return result
     except KeyError:

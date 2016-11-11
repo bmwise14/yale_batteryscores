@@ -10,6 +10,7 @@ def stai(input, nonresp):
 
     # RESOURCES USED:
     """GSP Scales - Holmes Lab"""
+    """http://www.mindgarden.com/145-state-trait-anxiety-inventory-for-adults"""
 
     # SCORING:
     """
@@ -17,14 +18,19 @@ def stai(input, nonresp):
 
     2. Scores are the sum of each subscale. Questions that should be reverse scored are reverse scored.
 
-    3. Any Prefer Not To Answer selection was not counted toward the subscales or final score
+    3. How to handle missing values is not explicitly mentioned in the primary resources above, so
+    if any value is left blank or prefer not to answer, those missing values will be replaced with the average
+    score on that particular subscale and then added to the final subscore total (Avram).
 
-    4. Any Question left blank was not counted toward the subscale or final score
+    4. If the score is below a minimum value range or above a maximum value range for the subscale, it will be discarded.
+                                                        Min     Max
+                                        STAI_tAnxiety   20      80
+                                        STAI_sAnxiety   20      80
     """
 
     try:
         # NOT AT ALL - SOMEWHAT - MODERATELY SO - VERY MUCH SO - PREFER NOT TO ANSWER
-        #     1            2           3               4               5
+        #     1            2           3               4               YOUR VALUE
         # ------------------------------------------------------------------------------
         stai_trait_keys = ['STAI_3', 'STAI_4', 'STAI_6', 'STAI_7', 'STAI_9', 'STAI_12', 'STAI_13', 'STAI_14', 'STAI_17',
                            'STAI_18']
@@ -38,6 +44,17 @@ def stai(input, nonresp):
                                'STAI_39']
 
 
+        # all = [stai_trait_keys, stai_trait_rev_keys, stai_state_keys, stai_state_rev_keys]
+        #
+        #
+        # for x in all:
+        #     for_x = input[x].apply(pd.to_numeric, args=('coerce',))
+        #     # sum the number of forward questions left blank or preferred not to answer
+        #     x_forward_leftblank = for_x.apply(lambda x: sum(x.isnull().values), axis=1)
+        #     x_forward_prefernotanswer = for_x[for_x[x] == nonresp['STAI']].count(axis=1)
+        #     x_forward_unanswered = x_forward_leftblank + x_forward_prefernotanswer
+        #     # sum all the forward scores
+        #     x_forward_score = for_x[(for_x[x] >= 1) & (for_x[x] <= 4)].sum(axis=1)
 
 
         # ------------------------------------------------------------------------------
@@ -64,7 +81,7 @@ def stai(input, nonresp):
         stai_trait_reverse_unanswered = stai_trait_reverse_leftblank + stai_trait_reverse_prefernotanswer
 
         # sum all the reverse scores
-        stai_trait_reverse_score = stai_trait_rev.rsub(5).sum(axis=1, skipna=True)
+        stai_trait_reverse_score = stai_trait_rev[stai_trait_rev[stai_trait_rev_keys] <= 4].rsub(5).sum(axis=1, skipna=True)
 
         # Total STAI TRAIT SCORE
         total_STAI_Trait_score = stai_trait_forward_score + stai_trait_reverse_score
@@ -78,10 +95,18 @@ def stai(input, nonresp):
         total_stai_trait_prefernotanswer = stai_trait_forward_prefernotanswer + stai_trait_reverse_prefernotanswer
 
 
+        # If there are values missing, multiply the number of unanswered questions by the total subscale score.
+        # Then divide that by the total number of questions in the subscale.
+        # Add all of this to to the original drive score.
+        total_STAI_Trait_score = total_STAI_Trait_score + (total_STAI_Trait_unanswered * total_STAI_Trait_score / (len(stai_trait_keys)+len(stai_trait_rev_keys)))
+
+        # Discard any value below 20 and above 80
+        total_STAI_Trait_score = ['Discard' if x < 20 else 'Discard' if x > 80 else x for x in total_STAI_Trait_score]
+
 
         staitraitall = pd.DataFrame(
-            {'STAI Trait Score': total_STAI_Trait_score, 'STAI Trait Left Blank': total_stai_trait_leftblank,
-             'STAI Trait Prefer Not to Answer': total_stai_trait_prefernotanswer})
+            {'STAI_Trait_Score': total_STAI_Trait_score, 'STAI_Trait_Left_Blank': total_stai_trait_leftblank,
+             'STAI_Trait_Prefer_Not_to_Answer': total_stai_trait_prefernotanswer})
 
 
         # ------------------------------------------------------------------------------
@@ -107,7 +132,7 @@ def stai(input, nonresp):
         stai_state_rev_unanswered = stai_state_rev_leftblank + stai_state_rev_prefernotanswer
 
         # sum all the reverse scores
-        stai_state_reverse_score = stai_state_rev.rsub(5).sum(axis=1, skipna=True)
+        stai_state_reverse_score = stai_state_rev[stai_state_rev[stai_state_rev_keys] <= 4].rsub(5).sum(axis=1, skipna=True)
 
         # Total STAI STATE SCORE
         total_STAI_state_score = stai_state_forward_score + stai_state_reverse_score
@@ -120,9 +145,18 @@ def stai(input, nonresp):
         #TOTAL ANSWERS PREFER NOT TO ANSWER
         total_stai_state_prefernotanswer = stai_state_forward_prefernotanswer + stai_state_rev_prefernotanswer
 
+        # If there are values missing, multiply the number of unanswered questions by the total subscale score.
+        # Then divide that by the total number of questions in the subscale.
+        # Add all of this to to the original drive score.
+        total_STAI_state_score = total_STAI_state_score + (total_STAI_state_unanswered * total_STAI_state_score / (len(stai_state_keys)+len(stai_state_rev_keys)))
+
+
+        # Discard any value below 20 and above 80
+        total_STAI_state_score = ['Discard' if x < 20 else 'Discard' if x > 80 else x for x in total_STAI_state_score]
+
         staistateall = pd.DataFrame(
-            {'STAI State Score': total_STAI_state_score, 'STAI State Left Blank': total_stai_state_leftblank,
-             'STAI State Prefer Not to Answer': total_stai_state_prefernotanswer})
+            {'STAI_State_Score': total_STAI_state_score, 'STAI_State_Left_Blank': total_stai_state_leftblank,
+             'STAI_State_Prefer_Not_to_Answer': total_stai_state_prefernotanswer})
 
 
 

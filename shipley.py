@@ -68,7 +68,7 @@ def shipley(input):
         overall_score = c1_score + c2_score + c3_score + c4_score + (leftblank_all/4)
 
 
-        shipleyresult = pd.DataFrame({'Shipley2 Score' : overall_score, 'Shipley2 Left Blank' : leftblank_all})
+        shipleyresult = pd.DataFrame({'Shipley2_Score' : overall_score, 'Shipley2_Left_Blank' : leftblank_all})
 
 
         # Put the scores into one frame

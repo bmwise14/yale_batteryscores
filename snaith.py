@@ -21,7 +21,7 @@ def snaith(input):
     'Disagree' responses scores 1 point and either of the 'Agree' responses scores 0 points. Thus, teh score range is 0-14."
 
     2. (1) Paper - STRONGLY DISAGREE    DISAGREE    AGREE     DEFINITELY AGREE
-                                1               1          0            0
+                            1               1          0            0
 
     3. In (2):
     "The 14-item Snaith-Hamilton Pleasure Scale was used to measure the present state of anhedonia. The SHAPS items are displayed
@@ -43,8 +43,8 @@ def snaith(input):
     """
 
     try:
-        # STRONGLY DISAGREE    DISAGREE     NEUTRAL        AGREE           DEFINITELY AGREE
-        #     1                  2            3              4                   5
+        # STRONGLY DISAGREE    DISAGREE     NEUTRAL        AGREE     DEFINITELY AGREE
+        #     1                  2            3              4             5
 
         # ------------------------------------------------------------------------------
         # These are are the different headers and their corresponding questions
@@ -63,7 +63,7 @@ def snaith(input):
         snaith_leftblank = snaith.apply(lambda x: sum(x.isnull().values), axis=1)
 
         # reverse the scores by subtracting 6 from the raw data. Score of each item ranges from 1 to 5.
-        snaith_answers_reversed = snaith.rsub(6)
+        snaith_answers_reversed = snaith[snaith[snaith_headers_rev] <= 5].rsub(6)
         # sum the reversed scores together to get the drive score
         snaith_score = snaith_answers_reversed.sum(axis=1, skipna = True)
 

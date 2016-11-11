@@ -12,15 +12,24 @@ def bisbas(input, nonresp):
 
     # RESOURCES USED:
     """GSP Scales Notebook - Holmes Lab"""
+    """Range of Scores for Self-Report Measures: Holmes Lab GSP Scales Notebook"""
     """http://psycnet.apa.org/journals/psp/67/2/319.pdf"""
 
     # SCORING:
     """
     1. Scores are the sum of each subscale. Questions that should be reverse scored are reverse scored.
 
-    2. Any Prefer Not To Answer selection was not counted toward the subscales or final score.
+    2. How to handle missing values is not explicitly mentioned in the primary resources above, so
+    if any value is left blank or prefer not to answer, those missing values will be replaced with the average
+    score on that particular subscale and then added to the final subscore total (Avram).
 
-    3. Any Question left blank was not counted toward the subscale or final score.
+    3. If the score is below a minimum value range or above a maximum value range for the subscale, it will be discarded.
+                                                        Min     Max
+                                            BAS_DRIVE   4       16
+                                            BAS_FUN     4       16
+                                            BAS_REWARD  5       20
+                                            BIS         7       28
+
     """
 
     try:
@@ -55,6 +64,16 @@ def bisbas(input, nonresp):
         drive_score = drive[drive[drive_headers] <= 4].rsub(5).sum(axis=1, skipna=True)
 
 
+        # If there are values missing, multiply the number of unanswered questions by the total subscale score.
+        # Then divide that by the total number of questions in the subscale.
+        # Add all of this to to the original drive score.
+        drive_score = drive_score + (drive_unanswered * drive_score / len(drive_headers))
+
+        # Discard any value below 4 and above 16
+        drive_score = ['Discard' if x < 4
+                       else 'Discard' if x > 16 else x for x in drive_score]
+
+
         driveall = pd.DataFrame({'Drive Score' : drive_score, 'Drive Left Blank': drive_leftblank,
              'Drive Prefer Not to Answer': drive_prefernotanswer})
 
@@ -73,8 +92,16 @@ def bisbas(input, nonresp):
         # reverse the scores by subtracting 5 from the raw data. Score of each item ranges from 1 to 4.
         # A score of 5 is "prefer not to answer."
         # sum the reversed scores together to get the funseeking score
-        funseeking_score = funseeking[funseeking[funseeking_headers] <= 4].rsub(5).sum(axis=1,skipna=True)
+        funseeking_score = funseeking[funseeking[funseeking_headers] <= 4].rsub(5).sum(axis=1, skipna=True)
 
+        # If there are values missing, multiply the number of unanswered questions by the total subscale score.
+        # Then divide that by the total number of questions in the subscale.
+        # Add all of this to to the original drive score.
+        funseeking_score = funseeking_score + (funseeking_unanswered * funseeking_score / len(funseeking_headers))
+
+        # Discard any value below 4 and above 16
+        funseeking_score = ['Discard' if x < 4
+                            else 'Discard' if x > 16 else x for x in funseeking_score]
 
         funseekingall = pd.DataFrame({'Funseeking Score': funseeking_score, 'Funseeking Left Blank': funseeking_leftblank,
              'Funseeking Prefer Not to Answer': funseeking_prefernotanswer})
@@ -96,6 +123,15 @@ def bisbas(input, nonresp):
         # A score of 5 is "prefer not to answer."
         # sum the reversed scores together to get the reward seeking score
         reward_score = reward[reward[reward_headers] <= 4].rsub(5).sum(axis=1,skipna=True)
+
+        # If there are values missing, multiply the number of unanswered questions by the total subscale score.
+        # Then divide that by the total number of questions in the subscale.
+        # Add all of this to to the original drive score.
+        reward_score = reward_score + (reward_unanswered * reward_score / len(reward_headers))
+
+        # Discard any value below 5 and above 20
+        reward_score = ['Discard' if x < 5
+                            else 'Discard' if x > 20 else x for x in reward_score]
 
 
         rewardall = pd.DataFrame({'Reward Score': reward_score, 'Reward Left Blank': reward_leftblank,
@@ -138,6 +174,16 @@ def bisbas(input, nonresp):
         total_bis_score = reverse_bis_score + forward_bis_score
 
 
+        # If there are values missing, multiply the number of unanswered questions by the total subscale score.
+        # Then divide that by the total number of questions in the subscale.
+        # Add all of this to to the original drive score.
+        total_bis_score = (total_bis_score + (bis_unanswered * total_bis_score / (len(reverse_code_bis)+len(forward_code_bis))))
+
+
+        # Discard any value below 7 and above 28
+        total_bis_score = ['Discard' if x < 7
+                            else 'Discard' if x > 28 else x for x in total_bis_score]
+
         # TOTAL ANSWERS LEFT BLANK
         total_bis_leftblank = bis_forward_leftblank + bisreverse_leftblank
         #TOTAL ANSWERS PREFER NOT TO ANSWER
@@ -147,32 +193,11 @@ def bisbas(input, nonresp):
         bisall = pd.DataFrame({'BIS Score': total_bis_score, 'BIS Left Blank': total_bis_leftblank,
              'BIS Prefer Not to Answer': total_bis_prefernotanswer})
 
-        # ------------------------------------------------------------------------------
 
-        allscores = pd.DataFrame({'Drive Score' : drive_score, 'Funseeking Score': funseeking_score,
-                                  'Reward Score': reward_score, 'BIS Score': total_bis_score})
-        allunanswered = pd.DataFrame({'Drive Left Blank': drive_leftblank, 'Funseeking Left Blank': funseeking_leftblank,
-                                      'Reward Left Blank': reward_leftblank, 'BIS Left Blank': total_bis_leftblank})
-        allprefernotanswer = pd.DataFrame({'Drive Prefer Not to Answer': drive_prefernotanswer, 'Funseeking Prefer Not to Answer': funseeking_prefernotanswer,
-                                           'Reward Prefer Not to Answer': reward_prefernotanswer, 'BIS Prefer Not to Answer': total_bis_prefernotanswer})
-
-
-
+        # -----------------------------------------------------------------------------
         # Put the scores into one frame
-        frames = [allscores, allunanswered, allprefernotanswer]
+        frames = [driveall, funseekingall, rewardall, bisall]
         result = pd.concat(frames, axis=1)
         return result
-
-
-        # if QC_Non_resp_BIS < 7:
-        #     BISBAS_BIS = int(sum(bis)) + float(QC_Non_resp_BIS * sum(bis) / len(bis))
-        # if QC_Non_resp_BAS_drive < 4:
-        #     BISBAS_BAS_Drive = int(sum(bas_drive)) + float(QC_Non_resp_BAS_drive * sum(bas_drive) / len(bas_drive))
-        # if QC_Non_resp_BAS_fun < 4:
-        #     BISBAS_BAS_Fun = int(sum(bas_fun)) + float(QC_Non_resp_BAS_fun * sum(bas_fun) / len(bas_fun))
-        # if QC_Non_resp_BAS_rew < 5:
-        #     BISBAS_BAS_Reward = int(sum(bas_reward)) + float(QC_Non_resp_BAS_rew * sum(bas_reward) / len(bas_reward))
-        #
-        # QC_Non_resp_BISBAS = QC_Non_resp_BIS + QC_Non_resp_BAS_drive + QC_Non_resp_BAS_fun + QC_Non_resp_BAS_rew
     except KeyError:
         print("We could not find the BISBAS headers in your dataset. Please look at the bisbas function in this package and put in the correct keys.")

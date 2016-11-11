@@ -23,9 +23,9 @@ def bapq(input, nonresp):
 
     2. Questions that should be reverse scored are reverse scored.
 
-    3. Any Prefer Not To Answer selection was not counted toward the subscales or final score.
+    3. Participant who chooses Prefer Not To Answer selection is not discarded, but is not counted toward the average on subscales or final score (Avram).
 
-    4. Any Question left blank was not counted toward the subscale or final score
+    4. Any Question That is left completely blank is not discarded, but not counted toward the average on subscales or final score (Avram).
     """
     try:
         # VERY RARELY - RARELY - OCCASIONALLY - SOMEWHAT OFTEN - OFTEN - VERY OFTEN - PREFER NOT TO ANSWER
@@ -48,7 +48,6 @@ def bapq(input, nonresp):
         aloof_forward = input[bapq_aloof_keys].apply(pd.to_numeric, args=('coerce',))
         aloof_forward_leftblank = aloof_forward.apply(lambda x: sum(x.isnull().values), axis=1)
         aloof_forward_prefernotanswer = aloof_forward[aloof_forward[bapq_aloof_keys] == nonresp['bapq']].count(axis=1)
-        aloof_forward_unanswered = aloof_forward_leftblank + aloof_forward_prefernotanswer
 
         # sum all the forward scores
         aloof_forward_score = aloof_forward[(aloof_forward[bapq_aloof_keys] >= 1) &
@@ -60,26 +59,21 @@ def bapq(input, nonresp):
         # sum the number of reverse questions left blank or preferred not to answer
         aloof_reverse_leftblank = aloof_rev.apply(lambda x: sum(x.isnull().values), axis=1)
         aloof_reverse_prefernotanswer = aloof_rev[aloof_rev[bapq_aloof_rev_keys] == nonresp['bapq']].count(axis=1)
-        aloof_reverse_unanswered = aloof_reverse_leftblank + aloof_reverse_prefernotanswer
 
         # sum all the reverse scores
         aloof_rev_score = aloof_rev[aloof_rev[bapq_aloof_rev_keys] <= 6].rsub(7).sum(axis=1, skipna=True)
 
         # Total SCORE
         total_aloof_score = (aloof_forward_score + aloof_rev_score)/12
-        # TOTAL ANSWERS UNANSWERED
-        total_aloof_unanswered = aloof_forward_unanswered + aloof_reverse_unanswered
-
 
         # TOTAL ANSWERS LEFT BLANK
         total_aloof_leftblank = aloof_forward_leftblank + aloof_reverse_leftblank
         #TOTAL ANSWERS PREFER NOT TO ANSWER
         total_aloof_prefernotanswer = aloof_forward_prefernotanswer + aloof_reverse_prefernotanswer
 
-
         aloofall = pd.DataFrame(
-            {'BAPQ_Aloof_Score': total_aloof_score, 'BAPQ_Aloof_Left_Blank': total_aloof_leftblank,
-             'BAPQ_Aloof_Prefer_Not_to_Answer': total_aloof_prefernotanswer})
+            {'BAPQ_Aloof_Score': total_aloof_score, 'BAPQ_Aloof_Prefer_Not_to_Answer': total_aloof_prefernotanswer,
+             'BAPQ_Aloof_Left_Blank': total_aloof_leftblank})
 
 
 
@@ -90,7 +84,6 @@ def bapq(input, nonresp):
         rigid_forward = input[bapq_rigid_keys].apply(pd.to_numeric, args=('coerce',))
         rigid_forward_leftblank = rigid_forward.apply(lambda x: sum(x.isnull().values), axis=1)
         rigid_forward_prefernotanswer = rigid_forward[rigid_forward[bapq_rigid_keys] == nonresp['bapq']].count(axis=1)
-        rigid_forward_unanswered = rigid_forward_leftblank + rigid_forward_prefernotanswer
 
         # sum all the forward scores
         rigid_forward_score = rigid_forward[(rigid_forward[bapq_rigid_keys] >= 1) &
@@ -102,15 +95,12 @@ def bapq(input, nonresp):
         # sum the number of reverse questions left blank or preferred not to answer
         rigid_reverse_leftblank = rigid_rev.apply(lambda x: sum(x.isnull().values), axis=1)
         rigid_reverse_prefernotanswer = rigid_rev[rigid_rev[bapq_rigid_rev_keys] == nonresp['bapq']].count(axis=1)
-        rigid_reverse_unanswered = rigid_reverse_leftblank + rigid_reverse_prefernotanswer
 
         # sum all the reverse scores
         rigid_rev_score = rigid_rev[rigid_rev[bapq_rigid_rev_keys] <= 6].rsub(7).sum(axis=1, skipna=True)
 
         # Total SCORE
         total_rigid_score = (rigid_forward_score + rigid_rev_score)/12
-        # TOTAL ANSWERS UNANSWERED
-        total_rigid_unanswered = rigid_forward_unanswered + rigid_reverse_unanswered
 
         # TOTAL ANSWERS LEFT BLANK
         total_rigid_leftblank = rigid_forward_leftblank + rigid_reverse_leftblank
@@ -130,7 +120,6 @@ def bapq(input, nonresp):
         prag_forward = input[bapq_prag_keys].apply(pd.to_numeric, args=('coerce',))
         prag_forward_leftblank = prag_forward.apply(lambda x: sum(x.isnull().values), axis=1)
         prag_forward_prefernotanswer = prag_forward[prag_forward[bapq_prag_keys] == nonresp['bapq']].count(axis=1)
-        prag_forward_unanswered = prag_forward_leftblank + prag_forward_prefernotanswer
 
         # sum all the forward scores
         prag_forward_score = prag_forward[(prag_forward[bapq_prag_keys] >= 1) &
@@ -142,15 +131,12 @@ def bapq(input, nonresp):
         # sum the number of reverse questions left blank or preferred not to answer
         prag_reverse_leftblank = prag_rev.apply(lambda x: sum(x.isnull().values), axis=1)
         prag_reverse_prefernotanswer = prag_rev[prag_rev[bapq_prag_rev_keys] == nonresp['bapq']].count(axis=1)
-        prag_reverse_unanswered = prag_reverse_leftblank + prag_reverse_prefernotanswer
 
         # sum all the reverse scores
         prag_rev_score = prag_rev[prag_rev[bapq_prag_rev_keys] <= 6].rsub(7).sum(axis=1, skipna=True)
 
         # Total SCORE
         total_prag_score = (prag_forward_score + prag_rev_score)/12
-        # TOTAL ANSWERS UNANSWERED
-        total_prag_unanswered = prag_forward_unanswered + prag_reverse_unanswered
 
         # TOTAL ANSWERS LEFT BLANK
         total_prag_leftblank = prag_forward_leftblank + prag_reverse_leftblank

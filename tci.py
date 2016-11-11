@@ -12,6 +12,8 @@ def tci(input, nonresp):
     # RESOURCES USED:
     """GSP Scales - Holmes Lab"""
 
+    """http://psycnet.apa.org/journals/jpa/27/2/73.pdf"""
+    """https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2810834/#R14"""
 
     # SCORING:
     """
@@ -19,9 +21,21 @@ def tci(input, nonresp):
 
     2. Scores are the sum of each subscale. Questions that should be reverse scored are reverse scored.
 
-    3. Any Prefer Not To Answer selection was not counted toward the subscales or final score.
+    3. There are 4 validity items on TCI-140. For participants who missed 3 or more check questions, scores were discarded (Zohar and Cloninger, 2011).
 
-    4. Any Question left blank was not counted toward the subscale or final score.
+    4. How to handle missing values is not explicitly mentioned in the primary resources above, so
+    if any value is left blank or prefer not to answer, those missing values will be replaced with the average
+    score on that particular subscale and then added to the final subscore total (Avram).
+
+    5. If the score is below a minimum value range or above a maximum value range for the subscale, it will be discarded.
+                                                        Min     Max
+                                        TCI_Novel       20      100
+                                        TCI_HarmAvoid   20      100
+                                        TCI_RewDep      20      100
+                                        TCI_Pers        20      100
+                                        TCI_SelfDir     20      100
+                                        TCI_Coop        20      100
+                                        TCI_SelfTran    16      80
     """
 
     try:
@@ -65,7 +79,10 @@ def tci(input, nonresp):
                                       'tci_91', 'tci_95', 'tci_99', 'tci_106', 'tci_112', 'tci_118']
         tci_selftranscendence_rev_keys = ['tci_32']
 
-        check_keys = ['tci_36', 'tci_101', 'tci_120', 'tci_132']
+        validity1 = ['tci_36']
+        validity2 = ['tci_101']
+        validity3 = ['tci_120']
+        validity4 = ['tci_132']
 
 
 
@@ -74,17 +91,30 @@ def tci(input, nonresp):
         # If a participant consistently selects the wrong check choice, it probably means they weren't paying attention
         # At what point should one drop the score?
 
-        checkquestions = input[check_keys].apply(pd.to_numeric, args=('coerce',))
-        checkquestions.fillna(value=99999)
 
+        check1 = input[validity1].apply(pd.to_numeric, args=('coerce',))
+        check1_wrong = check1[check1[validity1] != 4].count(axis=1)
+        check1_null = check1.apply(lambda x: sum(x.isnull().values), axis=1)
 
-        check1 = ['DROP' if x != 4.0 else x for x in checkquestions[check_keys[0]]]
-        check2 = ['DROP' if x != 1.0 else x for x in checkquestions[check_keys[1]]]
-        check3 = ['DROP' if x != 6.0 else x for x in checkquestions[check_keys[2]]]
-        check4 = ['DROP' if x != 2.0 else x for x in checkquestions[check_keys[3]]]
+        check2 = input[validity2].apply(pd.to_numeric, args=('coerce',))
+        check2_wrong = check2[check2[validity2] != 1].count(axis=1)
+        check2_null = check2.apply(lambda x: sum(x.isnull().values), axis=1)
+
+        check3 = input[validity3].apply(pd.to_numeric, args=('coerce',))
+        check3_wrong = check3[check3[validity3] != nonresp['tci']].count(axis=1)
+        check3_null = check3.apply(lambda x: sum(x.isnull().values), axis=1)
+
+        check4 = input[validity4].apply(pd.to_numeric, args=('coerce',))
+        check4_wrong = check4[check4[validity4] != 2].count(axis=1)
+        check4_null = check4.apply(lambda x: sum(x.isnull().values), axis=1)
+
+        tot_check_wrong = check1_wrong + check2_wrong + check3_wrong + check4_wrong + check1_null + check2_null + check3_null + check4_null
+
+        tot_check_wrong = ['Discard' if x > 2 else x for x in tot_check_wrong]
+
 
         checks = pd.DataFrame(
-            {'Check_1': check1, 'Check_2': check2, 'Check_3': check3, 'Check_4': check4})
+            {'Check_Questions_Answered_Wrong': tot_check_wrong})
         checks.index +=1
 
         # ------------------------------------------------------------------------------
@@ -109,7 +139,7 @@ def tci(input, nonresp):
         novelty_reverse_unanswered = novelty_reverse_leftblank + novelty_reverse_prefernotanswer
 
         # sum all the reverse scores
-        novelty_rev_score = novelty_rev.rsub(6).sum(axis=1, skipna=True)
+        novelty_rev_score = novelty_rev[novelty_rev[tci_novelty_rev_keys] <= 5].rsub(6).sum(axis=1, skipna=True)
 
         # Total SCORE
         total_novelty_score = novelty_forward_score + novelty_rev_score
@@ -120,6 +150,14 @@ def tci(input, nonresp):
         total_novelty_leftblank = novelty_forward_leftblank + novelty_reverse_leftblank
         #TOTAL ANSWERS PREFER NOT TO ANSWER
         total_novelty_prefernotanswer = novelty_forward_prefernotanswer + novelty_reverse_prefernotanswer
+
+        # If there are values missing, multiply the number of unanswered questions by the total subscale score.
+        # Then divide that by the total number of questions in the subscale.
+        # Add all of this to to the original drive score.
+        total_novelty_score = total_novelty_score + (total_novelty_unanswered * total_novelty_score / (len(tci_novelty_keys) + len(tci_novelty_rev_keys)))
+
+        # Discard any value below 20 and above 100
+        total_novelty_score = ['Discard' if x < 20 else 'Discard' if x > 80 else x for x in total_novelty_score]
 
 
         noveltyall = pd.DataFrame(
@@ -151,7 +189,7 @@ def tci(input, nonresp):
         harmavoidance_reverse_unanswered = harmavoidance_reverse_leftblank + harmavoidance_reverse_prefernotanswer
 
         # sum all the reverse scores
-        harmavoidance_rev_score = harmavoidance_rev.rsub(6).sum(axis=1, skipna=True)
+        harmavoidance_rev_score = harmavoidance_rev[harmavoidance_rev[tci_harmavoidance_rev_keys] <= 5].rsub(6).sum(axis=1, skipna=True)
 
         # Total SCORE
         total_harmavoidance_score = harmavoidance_forward_score + harmavoidance_rev_score
@@ -162,6 +200,14 @@ def tci(input, nonresp):
         total_harmavoidance_leftblank = harmavoidance_forward_leftblank + harmavoidance_reverse_leftblank
         #TOTAL ANSWERS PREFER NOT TO ANSWER
         total_harmavoidance_prefernotanswer = harmavoidance_forward_prefernotanswer + harmavoidance_reverse_prefernotanswer
+
+        # If there are values missing, multiply the number of unanswered questions by the total subscale score.
+        # Then divide that by the total number of questions in the subscale.
+        # Add all of this to to the original drive score.
+        total_harmavoidance_score = total_harmavoidance_score + (total_harmavoidance_unanswered * total_harmavoidance_score / (len(tci_harmavoidance_keys) + len(tci_harmavoidance_rev_keys)))
+
+        # Discard any value below 20 and above 100
+        total_harmavoidance_score = ['Discard' if x < 20 else 'Discard' if x > 80 else x for x in total_harmavoidance_score]
 
 
         harmall = pd.DataFrame(
@@ -193,7 +239,7 @@ def tci(input, nonresp):
         rewarddependence_reverse_unanswered = rewarddependence_reverse_leftblank + rewarddependence_reverse_prefernotanswer
 
         # sum all the reverse scores
-        rewarddependence_rev_score = rewarddependence_rev.rsub(6).sum(axis=1, skipna=True)
+        rewarddependence_rev_score = rewarddependence_rev[rewarddependence_rev[tci_rewarddependence_rev_keys] <= 5].rsub(6).sum(axis=1, skipna=True)
 
         # Total SCORE
         total_rewarddependence_score = rewarddependence_forward_score + rewarddependence_rev_score
@@ -204,6 +250,14 @@ def tci(input, nonresp):
         total_rewarddependence_leftblank = rewarddependence_forward_leftblank + rewarddependence_reverse_leftblank
         #TOTAL ANSWERS PREFER NOT TO ANSWER
         total_rewarddependence_prefernotanswer = rewarddependence_forward_prefernotanswer + rewarddependence_reverse_prefernotanswer
+
+        # If there are values missing, multiply the number of unanswered questions by the total subscale score.
+        # Then divide that by the total number of questions in the subscale.
+        # Add all of this to to the original drive score.
+        total_rewarddependence_score = total_rewarddependence_score + (total_rewarddependence_unanswered * total_rewarddependence_score / (len(tci_rewarddependence_keys) + len(tci_rewarddependence_rev_keys)))
+
+        # Discard any value below 20 and above 100
+        total_rewarddependence_score = ['Discard' if x < 20 else 'Discard' if x > 100 else x for x in total_rewarddependence_score]
 
 
         rewardall = pd.DataFrame(
@@ -235,7 +289,7 @@ def tci(input, nonresp):
         persistence_reverse_unanswered = persistence_reverse_leftblank + persistence_reverse_prefernotanswer
 
         # sum all the reverse scores
-        persistence_rev_score = persistence_rev.rsub(6).sum(axis=1, skipna=True)
+        persistence_rev_score = persistence_rev[persistence_rev[tci_persistence_rev_keys] <= 5].rsub(6).sum(axis=1, skipna=True)
 
         # Total SCORE
         total_persistence_score = persistence_forward_score + persistence_rev_score
@@ -246,6 +300,15 @@ def tci(input, nonresp):
         total_persistence_leftblank = persistence_forward_leftblank + persistence_reverse_leftblank
         #TOTAL ANSWERS PREFER NOT TO ANSWER
         total_persistence_prefernotanswer = persistence_forward_prefernotanswer + persistence_reverse_prefernotanswer
+
+        # If there are values missing, multiply the number of unanswered questions by the total subscale score.
+        # Then divide that by the total number of questions in the subscale.
+        # Add all of this to to the original drive score.
+        total_persistence_score = total_persistence_score + (total_persistence_unanswered * total_persistence_score / (len(tci_persistence_keys) + len(tci_persistence_rev_keys)))
+
+        # Discard any value below 20 and above 100
+        total_persistence_score = ['Discard' if x < 20 else 'Discard' if x > 100 else x for x in total_persistence_score]
+
 
 
         persistall = pd.DataFrame(
@@ -277,7 +340,7 @@ def tci(input, nonresp):
         selfdirectedness_reverse_unanswered = selfdirectedness_reverse_leftblank + selfdirectedness_reverse_prefernotanswer
 
         # sum all the reverse scores
-        selfdirectedness_rev_score = selfdirectedness_rev.rsub(6).sum(axis=1, skipna=True)
+        selfdirectedness_rev_score = selfdirectedness_rev[selfdirectedness_rev[tci_selfdirectedness_rev_keys] <= 5].rsub(6).sum(axis=1, skipna=True)
 
         # Total SCORE
         total_selfdirectedness_score = selfdirectedness_forward_score + selfdirectedness_rev_score
@@ -288,6 +351,14 @@ def tci(input, nonresp):
         total_selfdirectedness_leftblank = selfdirectedness_forward_leftblank + selfdirectedness_reverse_leftblank
         #TOTAL ANSWERS PREFER NOT TO ANSWER
         total_selfdirectedness_prefernotanswer = selfdirectedness_forward_prefernotanswer + selfdirectedness_reverse_prefernotanswer
+
+        # If there are values missing, multiply the number of unanswered questions by the total subscale score.
+        # Then divide that by the total number of questions in the subscale.
+        # Add all of this to to the original drive score.
+        total_selfdirectedness_score = total_selfdirectedness_score + (total_selfdirectedness_unanswered * total_selfdirectedness_score / (len(tci_selfdirectedness_keys) + len(tci_selfdirectedness_rev_keys)))
+
+        # Discard any value below 20 and above 100
+        total_selfdirectedness_score = ['Discard' if x < 20 else 'Discard' if x > 100 else x for x in total_selfdirectedness_score]
 
 
         directednessall = pd.DataFrame(
@@ -318,7 +389,7 @@ def tci(input, nonresp):
         cooperativeness_reverse_unanswered = cooperativeness_reverse_leftblank + cooperativeness_reverse_prefernotanswer
 
         # sum all the reverse scores
-        cooperativeness_rev_score = cooperativeness_rev.rsub(6).sum(axis=1, skipna=True)
+        cooperativeness_rev_score = cooperativeness_rev[cooperativeness_rev[tci_cooperativeness_rev_keys] <= 5].rsub(6).sum(axis=1, skipna=True)
 
         # Total SCORE
         total_cooperativeness_score = cooperativeness_forward_score + cooperativeness_rev_score
@@ -329,6 +400,14 @@ def tci(input, nonresp):
         total_cooperativeness_leftblank = cooperativeness_forward_leftblank + cooperativeness_reverse_leftblank
         #TOTAL ANSWERS PREFER NOT TO ANSWER
         total_cooperativeness_prefernotanswer = cooperativeness_forward_prefernotanswer + cooperativeness_reverse_prefernotanswer
+
+        # If there are values missing, multiply the number of unanswered questions by the total subscale score.
+        # Then divide that by the total number of questions in the subscale.
+        # Add all of this to to the original drive score.
+        total_cooperativeness_score = total_cooperativeness_score + (total_cooperativeness_unanswered * total_cooperativeness_score / (len(tci_cooperativeness_keys) + len(tci_cooperativeness_rev_keys)))
+
+        # Discard any value below 20 and above 100
+        total_cooperativeness_score = ['Discard' if x < 20 else 'Discard' if x > 100 else x for x in total_cooperativeness_score]
 
 
         cooperativeall = pd.DataFrame(
@@ -359,7 +438,7 @@ def tci(input, nonresp):
         selftranscendence_reverse_unanswered = selftranscendence_reverse_leftblank + selftranscendence_reverse_prefernotanswer
 
         # sum all the reverse scores
-        selftranscendence_rev_score = cooperativeness_rev.rsub(6).sum(axis=1, skipna=True)
+        selftranscendence_rev_score = selftranscendence_rev[selftranscendence_rev[tci_selftranscendence_rev_keys] <= 5].rsub(6).sum(axis=1, skipna=True)
 
         # Total SCORE
         total_selftranscendence_score = selftranscendence_forward_score + selftranscendence_rev_score
@@ -370,6 +449,15 @@ def tci(input, nonresp):
         total_selftranscendence_leftblank = selftranscendence_forward_leftblank + selftranscendence_reverse_leftblank
         #TOTAL ANSWERS PREFER NOT TO ANSWER
         total_selftranscendence_prefernotanswer = selftranscendence_forward_prefernotanswer + selftranscendence_reverse_prefernotanswer
+
+
+        # If there are values missing, multiply the number of unanswered questions by the total subscale score.
+        # Then divide that by the total number of questions in the subscale.
+        # Add all of this to to the original drive score.
+        total_selftranscendence_score = total_selftranscendence_score + (total_selftranscendence_unanswered * total_selftranscendence_score / (len(tci_selftranscendence_keys) + len(tci_selftranscendence_rev_keys)))
+
+        # Discard any value below 20 and above 100
+        total_selftranscendence_score = ['Discard' if x < 20 else 'Discard' if x > 100 else x for x in total_selftranscendence_score]
 
 
         selftranscendall = pd.DataFrame(

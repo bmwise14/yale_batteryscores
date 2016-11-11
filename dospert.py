@@ -11,7 +11,7 @@ def dospert(input, nonresp):
 
     # RESOURCES USED:
     """GSP Scales Notebook - Holmes Lab"""
-    """http://onlinelibrary.wiley.com/doi/10.1002/bdm.414/full"""
+    """http://onlinelibrary.wiley.com/doi/10.1002/bdm.414/epdf"""
     """http://journal.sjdm.org/jdm06005.pdf"""
 
     # SCORING:
@@ -19,9 +19,13 @@ def dospert(input, nonresp):
     1. Scores are the sum of each subscale (Risk-Taking and Risk-Perception).
     This one uses the 40-item scale, not the 2006 revised version (Blais & Weber, 2006).
 
-    2. Any Prefer Not To Answer selection was not counted toward the subscales.
+    2. If any value is left blank or prefer not to answer, those missing values will be replaced with the average
+    score on that particular subscale and then added to the final subscore total (Blais & Weber, 2006).
 
-    3. Any Question left blank was not counted toward the subscale.
+    3. If the score is below a minimum value range or above a maximum value range for the subscale, it will be discarded.
+                                                        Min     Max
+                                    DOSPERT_taking      40      280
+                                    DOSPERT_perception  40      280
     """
 
     try:
@@ -61,6 +65,15 @@ def dospert(input, nonresp):
         risktaking_score = risktaking[(risktaking[risktaking_keys] >= 1) &
                                       (risktaking[risktaking_keys] <= 7)].sum(axis=1)
 
+        # If there are values missing, multiply the number of unanswered questions by the total subscale score.
+        # Then divide that by the total number of questions in the subscale.
+        # Add all of this to to the original drive score.
+        risktaking_score = (risktaking_score + (risktaking_unanswered * risktaking_score / (len(risktaking_keys))))
+
+
+        # Discard any value below 40 and above 280
+        risktaking_score = ['Discard' if x < 40 else 'Discard' if x > 280 else x for x in risktaking_score]
+
         risktakingall = pd.DataFrame(
             {'DOSPERT Risktaking Score': risktaking_score, 'DOSPERT Risktaking Left Blank': risktaking_leftblank,
              'DOSPERT Risktaking Prefer Not to Answer': risktaking_prefernotanswer})
@@ -81,6 +94,14 @@ def dospert(input, nonresp):
         # Total SCORE
         perception_score = perception[(perception[riskperception_keys] >= 1) &
                                       (perception[riskperception_keys] <= 7)].sum(axis=1)
+
+        # If there are values missing, multiply the number of unanswered questions by the total subscale score.
+        # Then divide that by the total number of questions in the subscale.
+        # Add all of this to to the original drive score.
+        perception_score = (perception_score + (perception_unanswered * perception_score / (len(riskperception_keys))))
+
+        # Discard any value below 40 and above 280
+        perception_score = ['Discard' if x < 40 else 'Discard' if x > 280 else x for x in perception_score]
 
         perceptionall = pd.DataFrame(
             {'DOSPERT Risk Perception Score': perception_score, 'DOSPERT Risk Perception Left Blank': perception_leftblank,

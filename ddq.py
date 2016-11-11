@@ -159,10 +159,10 @@ def ddq(input):
 
 
         # Drops the 0 values because it means that the participant skipped at least 1 question.
-        smallrewardks = ['DROP' if x == 0 else x for x in smallrewards]
+        smallrewardks = ['DISCARD' if x == 0 else x for x in smallrewards]
         # List Comprehension that takes the log10 of each k-bin value and rounds to the 5th decimal place.
         # This also drops any discount rate where a 0 value is given
-        smalllogdiscountrate = [round(log(y, 10), 5) if y > 0 and y <= 1 else 'DROP' for y in smallrewards]
+        smalllogdiscountrate = [round(log(y, 10), 5) if y > 0 and y <= 1 else 'DISCARD' for y in smallrewards]
 
         # Puts the k-values into a dataframe
         smallldr = pd.DataFrame(

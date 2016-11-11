@@ -25,11 +25,25 @@ def barratt(input, nonresp):
     motor impulsiveness, nonplanning impulsiveness). A total score is obtained by summing the first or second-order factors.
 
     2. The items are normally scored on a 4-point scale. (RARELY/NEVER-1, OCCASIONALLY-2, OFTEN-3, ALMOST ALWAYS/ALWAYS-4).
-     Questions that should be reverse scored are reverse scored.
+     Questions that should be reverse scored are reverse scored. Your scale may or may not have a PREFER NOT TO ANSWER value.
 
-    3. Any Prefer Not To Answer selection was not counted toward the subscales or final score
+    3. How to handle missing values is not explicitly mentioned in the primary resources above, so
+    if any value is left blank or prefer not to answer, those missing values will be replaced with the average
+    score on that particular subscale and then added to the final subscore total (Avram).
 
-    4. Any Question left blank was not counted toward the subscale or final score
+    4. If the score is below a minimum value range or above a maximum value range for the subscale, it will be discarded.
+                                                        Min     Max
+                                    Barratt_2attention  8       32
+                                    Barratt_2motor      11      44
+                                    Barratt_2nonplan    11      44
+                                    Barratt_1attention  5       20
+                                    Barratt_1motor      7       28
+                                    Barratt_1selfcont   6       24
+                                    Barratt_1complex    5       20
+                                    Barratt_1persevere  4       16
+                                    Barratt_1instable   3       12
+                                    Barratt_tot         30      120 <- for either scale
+
 
     """
 
@@ -87,15 +101,16 @@ def barratt(input, nonresp):
         # TOTAL ANSWERS UNANSWERED
         total_atten1_unanswered = atten1_forward_unanswered + atten1_reverse_unanswered
 
+        # If there are values missing, multiply the number of unanswered questions by the total subscale score.
+        # Then divide that by the total number of questions in the subscale.
+        # Add all of this to to the original drive score.
+        total_atten1_score = (total_atten1_score + (total_atten1_unanswered * total_atten1_score / (len(barratt_1atten_keys)+len(barratt_1atten_rev_keys))))
+
+
         # TOTAL ANSWERS LEFT BLANK
         total_atten1_leftblank = atten1_forward_leftblank + atten1_reverse_leftblank
         #TOTAL ANSWERS PREFER NOT TO ANSWER
         total_atten1_prefernotanswer = atten1_forward_prefernotanswer + atten1_reverse_prefernotanswer
-
-
-        attentionall = pd.DataFrame(
-            {'BIS_Attention_Score': total_atten1_score, 'BIS_Attention_Left_Blank': total_atten1_leftblank,
-             'BIS_Attention_Prefer_Not_to_Answer': total_atten1_prefernotanswer})
 
         # ------------------------------------------------------------------------------
         # BIS COGNITIVE INSTABILITY - ALL FORWARD, NO REVERSE
@@ -112,9 +127,10 @@ def barratt(input, nonresp):
         instability_score = instability[(instability[barratt_1instability_keys] >= 1) &
                                         (instability[barratt_1instability_keys] <= 4)].sum(axis=1)
 
-        coginstall = pd.DataFrame(
-            {'BIS_Cognitive_Instability_Score': instability_score, 'BIS_Cognitive_Instability_Left_Blank': instability_leftblank,
-             'BIS_Cognitive_Instability_Prefer_Not_to_Answer': instability_prefernotanswer})
+        # If there are values missing, multiply the number of unanswered questions by the total subscale score.
+        # Then divide that by the total number of questions in the subscale.
+        # Add all of this to to the original drive score.
+        instability_score = (instability_score + (instability_unanswered * instability_score / (len(barratt_1instability_keys))))
 
         # ------------------------------------------------------------------------------
         # BIS MOTOR - ALL FORWARD, NO REVERSE
@@ -131,11 +147,11 @@ def barratt(input, nonresp):
         motor_score = motor[(motor[barratt_1mot_keys] >= 1) &
                             (motor[barratt_1mot_keys] <= 4)].sum(axis=1)
 
-        motorall = pd.DataFrame(
-            {'BIS_Motor_Score': motor_score, 'BIS_Motor_Left_Blank': motor_leftblank,
-             'BIS_Motor_Prefer_Not_to_Answer': motor_prefernotanswer})
 
-
+        # If there are values missing, multiply the number of unanswered questions by the total subscale score.
+        # Then divide that by the total number of questions in the subscale.
+        # Add all of this to to the original drive score.
+        motor_score = (motor_score + (motor_unanswered * motor_score / (len(barratt_1mot_keys))))
 
         # ------------------------------------------------------------------------------
         # BIS SELF-CONTROL
@@ -171,10 +187,11 @@ def barratt(input, nonresp):
         #TOTAL ANSWERS PREFER NOT TO ANSWER
         total_selfcontrol1_prefernotanswer = selfcontrol1_forward_prefernotanswer + selfcontrol1_reverse_prefernotanswer
 
-        selfcontrolall = pd.DataFrame(
-            {'BIS_Self-Control_Score': total_selfcontrol1_score, 'BIS_Self-Control_Left_Blank': total_selfcontrol1_leftblank,
-             'BIS_Self-Control_Prefer_Not_to_Answer': total_selfcontrol1_prefernotanswer})
 
+        # If there are values missing, multiply the number of unanswered questions by the total subscale score.
+        # Then divide that by the total number of questions in the subscale.
+        # Add all of this to to the original drive score.
+        total_selfcontrol1_score = (total_selfcontrol1_score + (total_selfcontrol1_unanswered * total_selfcontrol1_score / (len(barratt_1selfcontrol_keys)+len(barratt_1selfcontrol_rev_keys))))
 
         # ------------------------------------------------------------------------------
         # BIS COGNITIVE COMPLEXITY
@@ -206,15 +223,16 @@ def barratt(input, nonresp):
         # TOTAL ANSWERS UNANSWERED
         total_complex1_unanswered = complex1_forward_unanswered + complex1_reverse_unanswered
 
-
         # TOTAL ANSWERS LEFT BLANK
         total_complex1_leftblank = complex1_forward_leftblank + complex1_reverse_leftblank
         #TOTAL ANSWERS PREFER NOT TO ANSWER
         total_complex1_prefernotanswer = complex1_forward_prefernotanswer + complex1_reverse_prefernotanswer
 
-        cogcomplexall = pd.DataFrame(
-            {'BIS_Cognitive_Complexity_Score': total_complex1_score, 'BIS_Cognitive_Complexity_Left_Blank': total_complex1_leftblank,
-             'BIS_Cognitive_Complexity_Prefer_Not_to_Answer': total_complex1_prefernotanswer})
+
+        # If there are values missing, multiply the number of unanswered questions by the total subscale score.
+        # Then divide that by the total number of questions in the subscale.
+        # Add all of this to to the original drive score.
+        total_complex1_score = (total_complex1_score + (total_complex1_unanswered * total_complex1_score / (len(barratt_1complex_keys)+len(barratt_1complex_rev_keys))))
 
         # ------------------------------------------------------------------------------
         # BIS PERSEVERANCE
@@ -251,10 +269,11 @@ def barratt(input, nonresp):
         #TOTAL ANSWERS PREFER NOT TO ANSWER
         total_persever1_prefernotanswer = persever1_forward_prefernotanswer + persever1_reverse_prefernotanswer
 
-        perseverall = pd.DataFrame(
-            {'BIS_Perseverance_Score': total_persever1_score, 'BIS_Perseverance_Left_Blank': total_persever1_leftblank,
-             'BIS_Perseverance_Prefer_Not_to_Answer': total_persever1_prefernotanswer})
 
+        # If there are values missing, multiply the number of unanswered questions by the total subscale score.
+        # Then divide that by the total number of questions in the subscale.
+        # Add all of this to to the original drive score.
+        total_persever1_score = (total_persever1_score + (total_persever1_unanswered * total_persever1_score / (len(barratt_1persever_keys)+len(barratt_1persever_rev_keys))))
 
         # ------------------------------------------------------------------------------
         # ATTENTIONAL IMPULSIVENESS
@@ -292,10 +311,10 @@ def barratt(input, nonresp):
         #TOTAL ANSWERS PREFER NOT TO ANSWER
         total_atteimpuls2_prefernotanswer = atteimpuls2_forward_prefernotanswer + atteimpuls2_reverse_prefernotanswer
 
-        attenimpulsall = pd.DataFrame(
-            {'BIS_Attentional_Impulsiveness Score': total_atteimpuls2_score, 'BIS_Attentional_Impulsiveness_Left_Blank': total_atteimpuls2_leftblank,
-             'BIS_Attentional_Impulsiveness_Prefer_Not_to_Answer': total_atteimpuls2_prefernotanswer})
-
+        # If there are values missing, multiply the number of unanswered questions by the total subscale score.
+        # Then divide that by the total number of questions in the subscale.
+        # Add all of this to to the original drive score.
+        total_atteimpuls2_score = (total_atteimpuls2_score + (total_atteimpuls2_unanswered * total_atteimpuls2_score / (len(barratt_2attentionalimpulsiveness_keys)+len(barratt_2attentionalimpulsiveness_rev_keys))))
 
         # ------------------------------------------------------------------------------
         # MOTOR IMPULSIVENESS
@@ -332,11 +351,10 @@ def barratt(input, nonresp):
         #TOTAL ANSWERS PREFER NOT TO ANSWER
         total_motimpuls2_prefernotanswer = motimpuls2_forward_prefernotanswer + motimpuls2_reverse_prefernotanswer
 
-        motorimpulsall = pd.DataFrame(
-            {'BIS_Motor_Impulsiveness_Score': total_motimpuls2_score, 'BIS_Motor_Impulsiveness_Left_Blank': total_motimpuls2_leftblank,
-             'BIS_Motor_Impulsiveness_Prefer_Not_to_Answer': total_motimpuls2_prefernotanswer})
-
-
+        # If there are values missing, multiply the number of unanswered questions by the total subscale score.
+        # Then divide that by the total number of questions in the subscale.
+        # Add all of this to to the original drive score.
+        total_motimpuls2_score = (total_motimpuls2_score + (total_motimpuls2_unanswered * total_motimpuls2_score / (len(barratt_2motorimpulsiveness_keys)+len(barratt_2motorimpulsiveness_rev_keys))))
 
         # ------------------------------------------------------------------------------
         # NONPLANNING IMPULSIVENESS
@@ -375,44 +393,90 @@ def barratt(input, nonresp):
         #TOTAL ANSWERS PREFER NOT TO ANSWER
         total_nonplanimpuls2_prefernotanswer = nonplanimpuls2_forward_prefernotanswer + nonplanimpuls2_reverse_prefernotanswer
 
+        # If there are values missing, multiply the number of unanswered questions by the total subscale score.
+        # Then divide that by the total number of questions in the subscale.
+        # Add all of this to to the original drive score.
+        total_nonplanimpuls2_score = (total_nonplanimpuls2_score + (total_nonplanimpuls2_unanswered * total_nonplanimpuls2_score / (len(barratt_2nonplanningimpulsiveness_keys)+len(barratt_2nonplanningimpulsiveness_rev_keys))))
+
+        # ------------------------------------------------------------------------------
+        # TOTAL BARRATT SCORE - CAN BE COMPUTED VIA PRIMARY OR SECONDARY KEYS ONLY
+        barratt_total = total_atten1_score + instability_score + motor_score + total_selfcontrol1_score + total_complex1_score + total_persever1_score
+        barratt_total = ['Discard' if x < 30 else 'Discard' if x > 120 else x for x in barratt_total]
+
+
+        barratt_leftblank = total_atten1_leftblank + instability_leftblank + motor_leftblank + total_selfcontrol1_leftblank + total_complex1_leftblank + total_persever1_leftblank
+        barratt_pfn = total_atten1_prefernotanswer + instability_prefernotanswer + motor_prefernotanswer + total_selfcontrol1_prefernotanswer + total_complex1_prefernotanswer + total_persever1_prefernotanswer
+
+
+
+        bistotal = pd.DataFrame(
+            {'BIS_TOTAL_SCORE': barratt_total, 'BIS_TOTAL_Left_Blank': barratt_leftblank,
+             'BIS_TOTAL_Prefer_Not_to_Answer': barratt_pfn})
+
+
+        # ------------------------------------------------------------------------------
+        # PRIMARY SCORES
+        # Discard any value below 5 and above 20
+        total_atten1_score = ['Discard' if x < 5 else 'Discard' if x > 20 else x for x in total_atten1_score]
+        attentionall = pd.DataFrame(
+            {'BIS_Attention_Score': total_atten1_score, 'BIS_Attention_Left_Blank': total_atten1_leftblank,
+             'BIS_Attention_Prefer_Not_to_Answer': total_atten1_prefernotanswer})
+
+        # Discard any value below 3 and above 12
+        instability_score = ['Discard' if x < 3 else 'Discard' if x > 12 else x for x in instability_score]
+        coginstall = pd.DataFrame(
+            {'BIS_Cognitive_Instability_Score': instability_score, 'BIS_Cognitive_Instability_Left_Blank': instability_leftblank,
+             'BIS_Cognitive_Instability_Prefer_Not_to_Answer': instability_prefernotanswer})
+
+        # Discard any value below 7 and above 28
+        motor_score = ['Discard' if x < 7 else 'Discard' if x > 28 else x for x in motor_score]
+        motorall = pd.DataFrame(
+            {'BIS_Motor_Score': motor_score, 'BIS_Motor_Left_Blank': motor_leftblank,
+             'BIS_Motor_Prefer_Not_to_Answer': motor_prefernotanswer})
+
+        # Discard any value below 6 and above 24
+        total_selfcontrol1_score = ['Discard' if x < 6 else 'Discard' if x > 24 else x for x in total_selfcontrol1_score]
+        selfcontrolall = pd.DataFrame(
+            {'BIS_Self-Control_Score': total_selfcontrol1_score, 'BIS_Self-Control_Left_Blank': total_selfcontrol1_leftblank,
+             'BIS_Self-Control_Prefer_Not_to_Answer': total_selfcontrol1_prefernotanswer})
+
+        # Discard any value below 5 and above 20
+        total_complex1_score = ['Discard' if x < 5 else 'Discard' if x > 20 else x for x in total_complex1_score]
+        cogcomplexall = pd.DataFrame(
+            {'BIS_Cognitive_Complexity_Score': total_complex1_score, 'BIS_Cognitive_Complexity_Left_Blank': total_complex1_leftblank,
+             'BIS_Cognitive_Complexity_Prefer_Not_to_Answer': total_complex1_prefernotanswer})
+
+        # Discard any value below 4 and above 16
+        total_persever1_score = ['Discard' if x < 4 else 'Discard' if x > 16 else x for x in total_persever1_score]
+        perseverall = pd.DataFrame(
+            {'BIS_Perseverance_Score': total_persever1_score, 'BIS_Perseverance_Left_Blank': total_persever1_leftblank,
+             'BIS_Perseverance_Prefer_Not_to_Answer': total_persever1_prefernotanswer})
+
+        # ------------------------------------------------------------------------------
+        # SECONDARY SCORES
+        # Discard any value below 8 and above 32
+        total_atteimpuls2_score = ['Discard' if x < 8 else 'Discard' if x > 32 else x for x in total_atteimpuls2_score]
+        attenimpulsall = pd.DataFrame(
+            {'BIS_Attentional_Impulsiveness Score': total_atteimpuls2_score, 'BIS_Attentional_Impulsiveness_Left_Blank': total_atteimpuls2_leftblank,
+             'BIS_Attentional_Impulsiveness_Prefer_Not_to_Answer': total_atteimpuls2_prefernotanswer})
+
+
+        # Discard any value below 11 and above 44
+        total_motimpuls2_score = ['Discard' if x < 11 else 'Discard' if x > 44 else x for x in total_motimpuls2_score]
+        motorimpulsall = pd.DataFrame(
+            {'BIS_Motor_Impulsiveness_Score': total_motimpuls2_score, 'BIS_Motor_Impulsiveness_Left_Blank': total_motimpuls2_leftblank,
+             'BIS_Motor_Impulsiveness_Prefer_Not_to_Answer': total_motimpuls2_prefernotanswer})
+
+        # Discard any value below 11 and above 44
+        total_nonplanimpuls2_score = ['Discard' if x < 11 else 'Discard' if x > 44 else x for x in total_nonplanimpuls2_score]
         nonplanimpulsall = pd.DataFrame(
             {'BIS_Nonplanning_Impulsiveness_Score': total_nonplanimpuls2_score, 'BIS_Motor_Impulsiveness_Left_Blank': total_nonplanimpuls2_leftblank,
              'BIS_Motor_Impulsiveness_Prefer_Not_to_Answer': total_nonplanimpuls2_prefernotanswer})
 
-
-        # ------------------------------------------------------------------------------
-        # ADD TOTAL FIRST ORDER FACTORS
-        firstorderscore = total_atten1_score + instability_score + motor_score + total_selfcontrol1_score + \
-                          total_complex1_score + total_persever1_score
-
-        firstorderleftblank = total_atten1_leftblank + instability_leftblank + motor_leftblank + \
-                              total_selfcontrol1_leftblank + total_complex1_leftblank + total_persever1_leftblank
-
-        firstorderprefernot = total_atten1_prefernotanswer + instability_prefernotanswer + motor_prefernotanswer + \
-                              total_selfcontrol1_prefernotanswer + total_complex1_prefernotanswer + total_persever1_prefernotanswer
-
-        firstorder = pd.DataFrame(
-            {'BIS_FirstOrder_Score': firstorderscore, 'BIS_FirstOrder_Left_Blank': firstorderleftblank,
-             'BIS_FirstOrder_Prefer_Not_to_Answer': firstorderprefernot})
-
-
-        # ------------------------------------------------------------------------------
-        # ADD TOTAL SECOND ORDER FACTORS
-        secondorderscore = total_atteimpuls2_score + total_motimpuls2_score + total_nonplanimpuls2_score
-        secondorderleftblank = total_atteimpuls2_leftblank + total_motimpuls2_leftblank + total_nonplanimpuls2_leftblank
-        seconorderprefernot = total_atteimpuls2_prefernotanswer + total_motimpuls2_prefernotanswer + total_nonplanimpuls2_prefernotanswer
-
-
-
-        secondorder = pd.DataFrame(
-            {'BIS_SecondOrder_Impulsiveness_Score': secondorderscore, 'BIS_SecondOrder_Left_Blank': secondorderleftblank,
-             'BIS_SecondOrder_Prefer_Not_to_Answer': seconorderprefernot})
-
         # ------------------------------------------------------------------------------
         # Put the scores into one frame
-        # frames = [attentionall, coginstall, motorall, selfcontrolall, cogcomplexall, perseverall, attenimpulsall, motorimpulsall, nonplanimpulsall]
-        frames2 = [firstorder, secondorder]
-        result = pd.concat(frames2, axis=1)
+        frames = [attentionall, coginstall, motorall, selfcontrolall, cogcomplexall, perseverall, attenimpulsall, motorimpulsall, nonplanimpulsall, bistotal]
+        result = pd.concat(frames, axis=1)
         return result
     except KeyError:
         print("We could not find the BARRATT headers in your dataset. Please look at the barratt function in this package and put in the correct keys.")
