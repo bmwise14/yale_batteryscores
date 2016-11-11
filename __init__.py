@@ -13,4 +13,4 @@ Battery Scores Package for Processing Qualtrics CSV Files
 
 """
 __all__ = ['reader', 'teps', 'tci', 'subjectid', 'stai', 'shipley', 'snaith', 'qids', 'pss',
-           'poms', 'neoffi', 'dospert', 'ddq', 'bisbas', 'barratt', 'bapq']
+           'poms', 'neoffi', 'ncog', 'dospert', 'ddq', 'bisbas', 'barratt', 'bapq']
