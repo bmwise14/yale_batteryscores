@@ -110,7 +110,7 @@ def tci(input, nonresp):
 
         tot_check_wrong = check1_wrong + check2_wrong + check3_wrong + check4_wrong + check1_null + check2_null + check3_null + check4_null
 
-        tot_check_wrong = ['Discard' if x > 2 else x for x in tot_check_wrong]
+        tot_check_wrong = ['Missed > 2' if x > 2 else x for x in tot_check_wrong]
 
 
         checks = pd.DataFrame(

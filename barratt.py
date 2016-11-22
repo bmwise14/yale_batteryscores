@@ -457,7 +457,7 @@ def barratt(input, nonresp):
         # Discard any value below 8 and above 32
         total_atteimpuls2_score = ['Discard' if x < 8 else 'Discard' if x > 32 else x for x in total_atteimpuls2_score]
         attenimpulsall = pd.DataFrame(
-            {'BIS_Attentional_Impulsiveness Score': total_atteimpuls2_score, 'BIS_Attentional_Impulsiveness_Left_Blank': total_atteimpuls2_leftblank,
+            {'BIS_Attentional_Impulsiveness_Score': total_atteimpuls2_score, 'BIS_Attentional_Impulsiveness_Left_Blank': total_atteimpuls2_leftblank,
              'BIS_Attentional_Impulsiveness_Prefer_Not_to_Answer': total_atteimpuls2_prefernotanswer})
 
 
@@ -470,8 +470,8 @@ def barratt(input, nonresp):
         # Discard any value below 11 and above 44
         total_nonplanimpuls2_score = ['Discard' if x < 11 else 'Discard' if x > 44 else x for x in total_nonplanimpuls2_score]
         nonplanimpulsall = pd.DataFrame(
-            {'BIS_Nonplanning_Impulsiveness_Score': total_nonplanimpuls2_score, 'BIS_Motor_Impulsiveness_Left_Blank': total_nonplanimpuls2_leftblank,
-             'BIS_Motor_Impulsiveness_Prefer_Not_to_Answer': total_nonplanimpuls2_prefernotanswer})
+            {'BIS_Nonplanning_Impulsiveness_Score': total_nonplanimpuls2_score, 'BIS_Nonplanning_Impulsiveness_Left_Blank': total_nonplanimpuls2_leftblank,
+             'BIS_Nonplanning_Impulsiveness_Prefer_Not_to_Answer': total_nonplanimpuls2_prefernotanswer})
 
         # ------------------------------------------------------------------------------
         # Put the scores into one frame
