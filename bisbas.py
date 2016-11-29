@@ -70,8 +70,8 @@ def bisbas(input, nonresp):
         drive_score = drive_score + (drive_unanswered * drive_score / len(drive_headers))
 
         # Discard any value below 4 and above 16
-        drive_score = ['Discard' if x < 4
-                       else 'Discard' if x > 16 else x for x in drive_score]
+        # drive_score = ['Discard' if x < 4
+        #                else 'Discard' if x > 16 else x for x in drive_score]
 
 
         driveall = pd.DataFrame({'Drive_Score' : drive_score, 'Drive Left Blank': drive_leftblank,
@@ -100,8 +100,8 @@ def bisbas(input, nonresp):
         funseeking_score = funseeking_score + (funseeking_unanswered * funseeking_score / len(funseeking_headers))
 
         # Discard any value below 4 and above 16
-        funseeking_score = ['Discard' if x < 4
-                            else 'Discard' if x > 16 else x for x in funseeking_score]
+        # funseeking_score = ['Discard' if x < 4
+        #                     else 'Discard' if x > 16 else x for x in funseeking_score]
 
         funseekingall = pd.DataFrame({'Funseeking Score': funseeking_score, 'Funseeking Left Blank': funseeking_leftblank,
              'Funseeking Prefer Not to Answer': funseeking_prefernotanswer})
@@ -130,8 +130,8 @@ def bisbas(input, nonresp):
         reward_score = reward_score + (reward_unanswered * reward_score / len(reward_headers))
 
         # Discard any value below 5 and above 20
-        reward_score = ['Discard' if x < 5
-                            else 'Discard' if x > 20 else x for x in reward_score]
+        # reward_score = ['Discard' if x < 5
+        #                     else 'Discard' if x > 20 else x for x in reward_score]
 
 
         rewardall = pd.DataFrame({'Reward Score': reward_score, 'Reward Left Blank': reward_leftblank,
@@ -181,8 +181,8 @@ def bisbas(input, nonresp):
 
 
         # Discard any value below 7 and above 28
-        total_bis_score = ['Discard' if x < 7
-                            else 'Discard' if x > 28 else x for x in total_bis_score]
+        # total_bis_score = ['Discard' if x < 7
+        #                     else 'Discard' if x > 28 else x for x in total_bis_score]
 
         # TOTAL ANSWERS LEFT BLANK
         total_bis_leftblank = bis_forward_leftblank + bisreverse_leftblank

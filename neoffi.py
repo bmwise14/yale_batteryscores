@@ -91,8 +91,8 @@ def neoffi(input, nonresp):
         total_neuroticism_score = total_neuroticism_score + (total_neuroticism_unanswered * total_neuroticism_score / (len(neo_neuroticism_keys)+len(neo_neuroticism_rev_keys)))
 
         # Discard any value below 0 and above 48
-        total_neuroticism_score = ['Discard' if x < 0
-                       else 'Discard' if x > 48 else x for x in total_neuroticism_score]
+        # total_neuroticism_score = ['Discard' if x < 0
+        #                else 'Discard' if x > 48 else x for x in total_neuroticism_score]
 
 
         neuroall = pd.DataFrame(
@@ -142,8 +142,8 @@ def neoffi(input, nonresp):
         total_extroversion_score = total_extroversion_score + (total_extroversion_unanswered * total_extroversion_score / (len(neo_extroversion_keys)+len(neo_extroversion_rev_keys)))
 
         # Discard any value below 0 and above 48
-        total_extroversion_score = ['Discard' if x < 0
-                       else 'Discard' if x > 48 else x for x in total_extroversion_score]
+        # total_extroversion_score = ['Discard' if x < 0
+        #                else 'Discard' if x > 48 else x for x in total_extroversion_score]
 
 
         extroversall = pd.DataFrame(
@@ -195,8 +195,8 @@ def neoffi(input, nonresp):
         total_openness_score = total_openness_score + (total_openness_unanswered * total_openness_score / (len(neo_openness_keys)+len(neo_openness_rev_keys)))
 
         # Discard any value below 0 and above 48
-        total_openness_score = ['Discard' if x < 0
-                       else 'Discard' if x > 48 else x for x in total_openness_score]
+        # total_openness_score = ['Discard' if x < 0
+        #                else 'Discard' if x > 48 else x for x in total_openness_score]
 
         opennessall = pd.DataFrame(
             {'NEO_Openness_Score': total_openness_score, 'NEO_Openness_Left_Blank': total_openness_leftblank,
@@ -246,8 +246,8 @@ def neoffi(input, nonresp):
         total_agree_score = total_agree_score + (total_agree_unanswered * total_agree_score / (len(neo_agreeableness_keys)+len(neo_agreeableness_rev_keys)))
 
         # Discard any value below 0 and above 48
-        total_agree_score = ['Discard' if x < 0
-                       else 'Discard' if x > 48 else x for x in total_agree_score]
+        # total_agree_score = ['Discard' if x < 0
+        #                else 'Discard' if x > 48 else x for x in total_agree_score]
 
 
 
@@ -300,12 +300,12 @@ def neoffi(input, nonresp):
         total_conscien_score = total_conscien_score + (total_conscien_unanswered * total_conscien_score / (len(neo_conscientiousness_keys)+len(neo_conscientiousness_rev_keys)))
 
         # Discard any value below 0 and above 48
-        total_conscien_score = ['Discard' if x < 0
-                       else 'Discard' if x > 48 else x for x in total_conscien_score]
+        # total_conscien_score = ['Discard' if x < 0
+        #                else 'Discard' if x > 48 else x for x in total_conscien_score]
 
         conscienall = pd.DataFrame(
-            {'NEO_Conscientousness_Score': total_conscien_score, 'NEO_Conscientousness_Left_Blank': total_conscien_leftblank,
-             'NEO_Conscientousness_Prefer_Not_to_Answer': total_conscien_prefernotanswer})
+            {'NEO_Conscientiousness_Score': total_conscien_score, 'NEO_Conscientiousness_Left_Blank': total_conscien_leftblank,
+             'NEO_Conscientiousness_Prefer_Not_to_Answer': total_conscien_prefernotanswer})
 
 
         # ------------------------------------------------------------------------------

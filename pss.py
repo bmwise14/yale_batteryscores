@@ -78,7 +78,7 @@ def pss(input):
         # Get the total PSS Score
         total_pss_score = reverse_pss_score + forward_pss_score
 
-        total_pss_score = ['Discard' if x < 0 else 'Discard' if x > 40 else x for x in total_pss_score]
+        # total_pss_score = ['Discard' if x < 0 else 'Discard' if x > 40 else x for x in total_pss_score]
 
 
         # TOTAL ANSWERS LEFT BLANK

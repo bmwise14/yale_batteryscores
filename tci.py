@@ -110,12 +110,12 @@ def tci(input, nonresp):
 
         tot_check_wrong = check1_wrong + check2_wrong + check3_wrong + check4_wrong + check1_null + check2_null + check3_null + check4_null
 
-        tot_check_wrong = ['Missed > 2' if x > 2 else x for x in tot_check_wrong]
+        # tot_check_wrong = ['Missed > 2' if x > 2 else x for x in tot_check_wrong]
 
 
         checks = pd.DataFrame(
             {'Check_Questions_Answered_Wrong': tot_check_wrong})
-        checks.index +=1
+        # checks.index +=1
 
         # ------------------------------------------------------------------------------
         # NOVELTY SCORE
@@ -157,7 +157,7 @@ def tci(input, nonresp):
         total_novelty_score = total_novelty_score + (total_novelty_unanswered * total_novelty_score / (len(tci_novelty_keys) + len(tci_novelty_rev_keys)))
 
         # Discard any value below 20 and above 80
-        total_novelty_score = ['Discard (<20)' if x < 20 else 'Discard (>80)' if x > 80 else x for x in total_novelty_score]
+        # total_novelty_score = ['Discard (<20)' if x < 20 else 'Discard (>80)' if x > 80 else x for x in total_novelty_score]
 
 
         noveltyall = pd.DataFrame(
@@ -207,7 +207,7 @@ def tci(input, nonresp):
         total_harmavoidance_score = total_harmavoidance_score + (total_harmavoidance_unanswered * total_harmavoidance_score / (len(tci_harmavoidance_keys) + len(tci_harmavoidance_rev_keys)))
 
         # Discard any value below 20 and above 80
-        total_harmavoidance_score = ['Discard (<20)' if x < 20 else 'Discard (>80)' if x > 80 else x for x in total_harmavoidance_score]
+        # total_harmavoidance_score = ['Discard (<20)' if x < 20 else 'Discard (>80)' if x > 80 else x for x in total_harmavoidance_score]
 
 
         harmall = pd.DataFrame(
@@ -257,7 +257,7 @@ def tci(input, nonresp):
         total_rewarddependence_score = total_rewarddependence_score + (total_rewarddependence_unanswered * total_rewarddependence_score / (len(tci_rewarddependence_keys) + len(tci_rewarddependence_rev_keys)))
 
         # Discard any value below 20 and above 100
-        total_rewarddependence_score = ['Discard (<20)' if x < 20 else 'Discard (>100)' if x > 100 else x for x in total_rewarddependence_score]
+        # total_rewarddependence_score = ['Discard (<20)' if x < 20 else 'Discard (>100)' if x > 100 else x for x in total_rewarddependence_score]
 
 
         rewardall = pd.DataFrame(
@@ -307,7 +307,7 @@ def tci(input, nonresp):
         total_persistence_score = total_persistence_score + (total_persistence_unanswered * total_persistence_score / (len(tci_persistence_keys) + len(tci_persistence_rev_keys)))
 
         # Discard any value below 20 and above 100
-        total_persistence_score = ['Discard (<20)' if x < 20 else 'Discard (>100)' if x > 100 else x for x in total_persistence_score]
+        # total_persistence_score = ['Discard (<20)' if x < 20 else 'Discard (>100)' if x > 100 else x for x in total_persistence_score]
 
 
 
@@ -358,7 +358,7 @@ def tci(input, nonresp):
         total_selfdirectedness_score = total_selfdirectedness_score + (total_selfdirectedness_unanswered * total_selfdirectedness_score / (len(tci_selfdirectedness_keys) + len(tci_selfdirectedness_rev_keys)))
 
         # Discard any value below 20 and above 100
-        total_selfdirectedness_score = ['Discard (<20)' if x < 20 else 'Discard (>100)' if x > 100 else x for x in total_selfdirectedness_score]
+        # total_selfdirectedness_score = ['Discard (<20)' if x < 20 else 'Discard (>100)' if x > 100 else x for x in total_selfdirectedness_score]
 
 
         directednessall = pd.DataFrame(
@@ -407,7 +407,7 @@ def tci(input, nonresp):
         total_cooperativeness_score = total_cooperativeness_score + (total_cooperativeness_unanswered * total_cooperativeness_score / (len(tci_cooperativeness_keys) + len(tci_cooperativeness_rev_keys)))
 
         # Discard any value below 20 and above 100
-        total_cooperativeness_score = ['Discard (<20)' if x < 20 else 'Discard (>100)' if x > 100 else x for x in total_cooperativeness_score]
+        # total_cooperativeness_score = ['Discard (<20)' if x < 20 else 'Discard (>100)' if x > 100 else x for x in total_cooperativeness_score]
 
 
         cooperativeall = pd.DataFrame(
@@ -457,7 +457,7 @@ def tci(input, nonresp):
         total_selftranscendence_score = total_selftranscendence_score + (total_selftranscendence_unanswered * total_selftranscendence_score / (len(tci_selftranscendence_keys) + len(tci_selftranscendence_rev_keys)))
 
         # Discard any value below 20 and above 100
-        total_selftranscendence_score = ['Discard (<20)' if x < 20 else 'Discard (>100)' if x > 100 else x for x in total_selftranscendence_score]
+        # total_selftranscendence_score = ['Discard (<20)' if x < 20 else 'Discard (>100)' if x > 100 else x for x in total_selftranscendence_score]
 
 
         selftranscendall = pd.DataFrame(

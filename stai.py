@@ -101,7 +101,7 @@ def stai(input, nonresp):
         total_STAI_Trait_score = total_STAI_Trait_score + (total_STAI_Trait_unanswered * total_STAI_Trait_score / (len(stai_trait_keys)+len(stai_trait_rev_keys)))
 
         # Discard any value below 20 and above 80
-        total_STAI_Trait_score = ['Discard' if x < 20 else 'Discard' if x > 80 else x for x in total_STAI_Trait_score]
+        # total_STAI_Trait_score = ['Discard (<20)' if x < 20 else 'Discard (>80)' if x > 80 else x for x in total_STAI_Trait_score]
 
 
         staitraitall = pd.DataFrame(
@@ -152,7 +152,7 @@ def stai(input, nonresp):
 
 
         # Discard any value below 20 and above 80
-        total_STAI_state_score = ['Discard' if x < 20 else 'Discard' if x > 80 else x for x in total_STAI_state_score]
+        # total_STAI_state_score = ['Discard (<20)' if x < 20 else 'Discard (>80)' if x > 80 else x for x in total_STAI_state_score]
 
         staistateall = pd.DataFrame(
             {'STAI_State_Score': total_STAI_state_score, 'STAI_State_Left_Blank': total_stai_state_leftblank,

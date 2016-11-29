@@ -401,7 +401,7 @@ def barratt(input, nonresp):
         # ------------------------------------------------------------------------------
         # TOTAL BARRATT SCORE - CAN BE COMPUTED VIA PRIMARY OR SECONDARY KEYS ONLY
         barratt_total = total_atten1_score + instability_score + motor_score + total_selfcontrol1_score + total_complex1_score + total_persever1_score
-        barratt_total = ['Discard' if x < 30 else 'Discard' if x > 120 else x for x in barratt_total]
+        # barratt_total = ['Discard' if x < 30 else 'Discard' if x > 120 else x for x in barratt_total]
 
 
         barratt_leftblank = total_atten1_leftblank + instability_leftblank + motor_leftblank + total_selfcontrol1_leftblank + total_complex1_leftblank + total_persever1_leftblank
@@ -417,37 +417,37 @@ def barratt(input, nonresp):
         # ------------------------------------------------------------------------------
         # PRIMARY SCORES
         # Discard any value below 5 and above 20
-        total_atten1_score = ['Discard (<5)' if x < 5 else 'Discard (<20)' if x > 20 else x for x in total_atten1_score]
+        # total_atten1_score = ['Discard (<5)' if x < 5 else 'Discard (<20)' if x > 20 else x for x in total_atten1_score]
         attentionall = pd.DataFrame(
             {'BIS_Attention_Score': total_atten1_score, 'BIS_Attention_Left_Blank': total_atten1_leftblank,
              'BIS_Attention_Prefer_Not_to_Answer': total_atten1_prefernotanswer})
 
         # Discard any value below 3 and above 12
-        instability_score = ['Discard (<3)' if x < 3 else 'Discard (>12)' if x > 12 else x for x in instability_score]
+        # instability_score = ['Discard (<3)' if x < 3 else 'Discard (>12)' if x > 12 else x for x in instability_score]
         coginstall = pd.DataFrame(
             {'BIS_Cognitive_Instability_Score': instability_score, 'BIS_Cognitive_Instability_Left_Blank': instability_leftblank,
              'BIS_Cognitive_Instability_Prefer_Not_to_Answer': instability_prefernotanswer})
 
         # Discard any value below 7 and above 28
-        motor_score = ['Discard (<7)' if x < 7 else 'Discard (>28)' if x > 28 else x for x in motor_score]
+        # motor_score = ['Discard (<7)' if x < 7 else 'Discard (>28)' if x > 28 else x for x in motor_score]
         motorall = pd.DataFrame(
             {'BIS_Motor_Score': motor_score, 'BIS_Motor_Left_Blank': motor_leftblank,
              'BIS_Motor_Prefer_Not_to_Answer': motor_prefernotanswer})
 
         # Discard any value below 6 and above 24
-        total_selfcontrol1_score = ['Discard (<6)' if x < 6 else 'Discard (>24)' if x > 24 else x for x in total_selfcontrol1_score]
+        # total_selfcontrol1_score = ['Discard (<6)' if x < 6 else 'Discard (>24)' if x > 24 else x for x in total_selfcontrol1_score]
         selfcontrolall = pd.DataFrame(
             {'BIS_Self-Control_Score': total_selfcontrol1_score, 'BIS_Self-Control_Left_Blank': total_selfcontrol1_leftblank,
              'BIS_Self-Control_Prefer_Not_to_Answer': total_selfcontrol1_prefernotanswer})
 
         # Discard any value below 5 and above 20
-        total_complex1_score = ['Discard (<5)' if x < 5 else 'Discard (>20)' if x > 20 else x for x in total_complex1_score]
+        # total_complex1_score = ['Discard (<5)' if x < 5 else 'Discard (>20)' if x > 20 else x for x in total_complex1_score]
         cogcomplexall = pd.DataFrame(
             {'BIS_Cognitive_Complexity_Score': total_complex1_score, 'BIS_Cognitive_Complexity_Left_Blank': total_complex1_leftblank,
              'BIS_Cognitive_Complexity_Prefer_Not_to_Answer': total_complex1_prefernotanswer})
 
         # Discard any value below 4 and above 16
-        total_persever1_score = ['Discard (<4)' if x < 4 else 'Discard (>16)' if x > 16 else x for x in total_persever1_score]
+        # total_persever1_score = ['Discard (<4)' if x < 4 else 'Discard (>16)' if x > 16 else x for x in total_persever1_score]
         perseverall = pd.DataFrame(
             {'BIS_Perseverance_Score': total_persever1_score, 'BIS_Perseverance_Left_Blank': total_persever1_leftblank,
              'BIS_Perseverance_Prefer_Not_to_Answer': total_persever1_prefernotanswer})
@@ -455,20 +455,20 @@ def barratt(input, nonresp):
         # ------------------------------------------------------------------------------
         # SECONDARY SCORES
         # Discard any value below 8 and above 32
-        total_atteimpuls2_score = ['Discard (<8)' if x < 8 else 'Discard (>32)' if x > 32 else x for x in total_atteimpuls2_score]
+        # total_atteimpuls2_score = ['Discard (<8)' if x < 8 else 'Discard (>32)' if x > 32 else x for x in total_atteimpuls2_score]
         attenimpulsall = pd.DataFrame(
             {'BIS_Attentional_Impulsiveness_Score': total_atteimpuls2_score, 'BIS_Attentional_Impulsiveness_Left_Blank': total_atteimpuls2_leftblank,
              'BIS_Attentional_Impulsiveness_Prefer_Not_to_Answer': total_atteimpuls2_prefernotanswer})
 
 
         # Discard any value below 11 and above 44
-        total_motimpuls2_score = ['Discard (<11)' if x < 11 else 'Discard (>44)' if x > 44 else x for x in total_motimpuls2_score]
+        # total_motimpuls2_score = ['Discard (<11)' if x < 11 else 'Discard (>44)' if x > 44 else x for x in total_motimpuls2_score]
         motorimpulsall = pd.DataFrame(
             {'BIS_Motor_Impulsiveness_Score': total_motimpuls2_score, 'BIS_Motor_Impulsiveness_Left_Blank': total_motimpuls2_leftblank,
              'BIS_Motor_Impulsiveness_Prefer_Not_to_Answer': total_motimpuls2_prefernotanswer})
 
         # Discard any value below 11 and above 44
-        total_nonplanimpuls2_score = ['Discard (<11)' if x < 11 else 'Discard (>44)' if x > 44 else x for x in total_nonplanimpuls2_score]
+        # total_nonplanimpuls2_score = ['Discard (<11)' if x < 11 else 'Discard (>44)' if x > 44 else x for x in total_nonplanimpuls2_score]
         nonplanimpulsall = pd.DataFrame(
             {'BIS_Nonplanning_Impulsiveness_Score': total_nonplanimpuls2_score, 'BIS_Nonplanning_Impulsiveness_Left_Blank': total_nonplanimpuls2_leftblank,
              'BIS_Nonplanning_Impulsiveness_Prefer_Not_to_Answer': total_nonplanimpuls2_prefernotanswer})

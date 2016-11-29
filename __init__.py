@@ -8,7 +8,7 @@ Battery Scores Package for Processing Qualtrics CSV Files
 @author: Bradley Wise
 @email: bradley.wise@yale.edu
 @version: 1.1
-@date: 2016.10.28
+@date: 2016.11.29
 
 
 """
