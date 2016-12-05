@@ -65,9 +65,9 @@ def bisbas(input, nonresp):
 
 
         # If there are values missing, multiply the number of unanswered questions by the total subscale score.
-        # Then divide that by the total number of questions in the subscale.
-        # Add all of this to to the original drive score.
-        drive_score = drive_score + (drive_unanswered * drive_score / len(drive_headers))
+        # Then divide that by the (total number of questions in the subscale - number of unanswered questions).
+        # Add all of this to to the original score.
+        drive_score = drive_score + (drive_unanswered * drive_score / (len(drive_headers)-drive_unanswered))
 
         # Discard any value below 4 and above 16
         # drive_score = ['Discard' if x < 4
@@ -95,9 +95,9 @@ def bisbas(input, nonresp):
         funseeking_score = funseeking[funseeking[funseeking_headers] <= 4].rsub(5).sum(axis=1, skipna=True)
 
         # If there are values missing, multiply the number of unanswered questions by the total subscale score.
-        # Then divide that by the total number of questions in the subscale.
-        # Add all of this to to the original drive score.
-        funseeking_score = funseeking_score + (funseeking_unanswered * funseeking_score / len(funseeking_headers))
+        # Then divide that by the (total number of questions in the subscale - number of unanswered questions).
+        # Add all of this to to the original score.
+        funseeking_score = funseeking_score + (funseeking_unanswered * funseeking_score / (len(funseeking_headers)-funseeking_unanswered))
 
         # Discard any value below 4 and above 16
         # funseeking_score = ['Discard' if x < 4
@@ -125,9 +125,9 @@ def bisbas(input, nonresp):
         reward_score = reward[reward[reward_headers] <= 4].rsub(5).sum(axis=1,skipna=True)
 
         # If there are values missing, multiply the number of unanswered questions by the total subscale score.
-        # Then divide that by the total number of questions in the subscale.
-        # Add all of this to to the original drive score.
-        reward_score = reward_score + (reward_unanswered * reward_score / len(reward_headers))
+        # Then divide that by the (total number of questions in the subscale - number of unanswered questions).
+        # Add all of this to to the original score.
+        reward_score = reward_score + (reward_unanswered * reward_score / (len(reward_headers)-reward_unanswered))
 
         # Discard any value below 5 and above 20
         # reward_score = ['Discard' if x < 5
@@ -175,9 +175,9 @@ def bisbas(input, nonresp):
 
 
         # If there are values missing, multiply the number of unanswered questions by the total subscale score.
-        # Then divide that by the total number of questions in the subscale.
-        # Add all of this to to the original drive score.
-        total_bis_score = (total_bis_score + (bis_unanswered * total_bis_score / (len(reverse_code_bis)+len(forward_code_bis))))
+        # Then divide that by the (total number of questions in the subscale - number of unanswered questions).
+        # Add all of this to to the original score.
+        total_bis_score = (total_bis_score + (bis_unanswered * total_bis_score / (len(reverse_code_bis)+len(forward_code_bis)-bis_unanswered)))
 
 
         # Discard any value below 7 and above 28

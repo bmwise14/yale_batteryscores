@@ -124,7 +124,7 @@ def qids(input, nonresp):
         qids_leftblank = qids.apply(lambda x: sum(x.isnull().values), axis=1)
         qids_prefernotanswer = qids[qids[qids_keys] == nonresp['QIDS']].count(axis=1)
 
-        qids_score = ['Discard' if x < 0 else 'Discard' if x > 27 else x for x in qids_score]
+        # qids_score = ['Discard' if x < 0 else 'Discard' if x > 27 else x for x in qids_score]
 
         qidsall = pd.DataFrame(
             {'QIDS_Score': qids_score, 'QIDS_Left_Blank': qids_leftblank,

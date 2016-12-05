@@ -102,9 +102,10 @@ def barratt(input, nonresp):
         total_atten1_unanswered = atten1_forward_unanswered + atten1_reverse_unanswered
 
         # If there are values missing, multiply the number of unanswered questions by the total subscale score.
-        # Then divide that by the total number of questions in the subscale.
-        # Add all of this to to the original drive score.
-        total_atten1_score = (total_atten1_score + (total_atten1_unanswered * total_atten1_score / (len(barratt_1atten_keys)+len(barratt_1atten_rev_keys))))
+        # Then divide that by the (total number of questions in the subscale - number of unanswered questions).
+        # Add all of this to to the original score.
+        total_atten1_score = (total_atten1_score + (total_atten1_unanswered * total_atten1_score /
+                                                    (len(barratt_1atten_keys)+len(barratt_1atten_rev_keys)- total_atten1_unanswered)))
 
 
         # TOTAL ANSWERS LEFT BLANK
@@ -128,9 +129,10 @@ def barratt(input, nonresp):
                                         (instability[barratt_1instability_keys] <= 4)].sum(axis=1)
 
         # If there are values missing, multiply the number of unanswered questions by the total subscale score.
-        # Then divide that by the total number of questions in the subscale.
-        # Add all of this to to the original drive score.
-        instability_score = (instability_score + (instability_unanswered * instability_score / (len(barratt_1instability_keys))))
+        # Then divide that by the (total number of questions in the subscale - number of unanswered questions).
+        # Add all of this to to the original score.
+        instability_score = (instability_score + (instability_unanswered * instability_score /
+                                                  (len(barratt_1instability_keys)-instability_unanswered)))
 
         # ------------------------------------------------------------------------------
         # BIS MOTOR - ALL FORWARD, NO REVERSE
@@ -149,9 +151,9 @@ def barratt(input, nonresp):
 
 
         # If there are values missing, multiply the number of unanswered questions by the total subscale score.
-        # Then divide that by the total number of questions in the subscale.
-        # Add all of this to to the original drive score.
-        motor_score = (motor_score + (motor_unanswered * motor_score / (len(barratt_1mot_keys))))
+        # Then divide that by the (total number of questions in the subscale - number of unanswered questions).
+        # Add all of this to to the original score.
+        motor_score = (motor_score + (motor_unanswered * motor_score / (len(barratt_1mot_keys)-motor_unanswered)))
 
         # ------------------------------------------------------------------------------
         # BIS SELF-CONTROL
@@ -189,9 +191,10 @@ def barratt(input, nonresp):
 
 
         # If there are values missing, multiply the number of unanswered questions by the total subscale score.
-        # Then divide that by the total number of questions in the subscale.
-        # Add all of this to to the original drive score.
-        total_selfcontrol1_score = (total_selfcontrol1_score + (total_selfcontrol1_unanswered * total_selfcontrol1_score / (len(barratt_1selfcontrol_keys)+len(barratt_1selfcontrol_rev_keys))))
+        # Then divide that by the (total number of questions in the subscale - number of unanswered questions).
+        # Add all of this to to the original score.
+        total_selfcontrol1_score = (total_selfcontrol1_score + (total_selfcontrol1_unanswered * total_selfcontrol1_score /
+                                                                (len(barratt_1selfcontrol_keys)+len(barratt_1selfcontrol_rev_keys)-total_selfcontrol1_unanswered)))
 
         # ------------------------------------------------------------------------------
         # BIS COGNITIVE COMPLEXITY
@@ -230,9 +233,10 @@ def barratt(input, nonresp):
 
 
         # If there are values missing, multiply the number of unanswered questions by the total subscale score.
-        # Then divide that by the total number of questions in the subscale.
-        # Add all of this to to the original drive score.
-        total_complex1_score = (total_complex1_score + (total_complex1_unanswered * total_complex1_score / (len(barratt_1complex_keys)+len(barratt_1complex_rev_keys))))
+        # Then divide that by the (total number of questions in the subscale - number of unanswered questions).
+        # Add all of this to to the original score.
+        total_complex1_score = (total_complex1_score + (total_complex1_unanswered * total_complex1_score /
+                                                        (len(barratt_1complex_keys)+len(barratt_1complex_rev_keys)-total_complex1_unanswered)))
 
         # ------------------------------------------------------------------------------
         # BIS PERSEVERANCE
@@ -271,9 +275,10 @@ def barratt(input, nonresp):
 
 
         # If there are values missing, multiply the number of unanswered questions by the total subscale score.
-        # Then divide that by the total number of questions in the subscale.
-        # Add all of this to to the original drive score.
-        total_persever1_score = (total_persever1_score + (total_persever1_unanswered * total_persever1_score / (len(barratt_1persever_keys)+len(barratt_1persever_rev_keys))))
+        # Then divide that by the (total number of questions in the subscale - number of unanswered questions).
+        # Add all of this to to the original score.
+        total_persever1_score = (total_persever1_score + (total_persever1_unanswered * total_persever1_score /
+                                                          (len(barratt_1persever_keys)+len(barratt_1persever_rev_keys)-total_persever1_unanswered)))
 
         # ------------------------------------------------------------------------------
         # ATTENTIONAL IMPULSIVENESS
@@ -312,9 +317,10 @@ def barratt(input, nonresp):
         total_atteimpuls2_prefernotanswer = atteimpuls2_forward_prefernotanswer + atteimpuls2_reverse_prefernotanswer
 
         # If there are values missing, multiply the number of unanswered questions by the total subscale score.
-        # Then divide that by the total number of questions in the subscale.
-        # Add all of this to to the original drive score.
-        total_atteimpuls2_score = (total_atteimpuls2_score + (total_atteimpuls2_unanswered * total_atteimpuls2_score / (len(barratt_2attentionalimpulsiveness_keys)+len(barratt_2attentionalimpulsiveness_rev_keys))))
+        # Then divide that by the (total number of questions in the subscale - number of unanswered questions).
+        # Add all of this to to the original score.
+        total_atteimpuls2_score = (total_atteimpuls2_score + (total_atteimpuls2_unanswered * total_atteimpuls2_score /
+                                                              (len(barratt_2attentionalimpulsiveness_keys)+len(barratt_2attentionalimpulsiveness_rev_keys)-total_atteimpuls2_unanswered)))
 
         # ------------------------------------------------------------------------------
         # MOTOR IMPULSIVENESS
@@ -352,9 +358,10 @@ def barratt(input, nonresp):
         total_motimpuls2_prefernotanswer = motimpuls2_forward_prefernotanswer + motimpuls2_reverse_prefernotanswer
 
         # If there are values missing, multiply the number of unanswered questions by the total subscale score.
-        # Then divide that by the total number of questions in the subscale.
-        # Add all of this to to the original drive score.
-        total_motimpuls2_score = (total_motimpuls2_score + (total_motimpuls2_unanswered * total_motimpuls2_score / (len(barratt_2motorimpulsiveness_keys)+len(barratt_2motorimpulsiveness_rev_keys))))
+        # Then divide that by the (total number of questions in the subscale - number of unanswered questions).
+        # Add all of this to to the original score.
+        total_motimpuls2_score = (total_motimpuls2_score + (total_motimpuls2_unanswered * total_motimpuls2_score /
+                                                            (len(barratt_2motorimpulsiveness_keys)+len(barratt_2motorimpulsiveness_rev_keys)-total_motimpuls2_unanswered)))
 
         # ------------------------------------------------------------------------------
         # NONPLANNING IMPULSIVENESS
@@ -394,9 +401,10 @@ def barratt(input, nonresp):
         total_nonplanimpuls2_prefernotanswer = nonplanimpuls2_forward_prefernotanswer + nonplanimpuls2_reverse_prefernotanswer
 
         # If there are values missing, multiply the number of unanswered questions by the total subscale score.
-        # Then divide that by the total number of questions in the subscale.
-        # Add all of this to to the original drive score.
-        total_nonplanimpuls2_score = (total_nonplanimpuls2_score + (total_nonplanimpuls2_unanswered * total_nonplanimpuls2_score / (len(barratt_2nonplanningimpulsiveness_keys)+len(barratt_2nonplanningimpulsiveness_rev_keys))))
+        # Then divide that by the (total number of questions in the subscale - number of unanswered questions).
+        # Add all of this to to the original score.
+        total_nonplanimpuls2_score = (total_nonplanimpuls2_score + (total_nonplanimpuls2_unanswered * total_nonplanimpuls2_score /
+                                                                    (len(barratt_2nonplanningimpulsiveness_keys)+len(barratt_2nonplanningimpulsiveness_rev_keys)-total_nonplanimpuls2_unanswered)))
 
         # ------------------------------------------------------------------------------
         # TOTAL BARRATT SCORE - CAN BE COMPUTED VIA PRIMARY OR SECONDARY KEYS ONLY

@@ -152,9 +152,10 @@ def tci(input, nonresp):
         total_novelty_prefernotanswer = novelty_forward_prefernotanswer + novelty_reverse_prefernotanswer
 
         # If there are values missing, multiply the number of unanswered questions by the total subscale score.
-        # Then divide that by the total number of questions in the subscale.
-        # Add all of this to to the original drive score.
-        total_novelty_score = total_novelty_score + (total_novelty_unanswered * total_novelty_score / (len(tci_novelty_keys) + len(tci_novelty_rev_keys)))
+        # Then divide that by the (total number of questions in the subscale - number of unanswered questions).
+        # Add all of this to to the original score.
+        total_novelty_score = total_novelty_score + (total_novelty_unanswered * total_novelty_score /
+                                                     (len(tci_novelty_keys) + len(tci_novelty_rev_keys)-total_novelty_unanswered))
 
         # Discard any value below 20 and above 80
         # total_novelty_score = ['Discard (<20)' if x < 20 else 'Discard (>80)' if x > 80 else x for x in total_novelty_score]
@@ -202,9 +203,10 @@ def tci(input, nonresp):
         total_harmavoidance_prefernotanswer = harmavoidance_forward_prefernotanswer + harmavoidance_reverse_prefernotanswer
 
         # If there are values missing, multiply the number of unanswered questions by the total subscale score.
-        # Then divide that by the total number of questions in the subscale.
-        # Add all of this to to the original drive score.
-        total_harmavoidance_score = total_harmavoidance_score + (total_harmavoidance_unanswered * total_harmavoidance_score / (len(tci_harmavoidance_keys) + len(tci_harmavoidance_rev_keys)))
+        # Then divide that by the (total number of questions in the subscale - number of unanswered questions).
+        # Add all of this to to the original score.
+        total_harmavoidance_score = total_harmavoidance_score + (total_harmavoidance_unanswered * total_harmavoidance_score /
+                                                                 (len(tci_harmavoidance_keys) + len(tci_harmavoidance_rev_keys)-total_harmavoidance_unanswered))
 
         # Discard any value below 20 and above 80
         # total_harmavoidance_score = ['Discard (<20)' if x < 20 else 'Discard (>80)' if x > 80 else x for x in total_harmavoidance_score]
@@ -252,9 +254,10 @@ def tci(input, nonresp):
         total_rewarddependence_prefernotanswer = rewarddependence_forward_prefernotanswer + rewarddependence_reverse_prefernotanswer
 
         # If there are values missing, multiply the number of unanswered questions by the total subscale score.
-        # Then divide that by the total number of questions in the subscale.
-        # Add all of this to to the original drive score.
-        total_rewarddependence_score = total_rewarddependence_score + (total_rewarddependence_unanswered * total_rewarddependence_score / (len(tci_rewarddependence_keys) + len(tci_rewarddependence_rev_keys)))
+        # Then divide that by the (total number of questions in the subscale - number of unanswered questions).
+        # Add all of this to to the original score.
+        total_rewarddependence_score = total_rewarddependence_score + (total_rewarddependence_unanswered * total_rewarddependence_score /
+                                                                       (len(tci_rewarddependence_keys) + len(tci_rewarddependence_rev_keys)-total_rewarddependence_unanswered))
 
         # Discard any value below 20 and above 100
         # total_rewarddependence_score = ['Discard (<20)' if x < 20 else 'Discard (>100)' if x > 100 else x for x in total_rewarddependence_score]
@@ -302,9 +305,10 @@ def tci(input, nonresp):
         total_persistence_prefernotanswer = persistence_forward_prefernotanswer + persistence_reverse_prefernotanswer
 
         # If there are values missing, multiply the number of unanswered questions by the total subscale score.
-        # Then divide that by the total number of questions in the subscale.
-        # Add all of this to to the original drive score.
-        total_persistence_score = total_persistence_score + (total_persistence_unanswered * total_persistence_score / (len(tci_persistence_keys) + len(tci_persistence_rev_keys)))
+        # Then divide that by the (total number of questions in the subscale - number of unanswered questions).
+        # Add all of this to to the original score.
+        total_persistence_score = total_persistence_score + (total_persistence_unanswered * total_persistence_score /
+                                                             (len(tci_persistence_keys) + len(tci_persistence_rev_keys)-total_persistence_unanswered))
 
         # Discard any value below 20 and above 100
         # total_persistence_score = ['Discard (<20)' if x < 20 else 'Discard (>100)' if x > 100 else x for x in total_persistence_score]
@@ -353,9 +357,10 @@ def tci(input, nonresp):
         total_selfdirectedness_prefernotanswer = selfdirectedness_forward_prefernotanswer + selfdirectedness_reverse_prefernotanswer
 
         # If there are values missing, multiply the number of unanswered questions by the total subscale score.
-        # Then divide that by the total number of questions in the subscale.
-        # Add all of this to to the original drive score.
-        total_selfdirectedness_score = total_selfdirectedness_score + (total_selfdirectedness_unanswered * total_selfdirectedness_score / (len(tci_selfdirectedness_keys) + len(tci_selfdirectedness_rev_keys)))
+        # Then divide that by the (total number of questions in the subscale - number of unanswered questions).
+        # Add all of this to to the original score.
+        total_selfdirectedness_score = total_selfdirectedness_score + (total_selfdirectedness_unanswered * total_selfdirectedness_score /
+                                                                       (len(tci_selfdirectedness_keys) + len(tci_selfdirectedness_rev_keys)-total_selfdirectedness_unanswered))
 
         # Discard any value below 20 and above 100
         # total_selfdirectedness_score = ['Discard (<20)' if x < 20 else 'Discard (>100)' if x > 100 else x for x in total_selfdirectedness_score]
@@ -402,9 +407,10 @@ def tci(input, nonresp):
         total_cooperativeness_prefernotanswer = cooperativeness_forward_prefernotanswer + cooperativeness_reverse_prefernotanswer
 
         # If there are values missing, multiply the number of unanswered questions by the total subscale score.
-        # Then divide that by the total number of questions in the subscale.
-        # Add all of this to to the original drive score.
-        total_cooperativeness_score = total_cooperativeness_score + (total_cooperativeness_unanswered * total_cooperativeness_score / (len(tci_cooperativeness_keys) + len(tci_cooperativeness_rev_keys)))
+        # Then divide that by the (total number of questions in the subscale - number of unanswered questions).
+        # Add all of this to to the original score.
+        total_cooperativeness_score = total_cooperativeness_score + (total_cooperativeness_unanswered * total_cooperativeness_score /
+                                                                     (len(tci_cooperativeness_keys) + len(tci_cooperativeness_rev_keys)-total_cooperativeness_unanswered))
 
         # Discard any value below 20 and above 100
         # total_cooperativeness_score = ['Discard (<20)' if x < 20 else 'Discard (>100)' if x > 100 else x for x in total_cooperativeness_score]
@@ -452,9 +458,10 @@ def tci(input, nonresp):
 
 
         # If there are values missing, multiply the number of unanswered questions by the total subscale score.
-        # Then divide that by the total number of questions in the subscale.
-        # Add all of this to to the original drive score.
-        total_selftranscendence_score = total_selftranscendence_score + (total_selftranscendence_unanswered * total_selftranscendence_score / (len(tci_selftranscendence_keys) + len(tci_selftranscendence_rev_keys)))
+        # Then divide that by the (total number of questions in the subscale - number of unanswered questions).
+        # Add all of this to to the original score.
+        total_selftranscendence_score = total_selftranscendence_score + (total_selftranscendence_unanswered * total_selftranscendence_score /
+                                                                         (len(tci_selftranscendence_keys) + len(tci_selftranscendence_rev_keys)-total_selftranscendence_unanswered))
 
         # Discard any value below 20 and above 100
         # total_selftranscendence_score = ['Discard (<20)' if x < 20 else 'Discard (>100)' if x > 100 else x for x in total_selftranscendence_score]

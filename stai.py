@@ -20,7 +20,7 @@ def stai(input, nonresp):
 
     3. How to handle missing values is not explicitly mentioned in the primary resources above, so
     if any value is left blank or prefer not to answer, those missing values will be replaced with the average
-    score on that particular subscale and then added to the final subscore total (Avram).
+    score on that particular subscale and then added to the final subscore total (Avram). (see rdoc.py)
 
     4. If the score is below a minimum value range or above a maximum value range for the subscale, it will be discarded.
                                                         Min     Max
@@ -35,11 +35,9 @@ def stai(input, nonresp):
         stai_trait_keys = ['STAI_3', 'STAI_4', 'STAI_6', 'STAI_7', 'STAI_9', 'STAI_12', 'STAI_13', 'STAI_14', 'STAI_17',
                            'STAI_18']
         stai_trait_rev_keys = ['STAI_1', 'STAI_2', 'STAI_5', 'STAI_8', 'STAI_10', 'STAI_11', 'STAI_15', 'STAI_16',
-                               'STAI_19',
-                               'STAI_20']
+                               'STAI_19', 'STAI_20']
         stai_state_keys = ['STAI_22', 'STAI_24', 'STAI_25', 'STAI_28', 'STAI_29', 'STAI_31', 'STAI_32', 'STAI_35',
-                           'STAI_37',
-                           'STAI_38', 'STAI_40']
+                           'STAI_37','STAI_38', 'STAI_40']
         stai_state_rev_keys = ['STAI_21', 'STAI_23', 'STAI_26', 'STAI_27', 'STAI_30', 'STAI_33', 'STAI_34', 'STAI_36',
                                'STAI_39']
 
@@ -96,9 +94,11 @@ def stai(input, nonresp):
 
 
         # If there are values missing, multiply the number of unanswered questions by the total subscale score.
-        # Then divide that by the total number of questions in the subscale.
+        # Then divide that by the (total number of questions in the subscale - number of unanswered questions).
         # Add all of this to to the original drive score.
-        total_STAI_Trait_score = total_STAI_Trait_score + (total_STAI_Trait_unanswered * total_STAI_Trait_score / (len(stai_trait_keys)+len(stai_trait_rev_keys)))
+        total_STAI_Trait_score = total_STAI_Trait_score + (total_STAI_Trait_unanswered * total_STAI_Trait_score /
+
+                                                           (len(stai_trait_keys)+len(stai_trait_rev_keys) - (total_STAI_Trait_unanswered)))
 
         # Discard any value below 20 and above 80
         # total_STAI_Trait_score = ['Discard (<20)' if x < 20 else 'Discard (>80)' if x > 80 else x for x in total_STAI_Trait_score]
@@ -146,9 +146,10 @@ def stai(input, nonresp):
         total_stai_state_prefernotanswer = stai_state_forward_prefernotanswer + stai_state_rev_prefernotanswer
 
         # If there are values missing, multiply the number of unanswered questions by the total subscale score.
-        # Then divide that by the total number of questions in the subscale.
+        # Then divide that by the (total number of questions in the subscale - number of unanswered questions).
         # Add all of this to to the original drive score.
-        total_STAI_state_score = total_STAI_state_score + (total_STAI_state_unanswered * total_STAI_state_score / (len(stai_state_keys)+len(stai_state_rev_keys)))
+        total_STAI_state_score = total_STAI_state_score + (total_STAI_state_unanswered * total_STAI_state_score /
+                                                           (len(stai_state_keys)+len(stai_state_rev_keys) - (total_STAI_state_unanswered)))
 
 
         # Discard any value below 20 and above 80

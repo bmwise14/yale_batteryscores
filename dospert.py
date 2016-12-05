@@ -66,13 +66,13 @@ def dospert(input, nonresp):
                                       (risktaking[risktaking_keys] <= 7)].sum(axis=1)
 
         # If there are values missing, multiply the number of unanswered questions by the total subscale score.
-        # Then divide that by the total number of questions in the subscale.
-        # Add all of this to to the original drive score.
-        risktaking_score = (risktaking_score + (risktaking_unanswered * risktaking_score / (len(risktaking_keys))))
+        # Then divide that by the (total number of questions in the subscale - number of unanswered questions).
+        # Add all of this to to the original score.
+        risktaking_score = (risktaking_score + (risktaking_unanswered * risktaking_score / (len(risktaking_keys)-risktaking_unanswered)))
 
 
         # Discard any value below 40 and above 280
-        risktaking_score = ['Discard' if x < 40 else 'Discard' if x > 280 else x for x in risktaking_score]
+        # risktaking_score = ['Discard' if x < 40 else 'Discard' if x > 280 else x for x in risktaking_score]
 
         risktakingall = pd.DataFrame(
             {'DOSPERT Risktaking Score': risktaking_score, 'DOSPERT Risktaking Left Blank': risktaking_leftblank,
@@ -96,12 +96,12 @@ def dospert(input, nonresp):
                                       (perception[riskperception_keys] <= 7)].sum(axis=1)
 
         # If there are values missing, multiply the number of unanswered questions by the total subscale score.
-        # Then divide that by the total number of questions in the subscale.
-        # Add all of this to to the original drive score.
-        perception_score = (perception_score + (perception_unanswered * perception_score / (len(riskperception_keys))))
+        # Then divide that by the (total number of questions in the subscale - number of unanswered questions).
+        # Add all of this to to the original score.
+        perception_score = (perception_score + (perception_unanswered * perception_score / (len(riskperception_keys)-perception_unanswered)))
 
         # Discard any value below 40 and above 280
-        perception_score = ['Discard' if x < 40 else 'Discard' if x > 280 else x for x in perception_score]
+        # perception_score = ['Discard' if x < 40 else 'Discard' if x > 280 else x for x in perception_score]
 
         perceptionall = pd.DataFrame(
             {'DOSPERT Risk Perception Score': perception_score, 'DOSPERT Risk Perception Left Blank': perception_leftblank,

@@ -86,9 +86,10 @@ def neoffi(input, nonresp):
         total_neuroticism_prefernotanswer = neuroticism_forward_prefernotanswer + neuroticism_reverse_prefernotanswer
 
         # If there are values missing, multiply the number of unanswered questions by the total subscale score.
-        # Then divide that by the total number of questions in the subscale.
-        # Add all of this to to the original drive score.
-        total_neuroticism_score = total_neuroticism_score + (total_neuroticism_unanswered * total_neuroticism_score / (len(neo_neuroticism_keys)+len(neo_neuroticism_rev_keys)))
+        # Then divide that by the (total number of questions in the subscale - number of unanswered questions).
+        # Add all of this to to the original score.
+        total_neuroticism_score = total_neuroticism_score + (total_neuroticism_unanswered * total_neuroticism_score /
+                                                             (len(neo_neuroticism_keys)+len(neo_neuroticism_rev_keys)-total_neuroticism_unanswered))
 
         # Discard any value below 0 and above 48
         # total_neuroticism_score = ['Discard' if x < 0
@@ -137,9 +138,10 @@ def neoffi(input, nonresp):
 
 
         # If there are values missing, multiply the number of unanswered questions by the total subscale score.
-        # Then divide that by the total number of questions in the subscale.
-        # Add all of this to to the original drive score.
-        total_extroversion_score = total_extroversion_score + (total_extroversion_unanswered * total_extroversion_score / (len(neo_extroversion_keys)+len(neo_extroversion_rev_keys)))
+        # Then divide that by the (total number of questions in the subscale - number of unanswered questions).
+        # Add all of this to to the original score.
+        total_extroversion_score = total_extroversion_score + (total_extroversion_unanswered * total_extroversion_score /
+                                                               (len(neo_extroversion_keys)+len(neo_extroversion_rev_keys)-total_extroversion_unanswered))
 
         # Discard any value below 0 and above 48
         # total_extroversion_score = ['Discard' if x < 0
@@ -190,9 +192,10 @@ def neoffi(input, nonresp):
 
 
         # If there are values missing, multiply the number of unanswered questions by the total subscale score.
-        # Then divide that by the total number of questions in the subscale.
-        # Add all of this to to the original drive score.
-        total_openness_score = total_openness_score + (total_openness_unanswered * total_openness_score / (len(neo_openness_keys)+len(neo_openness_rev_keys)))
+        # Then divide that by the (total number of questions in the subscale - number of unanswered questions).
+        # Add all of this to to the original score.
+        total_openness_score = total_openness_score + (total_openness_unanswered * total_openness_score /
+                                                       (len(neo_openness_keys)+len(neo_openness_rev_keys)-total_openness_unanswered))
 
         # Discard any value below 0 and above 48
         # total_openness_score = ['Discard' if x < 0
@@ -241,9 +244,10 @@ def neoffi(input, nonresp):
 
 
         # If there are values missing, multiply the number of unanswered questions by the total subscale score.
-        # Then divide that by the total number of questions in the subscale.
-        # Add all of this to to the original drive score.
-        total_agree_score = total_agree_score + (total_agree_unanswered * total_agree_score / (len(neo_agreeableness_keys)+len(neo_agreeableness_rev_keys)))
+        # Then divide that by the (total number of questions in the subscale - number of unanswered questions).
+        # Add all of this to to the original score.
+        total_agree_score = total_agree_score + (total_agree_unanswered * total_agree_score /
+                                                 (len(neo_agreeableness_keys)+len(neo_agreeableness_rev_keys)-total_agree_unanswered))
 
         # Discard any value below 0 and above 48
         # total_agree_score = ['Discard' if x < 0
@@ -295,9 +299,10 @@ def neoffi(input, nonresp):
 
 
         # If there are values missing, multiply the number of unanswered questions by the total subscale score.
-        # Then divide that by the total number of questions in the subscale.
-        # Add all of this to to the original drive score.
-        total_conscien_score = total_conscien_score + (total_conscien_unanswered * total_conscien_score / (len(neo_conscientiousness_keys)+len(neo_conscientiousness_rev_keys)))
+        # Then divide that by the (total number of questions in the subscale - number of unanswered questions).
+        # Add all of this to to the original score.
+        total_conscien_score = total_conscien_score + (total_conscien_unanswered * total_conscien_score /
+                                                       (len(neo_conscientiousness_keys)+len(neo_conscientiousness_rev_keys)-total_conscien_unanswered))
 
         # Discard any value below 0 and above 48
         # total_conscien_score = ['Discard' if x < 0

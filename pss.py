@@ -23,6 +23,10 @@ def pss(input):
     2. How to handle missing values is not explicitly mentioned in the primary resources above, so
     if any value is left blank or prefer not to answer, those missing values will be replaced with the average
     score on that particular subscale and then added to the final subscore total (Avram).
+
+    3. If the score is below a minimum value range or above a maximum value range for the subscale, it will be discarded.
+                                                        Min     Max
+                                        PSS Score       0       40
     """
     try:
         # NEVER         ALMOST NEVER        SOMETIMES       FAIRLY OFTEN    VERY OFTEN
@@ -50,9 +54,9 @@ def pss(input):
         reverse_pss_score = pss_reverse[pss_reverse[pss_positive_keys_rev] <= 4].rsub(4).sum(axis=1, skipna=True)
 
         # If there are values missing, multiply the number of unanswered questions by the total subscale score.
-        # Then divide that by the total number of questions in the subscale.
-        # Add all of this to to the original drive score.
-        reverse_pss_score = reverse_pss_score + (pss_rev_leftblank * reverse_pss_score / (len(pss_positive_keys_rev)))
+        # Then divide that by the (total number of questions in the subscale - number of unanswered questions).
+        # Add all of this to to the original score.
+        reverse_pss_score = reverse_pss_score + (pss_rev_leftblank * reverse_pss_score / (len(pss_positive_keys_rev)-pss_rev_leftblank))
 
         # ------------------------------------------------------------------------------
         # PSS Forward Scoring
@@ -69,9 +73,9 @@ def pss(input):
                                         (pss_forward[pss_negative_keys_for] <= 4)].sum(axis=1)
 
         # If there are values missing, multiply the number of unanswered questions by the total subscale score.
-        # Then divide that by the total number of questions in the subscale.
-        # Add all of this to to the original drive score.
-        forward_pss_score = forward_pss_score + (pss_forward_leftblank * forward_pss_score / (len(pss_negative_keys_for)))
+        # Then divide that by the (total number of questions in the subscale - number of unanswered questions).
+        # Add all of this to to the original score.
+        forward_pss_score = forward_pss_score + (pss_forward_leftblank * forward_pss_score / (len(pss_negative_keys_for)-pss_forward_leftblank))
 
 
         # ------------------------------------------------------------------------------

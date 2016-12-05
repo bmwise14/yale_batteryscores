@@ -63,9 +63,10 @@ def teps(input):
 
 
         # If there are values missing, multiply the number of unanswered questions by the total subscale score.
-        # Then divide that by the total number of questions in the subscale.
-        # Add all of this to to the original drive score.
-        total_anticipatory_score = total_anticipatory_score + (total_anticipatory_leftblank * total_anticipatory_score / (len(anticipatory_keys) + len(anticipatory_keys_rev)))
+        # Then divide that by the (total number of questions in the subscale - number of unanswered questions).
+        # Add all of this to to the original score.
+        total_anticipatory_score = total_anticipatory_score + (total_anticipatory_leftblank * total_anticipatory_score /
+                                                               (len(anticipatory_keys) + len(anticipatory_keys_rev)-total_anticipatory_leftblank))
 
         # Discard any value below 10 and above 60
         total_anticipatory_score = ['Discard' if x < 10 else 'Discard' if x > 60 else x for x in total_anticipatory_score]
@@ -86,9 +87,10 @@ def teps(input):
                                                           (consummatory_forward[consummatory_keys] <= 6)].sum(axis=1)
 
         # If there are values missing, multiply the number of unanswered questions by the total subscale score.
-        # Then divide that by the total number of questions in the subscale.
-        # Add all of this to to the original drive score.
-        consummatory_forward_score = consummatory_forward_score + (consummatory_forward_leftblank * consummatory_forward_score / (len(consummatory_keys)))
+        # Then divide that by the (total number of questions in the subscale - number of unanswered questions).
+        # Add all of this to to the original score.
+        consummatory_forward_score = consummatory_forward_score + (consummatory_forward_leftblank * consummatory_forward_score /
+                                                                   (len(consummatory_keys)-consummatory_forward_leftblank))
 
         # Discard any value below 8 and above 48
         consummatory_forward_score = ['Discard' if x < 8 else 'Discard' if x > 48 else x for x in consummatory_forward_score]
