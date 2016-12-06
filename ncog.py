@@ -2,8 +2,8 @@
 """
 Battery Scores Package for Processing Qualtrics CSV Files
 
-@author: Audrey Luo
-@email: audrey.luo@yale.edu
+@author: Bradley Wise with help from Audrey Luo
+@email: bradley.wise@yale.edu, audrey.luo@yale.edu
 @version: 1.1
 @date: 2016.10.28
 
