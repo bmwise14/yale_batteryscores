@@ -34,6 +34,9 @@ def reader(datafilepath, columndictionary):
 
     # Turn the raw data frame into a pandas dataframe
     # and replace your raw data column names with the question names
+    """NOTE: If your raw dataframe has 3 rows before the actual self-report data is seen, delete the 3rd row that says {import ID: ...}
+    because the df variable below will show that 3rd row if it is not deleted. Data is taken starting from row index 1
+    in the question headers, not index 0 or 2."""
     df = pd.DataFrame(raw_data_frame, index=range(1, len(raw_data_frame)),
                                 columns=question_dict['COLUMN_NAME'])
     df.columns = question_dict['QUESTION_NAME']
