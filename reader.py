@@ -14,8 +14,8 @@ import sys
 
 
 """
-1. This reader function converts the .csv datafile into a pandas dataframe that subsequent functions
-in this package canuse.
+1. This reader function converts your .csv datafile into a pandas dataframe that subsequent functions
+in this package can use.
 
 2. You do not need to use this reader as long as you use the PANDAS package and can reference the keys outlined in
 each self-report function in your dataset in some way.
@@ -35,7 +35,7 @@ def reader(datafilepath, columndictionary):
     # Turn the raw data frame into a pandas dataframe
     # and replace your raw data column names with the question names
     """NOTE: If your raw dataframe has 3 rows before the actual self-report data is seen, delete the 3rd row that says {import ID: ...}
-    because the df variable below will show that 3rd row if it is not deleted. Data is taken starting from row index 1
+    because the df variable below will show that 3rd row if it is not deleted. Data is taken starting from row index 1 (the 2nd row after your headers)
     in the question headers, not index 0 or 2."""
     df = pd.DataFrame(raw_data_frame, index=range(1, len(raw_data_frame)),
                                 columns=question_dict['COLUMN_NAME'])

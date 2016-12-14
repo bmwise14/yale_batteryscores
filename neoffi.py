@@ -25,8 +25,8 @@ def neoffi(input, nonresp):
 
     # SCORING:
     """
-    1. Raw subscores are computed by summing each subscale. This battery will take your 1-5 range values and replace them with range 0-4.
-       Questions that should be reverse scored are reverse scored.
+    1. Raw subscores are computed by summing each subscale. This battery will take your 1-5 range values in Qualtrics
+     and replace them with range 0-4. Questions that should be reverse scored are reverse scored.
 
     2. How to handle missing values is not explicitly mentioned in the primary resources above, so
     if any value is left blank or prefer not to answer, those missing values will be replaced with the average
@@ -65,7 +65,7 @@ def neoffi(input, nonresp):
 
 
         neuroticism_forward_leftblank = neuroticism_forward.apply(lambda x: sum(x.isnull().values), axis=1)
-        neuroticism_forward_prefernotanswer = neuroticism_forward[neuroticism_forward[neo_neuroticism_keys] == nonresp['neo']].count(axis=1)
+        neuroticism_forward_prefernotanswer = neuroticism_forward[neuroticism_forward[neo_neuroticism_keys] >= nonresp['neo']].count(axis=1)
         neuroticism_forward_unanswered = neuroticism_forward_leftblank + neuroticism_forward_prefernotanswer
 
         # sum all the forward scores
