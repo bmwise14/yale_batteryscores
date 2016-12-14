@@ -65,7 +65,7 @@ def neoffi(input, nonresp):
 
 
         neuroticism_forward_leftblank = neuroticism_forward.apply(lambda x: sum(x.isnull().values), axis=1)
-        neuroticism_forward_prefernotanswer = neuroticism_forward[neuroticism_forward[neo_neuroticism_keys] >= nonresp['neo']].count(axis=1)
+        neuroticism_forward_prefernotanswer = neuroticism_forward[neuroticism_forward[neo_neuroticism_keys] == nonresp['neo']].count(axis=1)
         neuroticism_forward_unanswered = neuroticism_forward_leftblank + neuroticism_forward_prefernotanswer
 
         # sum all the forward scores
