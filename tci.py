@@ -101,19 +101,19 @@ def tci(input, nonresp):
         # At what point should one drop the score?
 
 
-        check1 = input[validity1].apply(pd.to_numeric, args=('coerce',))
+        check1 = input[validity1].apply(pd.to_numeric, args=('raise',))
         check1_wrong = check1[check1[validity1] != 4].count(axis=1)
         check1_null = check1.apply(lambda x: sum(x.isnull().values), axis=1)
 
-        check2 = input[validity2].apply(pd.to_numeric, args=('coerce',))
+        check2 = input[validity2].apply(pd.to_numeric, args=('raise',))
         check2_wrong = check2[check2[validity2] != 1].count(axis=1)
         check2_null = check2.apply(lambda x: sum(x.isnull().values), axis=1)
 
-        check3 = input[validity3].apply(pd.to_numeric, args=('coerce',))
+        check3 = input[validity3].apply(pd.to_numeric, args=('raise',))
         check3_wrong = check3[check3[validity3] != nonresp['tci']].count(axis=1)
         check3_null = check3.apply(lambda x: sum(x.isnull().values), axis=1)
 
-        check4 = input[validity4].apply(pd.to_numeric, args=('coerce',))
+        check4 = input[validity4].apply(pd.to_numeric, args=('raise',))
         check4_wrong = check4[check4[validity4] != 2].count(axis=1)
         check4_null = check4.apply(lambda x: sum(x.isnull().values), axis=1)
 
@@ -130,7 +130,7 @@ def tci(input, nonresp):
         # NOVELTY SCORE
 
         # FORWARD SCORES AND FORWARD QUESTIONS UNANSWERED
-        novelty_forward = input[tci_novelty_keys].apply(pd.to_numeric, args=('coerce',))
+        novelty_forward = input[tci_novelty_keys].apply(pd.to_numeric, args=('raise',))
         novelty_forward_leftblank = novelty_forward.apply(lambda x: sum(x.isnull().values), axis=1)
         novelty_forward_prefernotanswer = novelty_forward[novelty_forward[tci_novelty_keys] == nonresp['tci']].count(axis=1)
         novelty_forward_unanswered = novelty_forward_leftblank + novelty_forward_prefernotanswer
@@ -140,7 +140,7 @@ def tci(input, nonresp):
                                                 (novelty_forward[tci_novelty_keys] <= 5)].sum(axis=1)
 
         # REVERSE SCORES AND REVERSE QUESTIONS UNANSWERED
-        novelty_rev = input[tci_novelty_rev_keys].apply(pd.to_numeric, args=('coerce',))
+        novelty_rev = input[tci_novelty_rev_keys].apply(pd.to_numeric, args=('raise',))
 
         # sum the number of reverse questions left blank or preferred not to answer
         novelty_reverse_leftblank = novelty_rev.apply(lambda x: sum(x.isnull().values), axis=1)
@@ -181,7 +181,7 @@ def tci(input, nonresp):
         # HARM AVOIDANCE SCORE
 
         # FORWARD SCORES AND FORWARD QUESTIONS UNANSWERED
-        harmavoidance_forward = input[tci_harmavoidance_keys].apply(pd.to_numeric, args=('coerce',))
+        harmavoidance_forward = input[tci_harmavoidance_keys].apply(pd.to_numeric, args=('raise',))
         harmavoidance_forward_leftblank = harmavoidance_forward.apply(lambda x: sum(x.isnull().values), axis=1)
         harmavoidance_forward_prefernotanswer = harmavoidance_forward[harmavoidance_forward[tci_harmavoidance_keys] == nonresp['tci']].count(axis=1)
         harmavoidance_forward_unanswered = harmavoidance_forward_leftblank + harmavoidance_forward_prefernotanswer
@@ -191,7 +191,7 @@ def tci(input, nonresp):
                                                             (harmavoidance_forward[tci_harmavoidance_keys] <= 5)].sum(axis=1)
 
         # REVERSE SCORES AND REVERSE QUESTIONS UNANSWERED
-        harmavoidance_rev = input[tci_harmavoidance_rev_keys].apply(pd.to_numeric, args=('coerce',))
+        harmavoidance_rev = input[tci_harmavoidance_rev_keys].apply(pd.to_numeric, args=('raise',))
 
         # sum the number of reverse questions left blank or preferred not to answer
         harmavoidance_reverse_leftblank = harmavoidance_rev.apply(lambda x: sum(x.isnull().values), axis=1)
@@ -232,7 +232,7 @@ def tci(input, nonresp):
         # REWARD DEPENDENCE SCORE
 
         # FORWARD SCORES AND FORWARD QUESTIONS UNANSWERED
-        rewarddependence_forward = input[tci_rewarddependence_keys].apply(pd.to_numeric, args=('coerce',))
+        rewarddependence_forward = input[tci_rewarddependence_keys].apply(pd.to_numeric, args=('raise',))
         rewarddependence_forward_leftblank = rewarddependence_forward.apply(lambda x: sum(x.isnull().values), axis=1)
         rewarddependence_forward_prefernotanswer = rewarddependence_forward[rewarddependence_forward[tci_rewarddependence_keys] == nonresp['tci']].count(axis=1)
         rewarddependence_forward_unanswered = rewarddependence_forward_leftblank + rewarddependence_forward_prefernotanswer
@@ -242,7 +242,7 @@ def tci(input, nonresp):
                                                                   (rewarddependence_forward[tci_rewarddependence_keys] <= 5)].sum(axis=1)
 
         # REVERSE SCORES AND REVERSE QUESTIONS UNANSWERED
-        rewarddependence_rev = input[tci_rewarddependence_rev_keys].apply(pd.to_numeric, args=('coerce',))
+        rewarddependence_rev = input[tci_rewarddependence_rev_keys].apply(pd.to_numeric, args=('raise',))
 
         # sum the number of reverse questions left blank or preferred not to answer
         rewarddependence_reverse_leftblank = rewarddependence_rev.apply(lambda x: sum(x.isnull().values), axis=1)
@@ -283,7 +283,7 @@ def tci(input, nonresp):
         # PERSISTENCE SCORE
 
         # FORWARD SCORES AND FORWARD QUESTIONS UNANSWERED
-        persistence_forward = input[tci_persistence_keys].apply(pd.to_numeric, args=('coerce',))
+        persistence_forward = input[tci_persistence_keys].apply(pd.to_numeric, args=('raise',))
         persistence_forward_leftblank = persistence_forward.apply(lambda x: sum(x.isnull().values), axis=1)
         persistence_forward_prefernotanswer = persistence_forward[persistence_forward[tci_persistence_keys] == nonresp['tci']].count(axis=1)
         persistence_forward_unanswered = persistence_forward_leftblank + persistence_forward_prefernotanswer
@@ -293,7 +293,7 @@ def tci(input, nonresp):
                                                         (persistence_forward[tci_persistence_keys] <= 5)].sum(axis=1)
 
         # REVERSE SCORES AND REVERSE QUESTIONS UNANSWERED
-        persistence_rev = input[tci_persistence_rev_keys].apply(pd.to_numeric, args=('coerce',))
+        persistence_rev = input[tci_persistence_rev_keys].apply(pd.to_numeric, args=('raise',))
 
         # sum the number of reverse questions left blank or preferred not to answer
         persistence_reverse_leftblank = persistence_rev.apply(lambda x: sum(x.isnull().values), axis=1)
@@ -335,7 +335,7 @@ def tci(input, nonresp):
         # SELF-DIRECTEDNESS SCORE
 
         # FORWARD SCORES AND FORWARD QUESTIONS UNANSWERED
-        selfdirectedness_forward = input[tci_selfdirectedness_keys].apply(pd.to_numeric, args=('coerce',))
+        selfdirectedness_forward = input[tci_selfdirectedness_keys].apply(pd.to_numeric, args=('raise',))
         selfdirectedness_forward_leftblank = selfdirectedness_forward.apply(lambda x: sum(x.isnull().values), axis=1)
         selfdirectedness_forward_prefernotanswer = selfdirectedness_forward[selfdirectedness_forward[tci_selfdirectedness_keys] == nonresp['tci']].count(axis=1)
         selfdirectedness_forward_unanswered = selfdirectedness_forward_leftblank + selfdirectedness_forward_prefernotanswer
@@ -345,7 +345,7 @@ def tci(input, nonresp):
                                                                   (selfdirectedness_forward[tci_selfdirectedness_keys] <= 5)].sum(axis=1)
 
         # REVERSE SCORES AND REVERSE QUESTIONS UNANSWERED
-        selfdirectedness_rev = input[tci_selfdirectedness_rev_keys].apply(pd.to_numeric, args=('coerce',))
+        selfdirectedness_rev = input[tci_selfdirectedness_rev_keys].apply(pd.to_numeric, args=('raise',))
 
         # sum the number of reverse questions left blank or preferred not to answer
         selfdirectedness_reverse_leftblank = selfdirectedness_rev.apply(lambda x: sum(x.isnull().values), axis=1)
@@ -385,7 +385,7 @@ def tci(input, nonresp):
         # COOPERATIVENESS SCORE
 
         # FORWARD SCORES AND FORWARD QUESTIONS UNANSWERED
-        cooperativeness_forward = input[tci_cooperativeness_keys].apply(pd.to_numeric, args=('coerce',))
+        cooperativeness_forward = input[tci_cooperativeness_keys].apply(pd.to_numeric, args=('raise',))
         cooperativeness_forward_leftblank = cooperativeness_forward.apply(lambda x: sum(x.isnull().values), axis=1)
         cooperativeness_forward_prefernotanswer = cooperativeness_forward[cooperativeness_forward[tci_cooperativeness_keys] == nonresp['tci']].count(axis=1)
         cooperativeness_forward_unanswered = cooperativeness_forward_leftblank + cooperativeness_forward_prefernotanswer
@@ -395,7 +395,7 @@ def tci(input, nonresp):
                                                                 (cooperativeness_forward[tci_cooperativeness_keys] <= 5)].sum(axis=1)
 
         # REVERSE SCORES AND REVERSE QUESTIONS UNANSWERED
-        cooperativeness_rev = input[tci_cooperativeness_rev_keys].apply(pd.to_numeric, args=('coerce',))
+        cooperativeness_rev = input[tci_cooperativeness_rev_keys].apply(pd.to_numeric, args=('raise',))
 
         # sum the number of reverse questions left blank or preferred not to answer
         cooperativeness_reverse_leftblank = cooperativeness_rev.apply(lambda x: sum(x.isnull().values), axis=1)
@@ -435,7 +435,7 @@ def tci(input, nonresp):
         # SELF-TRANSCENDENCE SCORE
 
         # FORWARD SCORES AND FORWARD QUESTIONS UNANSWERED
-        selftranscendence_forward = input[tci_selftranscendence_keys].apply(pd.to_numeric, args=('coerce',))
+        selftranscendence_forward = input[tci_selftranscendence_keys].apply(pd.to_numeric, args=('raise',))
         selftranscendence_forward_leftblank = selftranscendence_forward.apply(lambda x: sum(x.isnull().values), axis=1)
         selftranscendence_forward_prefernotanswer = selftranscendence_forward[selftranscendence_forward[tci_selftranscendence_keys] == nonresp['tci']].count(axis=1)
         selftranscendence_forward_unanswered = selftranscendence_forward_leftblank + selftranscendence_forward_prefernotanswer
@@ -445,7 +445,7 @@ def tci(input, nonresp):
                                                                     (selftranscendence_forward[tci_selftranscendence_keys] <= 5)].sum(axis=1)
 
         # REVERSE SCORES AND REVERSE QUESTIONS UNANSWERED
-        selftranscendence_rev = input[tci_selftranscendence_rev_keys].apply(pd.to_numeric, args=('coerce',))
+        selftranscendence_rev = input[tci_selftranscendence_rev_keys].apply(pd.to_numeric, args=('raise',))
 
         # sum the number of reverse questions left blank or preferred not to answer
         selftranscendence_reverse_leftblank = selftranscendence_rev.apply(lambda x: sum(x.isnull().values), axis=1)
@@ -489,3 +489,5 @@ def tci(input, nonresp):
         return result
     except KeyError:
         print("We could not find the TCI headers in your dataset. Please look at the tci function in this package and put in the correct keys.")
+    except ValueError:
+        print("We found strings in your TCI dataset. Please make sure there are no strings/letters in your input. Otherwise, we can't do our thang.")

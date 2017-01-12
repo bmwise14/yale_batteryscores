@@ -85,7 +85,7 @@ def barratt(input, nonresp):
         # BIS ATTENTION
 
         # FORWARD SCORES AND FORWARD QUESTIONS UNANSWERED
-        atten1_forward = input[barratt_1atten_keys].apply(pd.to_numeric, args=('coerce',))
+        atten1_forward = input[barratt_1atten_keys].apply(pd.to_numeric, args=('raise',))
         atten1_forward_leftblank = atten1_forward.apply(lambda x: sum(x.isnull().values), axis=1)
         atten1_forward_prefernotanswer = atten1_forward[atten1_forward[barratt_1atten_keys] == nonresp['barratt']].count(axis=1)
         atten1_forward_unanswered = atten1_forward_leftblank + atten1_forward_prefernotanswer
@@ -95,7 +95,7 @@ def barratt(input, nonresp):
                                               (atten1_forward[barratt_1atten_keys] <= 4)].sum(axis=1)
 
         # REVERSE SCORES AND REVERSE QUESTIONS UNANSWERED
-        atten1_rev = input[barratt_1atten_rev_keys].apply(pd.to_numeric, args=('coerce',))
+        atten1_rev = input[barratt_1atten_rev_keys].apply(pd.to_numeric, args=('raise',))
 
         # sum the number of reverse questions left blank or preferred not to answer
         atten1_reverse_leftblank = atten1_rev.apply(lambda x: sum(x.isnull().values), axis=1)
@@ -126,7 +126,7 @@ def barratt(input, nonresp):
         # BIS COGNITIVE INSTABILITY - ALL FORWARD, NO REVERSE
 
         # SCORES AND QUESTIONS UNANSWERED
-        instability = input[barratt_1instability_keys].apply(pd.to_numeric, args=('coerce',))
+        instability = input[barratt_1instability_keys].apply(pd.to_numeric, args=('raise',))
         instability_leftblank = instability.apply(lambda x: sum(x.isnull().values), axis=1)
         instability_prefernotanswer = instability[instability[barratt_1instability_keys] == nonresp['barratt']].count(axis=1)
 
@@ -147,7 +147,7 @@ def barratt(input, nonresp):
         # BIS MOTOR - ALL FORWARD, NO REVERSE
 
         # SCORES AND QUESTIONS UNANSWERED
-        motor = input[barratt_1mot_keys].apply(pd.to_numeric, args=('coerce',))
+        motor = input[barratt_1mot_keys].apply(pd.to_numeric, args=('raise',))
         motor_leftblank = motor.apply(lambda x: sum(x.isnull().values), axis=1)
         motor_prefernotanswer = motor[motor[barratt_1mot_keys] == nonresp['barratt']].count(axis=1)
 
@@ -168,7 +168,7 @@ def barratt(input, nonresp):
         # BIS SELF-CONTROL
 
         # FORWARD SCORES AND FORWARD QUESTIONS UNANSWERED
-        selfcontrol1_forward = input[barratt_1selfcontrol_keys].apply(pd.to_numeric, args=('coerce',))
+        selfcontrol1_forward = input[barratt_1selfcontrol_keys].apply(pd.to_numeric, args=('raise',))
         selfcontrol1_forward_leftblank = selfcontrol1_forward.apply(lambda x: sum(x.isnull().values), axis=1)
         selfcontrol1_forward_prefernotanswer = selfcontrol1_forward[selfcontrol1_forward[barratt_1selfcontrol_keys] == nonresp['barratt']].count(axis=1)
         selfcontrol1_forward_unanswered = selfcontrol1_forward_leftblank + selfcontrol1_forward_prefernotanswer
@@ -178,7 +178,7 @@ def barratt(input, nonresp):
                                                           (selfcontrol1_forward[barratt_1selfcontrol_keys] <= 4)].sum(axis=1)
 
         # REVERSE SCORES AND REVERSE QUESTIONS UNANSWERED
-        selfcontrol1_rev = input[barratt_1selfcontrol_rev_keys].apply(pd.to_numeric, args=('coerce',))
+        selfcontrol1_rev = input[barratt_1selfcontrol_rev_keys].apply(pd.to_numeric, args=('raise',))
 
         # sum the number of reverse questions left blank or preferred not to answer
         selfcontrol1_reverse_leftblank = selfcontrol1_rev.apply(lambda x: sum(x.isnull().values), axis=1)
@@ -209,7 +209,7 @@ def barratt(input, nonresp):
         # BIS COGNITIVE COMPLEXITY
 
         # FORWARD SCORES AND FORWARD QUESTIONS UNANSWERED
-        complex1_forward = input[barratt_1complex_keys].apply(pd.to_numeric, args=('coerce',))
+        complex1_forward = input[barratt_1complex_keys].apply(pd.to_numeric, args=('raise',))
         complex1_forward_leftblank = complex1_forward.apply(lambda x: sum(x.isnull().values), axis=1)
         complex1_forward_prefernotanswer = complex1_forward[complex1_forward[barratt_1complex_keys] == nonresp['barratt']].count(axis=1)
         complex1_forward_unanswered = complex1_forward_leftblank + complex1_forward_prefernotanswer
@@ -220,7 +220,7 @@ def barratt(input, nonresp):
 
 
         # REVERSE SCORES AND REVERSE QUESTIONS UNANSWERED
-        complex1_rev = input[barratt_1complex_rev_keys].apply(pd.to_numeric, args=('coerce',))
+        complex1_rev = input[barratt_1complex_rev_keys].apply(pd.to_numeric, args=('raise',))
 
         # sum the number of reverse questions left blank or preferred not to answer
         complex1_reverse_leftblank = complex1_rev.apply(lambda x: sum(x.isnull().values), axis=1)
@@ -251,7 +251,7 @@ def barratt(input, nonresp):
         # BIS PERSEVERANCE
 
         # FORWARD SCORES AND FORWARD QUESTIONS UNANSWERED
-        persever1_forward = input[barratt_1persever_keys].apply(pd.to_numeric, args=('coerce',))
+        persever1_forward = input[barratt_1persever_keys].apply(pd.to_numeric, args=('raise',))
         persever1_forward_leftblank = persever1_forward.apply(lambda x: sum(x.isnull().values), axis=1)
         persever1_forward_prefernotanswer = persever1_forward[persever1_forward[barratt_1persever_keys] == nonresp['barratt']].count(axis=1)
         persever1_forward_unanswered = persever1_forward_leftblank + persever1_forward_prefernotanswer
@@ -262,7 +262,7 @@ def barratt(input, nonresp):
 
 
         # REVERSE SCORES AND REVERSE QUESTIONS UNANSWERED
-        persever1_rev = input[barratt_1persever_rev_keys].apply(pd.to_numeric, args=('coerce',))
+        persever1_rev = input[barratt_1persever_rev_keys].apply(pd.to_numeric, args=('raise',))
 
         # sum the number of reverse questions left blank or preferred not to answer
         persever1_reverse_leftblank = persever1_rev.apply(lambda x: sum(x.isnull().values), axis=1)
@@ -294,7 +294,7 @@ def barratt(input, nonresp):
 
 
         # FORWARD SCORES AND FORWARD QUESTIONS UNANSWERED
-        atteimpuls2_forward = input[barratt_2attentionalimpulsiveness_keys].apply(pd.to_numeric, args=('coerce',))
+        atteimpuls2_forward = input[barratt_2attentionalimpulsiveness_keys].apply(pd.to_numeric, args=('raise',))
         atteimpuls2_forward_leftblank = atteimpuls2_forward.apply(lambda x: sum(x.isnull().values), axis=1)
         atteimpuls2_forward_prefernotanswer = atteimpuls2_forward[atteimpuls2_forward[barratt_2attentionalimpulsiveness_keys] == nonresp['barratt']].count(axis=1)
         atteimpuls2_forward_unanswered = atteimpuls2_forward_leftblank + atteimpuls2_forward_prefernotanswer
@@ -305,7 +305,7 @@ def barratt(input, nonresp):
 
 
         # REVERSE SCORES AND REVERSE QUESTIONS UNANSWERED
-        atteimpuls2_rev = input[barratt_2attentionalimpulsiveness_rev_keys].apply(pd.to_numeric, args=('coerce',))
+        atteimpuls2_rev = input[barratt_2attentionalimpulsiveness_rev_keys].apply(pd.to_numeric, args=('raise',))
 
         # sum the number of reverse questions left blank or preferred not to answer
         atteimpuls2_reverse_leftblank = atteimpuls2_rev.apply(lambda x: sum(x.isnull().values), axis=1)
@@ -334,7 +334,7 @@ def barratt(input, nonresp):
         # ------------------------------------------------------------------------------
         # MOTOR IMPULSIVENESS
         # FORWARD SCORES AND FORWARD QUESTIONS UNANSWERED
-        motimpuls2_forward = input[barratt_2motorimpulsiveness_keys].apply(pd.to_numeric, args=('coerce',))
+        motimpuls2_forward = input[barratt_2motorimpulsiveness_keys].apply(pd.to_numeric, args=('raise',))
         motimpuls2_forward_leftblank = motimpuls2_forward.apply(lambda x: sum(x.isnull().values), axis=1)
         motimpuls2_forward_prefernotanswer = motimpuls2_forward[motimpuls2_forward[barratt_2motorimpulsiveness_keys] == nonresp['barratt']].count(axis=1)
         motimpuls2_forward_unanswered = motimpuls2_forward_leftblank + motimpuls2_forward_prefernotanswer
@@ -345,7 +345,7 @@ def barratt(input, nonresp):
 
 
         # REVERSE SCORES AND REVERSE QUESTIONS UNANSWERED
-        motimpuls2_rev = input[barratt_2motorimpulsiveness_rev_keys].apply(pd.to_numeric, args=('coerce',))
+        motimpuls2_rev = input[barratt_2motorimpulsiveness_rev_keys].apply(pd.to_numeric, args=('raise',))
 
         # sum the number of reverse questions left blank or preferred not to answer
         motimpuls2_reverse_leftblank = motimpuls2_rev.apply(lambda x: sum(x.isnull().values), axis=1)
@@ -377,7 +377,7 @@ def barratt(input, nonresp):
 
 
         # FORWARD SCORES AND FORWARD QUESTIONS UNANSWERED
-        nonplanimpuls2_forward = input[barratt_2nonplanningimpulsiveness_keys].apply(pd.to_numeric, args=('coerce',))
+        nonplanimpuls2_forward = input[barratt_2nonplanningimpulsiveness_keys].apply(pd.to_numeric, args=('raise',))
         nonplanimpuls2_forward_leftblank = nonplanimpuls2_forward.apply(lambda x: sum(x.isnull().values), axis=1)
         nonplanimpuls2_forward_prefernotanswer = nonplanimpuls2_forward[nonplanimpuls2_forward[barratt_2nonplanningimpulsiveness_keys] == nonresp['barratt']].count(axis=1)
         nonplanimpuls2_forward_unanswered = nonplanimpuls2_forward_leftblank + nonplanimpuls2_forward_prefernotanswer
@@ -388,7 +388,7 @@ def barratt(input, nonresp):
 
 
         # REVERSE SCORES AND REVERSE QUESTIONS UNANSWERED
-        nonplanimpuls2_rev = input[barratt_2nonplanningimpulsiveness_rev_keys].apply(pd.to_numeric, args=('coerce',))
+        nonplanimpuls2_rev = input[barratt_2nonplanningimpulsiveness_rev_keys].apply(pd.to_numeric, args=('raise',))
 
         # sum the number of reverse questions left blank or preferred not to answer
         nonplanimpuls2_reverse_leftblank = nonplanimpuls2_rev.apply(lambda x: sum(x.isnull().values), axis=1)
@@ -497,3 +497,5 @@ def barratt(input, nonresp):
         return result
     except KeyError:
         print("We could not find the BARRATT headers in your dataset. Please look at the barratt function in this package and put in the correct keys.")
+    except ValueError:
+        print("We found strings in your BARRATT dataset. Please make sure there are no strings/letters in your input. Otherwise, we can't do our thang.")

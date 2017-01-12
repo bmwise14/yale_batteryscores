@@ -46,25 +46,25 @@ def shipley(input):
         # CREATE A COUNT FOR EACH ITEM GUESSED CORRECTLY
 
         # COUNTS # OF QUESTIONS IN choice 1 WITH FIRST CHOICE AS CORRECT ANSWER
-        c1 = input[choice1].apply(pd.to_numeric, args=('coerce',))
+        c1 = input[choice1].apply(pd.to_numeric, args=('raise',))
         c1_leftblank = c1.apply(lambda x: sum(x.isnull().values), axis=1)
         c1_score = c1[c1[choice1] == 1].count(axis=1)
 
 
         # COUNTS # OF QUESTIONS IN choice 2 WITH SECOND CHOICE AS CORRECT ANSWER
-        c2 = input[choice2].apply(pd.to_numeric, args=('coerce',))
+        c2 = input[choice2].apply(pd.to_numeric, args=('raise',))
         c2_leftblank = c2.apply(lambda x: sum(x.isnull().values), axis=1)
         c2_score = c2[c2[choice2] == 2].count(axis=1)
 
 
         # COUNTS # OF QUESTIONS IN choice 3 WITH SECOND CHOICE AS CORRECT ANSWER
-        c3 = input[choice3].apply(pd.to_numeric, args=('coerce',))
+        c3 = input[choice3].apply(pd.to_numeric, args=('raise',))
         c3_leftblank = c3.apply(lambda x: sum(x.isnull().values), axis=1)
         c3_score = c3[c3[choice3] == 3].count(axis=1)
 
 
         # COUNTS # OF QUESTIONS IN choice 4 WITH SECOND CHOICE AS CORRECT ANSWER
-        c4 = input[choice4].apply(pd.to_numeric, args=('coerce',))
+        c4 = input[choice4].apply(pd.to_numeric, args=('raise',))
         c4_leftblank = c4.apply(lambda x: sum(x.isnull().values), axis=1)
         c4_score = c4[c4[choice4] == 4].count(axis=1)
 
@@ -86,3 +86,5 @@ def shipley(input):
         return result
     except KeyError:
         print("We could not find the SHIPLEY headers in your dataset. Please look at the shipley function in this package and put in the correct keys.")
+    except ValueError:
+        print("We found strings in your SHIPLEY dataset. Please make sure there are no strings/letters in your input. Otherwise, we can't do our thang.")

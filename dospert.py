@@ -63,7 +63,7 @@ def dospert(input, nonresp):
         # DOSPERT RISKTAKING SCORE - ALL FORWARD, NO REVERSE
 
         # SCORES AND QUESTIONS UNANSWERED
-        risktaking = input[risktaking_keys].apply(pd.to_numeric, args=('coerce',))
+        risktaking = input[risktaking_keys].apply(pd.to_numeric, args=('raise',))
         risktaking_leftblank = risktaking.apply(lambda x: sum(x.isnull().values), axis=1)
         risktaking_prefernotanswer = risktaking[risktaking[risktaking_keys] == nonresp['dospert']].count(axis=1)
 
@@ -93,7 +93,7 @@ def dospert(input, nonresp):
         # DOSPERT RISK PERCEPTION SCORE - ALL FORWARD, NO REVERSE
 
         # SCORES AND QUESTIONS UNANSWERED
-        perception = input[riskperception_keys].apply(pd.to_numeric, args=('coerce',))
+        perception = input[riskperception_keys].apply(pd.to_numeric, args=('raise',))
         perception_leftblank = perception.apply(lambda x: sum(x.isnull().values), axis=1)
         perception_prefernotanswer = perception[perception[riskperception_keys] == nonresp['dospert']].count(axis=1)
 
@@ -125,3 +125,5 @@ def dospert(input, nonresp):
         return result
     except KeyError:
         print("We could not find the DOSPERT headers in your dataset. Please look at the dospert function in this package and put in the correct keys.")
+    except ValueError:
+        print("We found strings in your DOSPERT dataset. Please make sure there are no strings/letters in your input. Otherwise, we can't do our thang.")

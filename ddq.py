@@ -133,13 +133,13 @@ def ddq(input):
 
         # -----------------------------------------------------------------------------------------------------------------#
         # Converts keys to numeric values
-        smalldr = input[smalldr_keys].apply(pd.to_numeric, args=('coerce',))
+        smalldr = input[smalldr_keys].apply(pd.to_numeric, args=('raise',))
 
         # Counts the number of delayed reward choices and immediate choices among the small delayed reward keys
         smalldr_delayedreward = smalldr[smalldr[smalldr_keys] == 2].count(axis=1)
         smalldr_didnotdelay = smalldr[smalldr[smalldr_keys] == 1].count(axis=1)
 
-        # Totals the number of delayed rewards chosen
+        # Totals the number of total rewards chosen
         totalsmalldr = smalldr_didnotdelay + smalldr_delayedreward
 
         # Creates a percentage of immediate choices to total choices given
@@ -149,7 +149,7 @@ def ddq(input):
         smalldrimmediatepercentage.fillna(value=99999)
 
 
-        # List Comprehension bins each person into their appropriate k-value based
+        # List Comprehension bins each person into their appropriate k-value (see kbins) based
         # on their percentage of immediate choices to total choices.
         # This will put a 0 on all other percentages.
         # Any other percentage than the ones below means a participant skipped a question.
@@ -179,7 +179,7 @@ def ddq(input):
 
         # -----------------------------------------------------------------------------------------------------------------#
         # see smalldr comments. Exact same computation.
-        mediumdr = input[mediumdr_keys].apply(pd.to_numeric, args=('coerce',))
+        mediumdr = input[mediumdr_keys].apply(pd.to_numeric, args=('raise',))
 
         mediumdr_delayedreward = mediumdr[mediumdr[mediumdr_keys] == 2].count(axis=1)
         mediumdr_didnotdelay = mediumdr[mediumdr[mediumdr_keys] == 1].count(axis=1)
@@ -210,7 +210,7 @@ def ddq(input):
 
         # -----------------------------------------------------------------------------------------------------------------#
         # see smalldr comments. Exact same computation.
-        largedr = input[largedr_keys].apply(pd.to_numeric, args=('coerce',))
+        largedr = input[largedr_keys].apply(pd.to_numeric, args=('raise',))
 
         largedr_delayedreward = largedr[largedr[largedr_keys] == 2].count(axis=1)
         largedr_didnotdelay = largedr[largedr[largedr_keys] == 1].count(axis=1)
@@ -278,6 +278,8 @@ def ddq(input):
     except KeyError:
         print("We could not find the DDQ headers in your dataset. "
               "Please look at the ddq function in this package and put in the correct keys.")
+    except ValueError:
+        print("We found strings in your DDQ dataset. Please make sure there are no strings/letters in your input. Otherwise, we can't do our thang.")
 
 
 

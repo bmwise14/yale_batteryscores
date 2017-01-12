@@ -55,7 +55,7 @@ def bapq(input, nonresp):
         # ALOOF SCORE
 
         # FORWARD SCORES AND FORWARD QUESTIONS UNANSWERED
-        aloof_forward = input[bapq_aloof_keys].apply(pd.to_numeric, args=('coerce',))
+        aloof_forward = input[bapq_aloof_keys].apply(pd.to_numeric, args=('raise',))
         aloof_forward_leftblank = aloof_forward.apply(lambda x: sum(x.isnull().values), axis=1)
         aloof_forward_prefernotanswer = aloof_forward[aloof_forward[bapq_aloof_keys] == nonresp['bapq']].count(axis=1)
 
@@ -64,7 +64,7 @@ def bapq(input, nonresp):
                                             (aloof_forward[bapq_aloof_keys] <= 6)].sum(axis=1)
 
         # REVERSE SCORES AND REVERSE QUESTIONS UNANSWERED
-        aloof_rev = input[bapq_aloof_rev_keys].apply(pd.to_numeric, args=('coerce',))
+        aloof_rev = input[bapq_aloof_rev_keys].apply(pd.to_numeric, args=('raise',))
 
         # sum the number of reverse questions left blank or preferred not to answer
         aloof_reverse_leftblank = aloof_rev.apply(lambda x: sum(x.isnull().values), axis=1)
@@ -91,7 +91,7 @@ def bapq(input, nonresp):
         # RIGID SCORE
 
         # FORWARD SCORES AND FORWARD QUESTIONS UNANSWERED
-        rigid_forward = input[bapq_rigid_keys].apply(pd.to_numeric, args=('coerce',))
+        rigid_forward = input[bapq_rigid_keys].apply(pd.to_numeric, args=('raise',))
         rigid_forward_leftblank = rigid_forward.apply(lambda x: sum(x.isnull().values), axis=1)
         rigid_forward_prefernotanswer = rigid_forward[rigid_forward[bapq_rigid_keys] == nonresp['bapq']].count(axis=1)
 
@@ -100,7 +100,7 @@ def bapq(input, nonresp):
                                             (rigid_forward[bapq_rigid_keys] <= 6)].sum(axis=1)
 
         # REVERSE SCORES AND REVERSE QUESTIONS UNANSWERED
-        rigid_rev = input[bapq_rigid_rev_keys].apply(pd.to_numeric, args=('coerce',))
+        rigid_rev = input[bapq_rigid_rev_keys].apply(pd.to_numeric, args=('raise',))
 
         # sum the number of reverse questions left blank or preferred not to answer
         rigid_reverse_leftblank = rigid_rev.apply(lambda x: sum(x.isnull().values), axis=1)
@@ -127,7 +127,7 @@ def bapq(input, nonresp):
         # PRAGMATIC LANGUAGE SCORE
 
         # FORWARD SCORES AND FORWARD QUESTIONS UNANSWERED
-        prag_forward = input[bapq_prag_keys].apply(pd.to_numeric, args=('coerce',))
+        prag_forward = input[bapq_prag_keys].apply(pd.to_numeric, args=('raise',))
         prag_forward_leftblank = prag_forward.apply(lambda x: sum(x.isnull().values), axis=1)
         prag_forward_prefernotanswer = prag_forward[prag_forward[bapq_prag_keys] == nonresp['bapq']].count(axis=1)
 
@@ -136,7 +136,7 @@ def bapq(input, nonresp):
                                           (prag_forward[bapq_prag_keys] <= 6)].sum(axis=1)
 
         # REVERSE SCORES AND REVERSE QUESTIONS UNANSWERED
-        prag_rev = input[bapq_prag_rev_keys].apply(pd.to_numeric, args=('coerce',))
+        prag_rev = input[bapq_prag_rev_keys].apply(pd.to_numeric, args=('raise',))
 
         # sum the number of reverse questions left blank or preferred not to answer
         prag_reverse_leftblank = prag_rev.apply(lambda x: sum(x.isnull().values), axis=1)
@@ -186,3 +186,5 @@ def bapq(input, nonresp):
         print("We could not find the BAPQ headers in your dataset. Please look at the bapq function in this package and put in the correct keys.")
     except TypeError:
         print("You need (1) the dataframe and (2) a numeric BAPQ 'Prefer Not To Answer' choice (or stored variable) in your function arguments.")
+    except ValueError:
+        print("We found strings in your BAPQ dataset. Please make sure there are no strings/letters in your input. Otherwise, we can't do our thang.")

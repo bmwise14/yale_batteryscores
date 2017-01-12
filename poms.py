@@ -50,7 +50,7 @@ def poms(input, nonresp):
         # TENSION / ANXIETY SCORE - ALL FORWARD NO REVERSE
 
         # SCORES AND QUESTIONS UNANSWERED
-        tension_anxiety = input[tension_anxiety_keys].apply(pd.to_numeric, args=('coerce',)).replace(to_replace=[1, 2, 3, 4, 5], value=[0, 1, 2, 3, 4])
+        tension_anxiety = input[tension_anxiety_keys].apply(pd.to_numeric, args=('raise',)).replace(to_replace=[1, 2, 3, 4, 5], value=[0, 1, 2, 3, 4])
         tension_leftblank = tension_anxiety.apply(lambda x: sum(x.isnull().values), axis=1)
         tension_prefernotanswer = tension_anxiety[tension_anxiety[tension_anxiety_keys] == nonresp['poms']].count(axis=1)
 
@@ -70,7 +70,7 @@ def poms(input, nonresp):
         # DEPRESSION / DEJECTION SCORE - ALL FORWARD NO REVERSE
 
         # SCORES AND QUESTIONS UNANSWERED
-        depression_dejection = input[depression_dejection_keys].apply(pd.to_numeric, args=('coerce',)).replace(to_replace=[1, 2, 3, 4, 5], value=[0, 1, 2, 3, 4])
+        depression_dejection = input[depression_dejection_keys].apply(pd.to_numeric, args=('raise',)).replace(to_replace=[1, 2, 3, 4, 5], value=[0, 1, 2, 3, 4])
         depression_dejection_leftblank = depression_dejection.apply(lambda x: sum(x.isnull().values), axis=1)
         depression_dejection_prefernotanswer = depression_dejection[depression_dejection[depression_dejection_keys] == nonresp['poms']].count(axis=1)
 
@@ -92,7 +92,7 @@ def poms(input, nonresp):
         # ANGER / HOSTILITY SCORE - ALL FORWARD NO REVERSE
 
         # SCORES AND QUESTIONS UNANSWERED
-        anger_hostility = input[anger_hostility_keys].apply(pd.to_numeric, args=('coerce',)).replace(to_replace=[1, 2, 3, 4, 5], value=[0, 1, 2, 3, 4])
+        anger_hostility = input[anger_hostility_keys].apply(pd.to_numeric, args=('raise',)).replace(to_replace=[1, 2, 3, 4, 5], value=[0, 1, 2, 3, 4])
         anger_hostility_leftblank = anger_hostility.apply(lambda x: sum(x.isnull().values), axis=1)
         anger_hostility_prefernotanswer = anger_hostility[anger_hostility[anger_hostility_keys] == nonresp['poms']].count(axis=1)
 
@@ -113,7 +113,7 @@ def poms(input, nonresp):
         # VIGOR / ACTIVITY SCORE - ALL FORWARD NO REVERSE
 
         # SCORES AND QUESTIONS UNANSWERED
-        vigor_activity = input[vigor_activity_keys].apply(pd.to_numeric, args=('coerce',)).replace(to_replace=[1, 2, 3, 4, 5], value=[0, 1, 2, 3, 4])
+        vigor_activity = input[vigor_activity_keys].apply(pd.to_numeric, args=('raise',)).replace(to_replace=[1, 2, 3, 4, 5], value=[0, 1, 2, 3, 4])
         vigor_activity_leftblank = vigor_activity.apply(lambda x: sum(x.isnull().values), axis=1)
         vigor_activity_prefernotanswer = vigor_activity[vigor_activity[vigor_activity_keys] == nonresp['poms']].count(axis=1)
 
@@ -135,7 +135,7 @@ def poms(input, nonresp):
         # FATIGUE / INERTIA SCORE - ALL FORWARD NO REVERSE
 
         # SCORES AND QUESTIONS UNANSWERED
-        fatigue_inertia = input[fatigue_inertia_keys].apply(pd.to_numeric, args=('coerce',)).replace(to_replace=[1, 2, 3, 4, 5], value=[0, 1, 2, 3, 4])
+        fatigue_inertia = input[fatigue_inertia_keys].apply(pd.to_numeric, args=('raise',)).replace(to_replace=[1, 2, 3, 4, 5], value=[0, 1, 2, 3, 4])
         fatigue_inertia_leftblank = fatigue_inertia.apply(lambda x: sum(x.isnull().values), axis=1)
         fatigue_inertia_prefernotanswer = fatigue_inertia[fatigue_inertia[fatigue_inertia_keys] == nonresp['poms']].count(axis=1)
 
@@ -157,7 +157,7 @@ def poms(input, nonresp):
         # CONFUSION / BEWILDERMENT SCORE - ALL FORWARD NO REVERSE
 
         # SCORES AND QUESTIONS UNANSWERED
-        confusion_bewilderment = input[confusion_bewilderment_keys].apply(pd.to_numeric, args=('coerce',)).replace(to_replace=[1, 2, 3, 4, 5], value=[0, 1, 2, 3, 4])
+        confusion_bewilderment = input[confusion_bewilderment_keys].apply(pd.to_numeric, args=('raise',)).replace(to_replace=[1, 2, 3, 4, 5], value=[0, 1, 2, 3, 4])
         confusion_bewilderment_leftblank = confusion_bewilderment.apply(lambda x: sum(x.isnull().values), axis=1)
         confusion_bewilderment_prefernotanswer = confusion_bewilderment[confusion_bewilderment[confusion_bewilderment_keys] == nonresp['poms']].count(axis=1)
 
@@ -238,4 +238,6 @@ def poms(input, nonresp):
         return result
     except KeyError:
         print("We could not find the POMS headers in your dataset. Please look at the poms function in this package and put in the correct keys.")
+    except ValueError:
+        print("We found strings in your POMS dataset. Please make sure there are no strings/letters in your input. Otherwise, we can't do our thang.")
 

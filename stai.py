@@ -50,25 +50,11 @@ def stai(input, nonresp):
         stai_state_rev_keys = ['STAI_21', 'STAI_23', 'STAI_26', 'STAI_27', 'STAI_30', 'STAI_33', 'STAI_34', 'STAI_36',
                                'STAI_39']
 
-
-        # all = [stai_trait_keys, stai_trait_rev_keys, stai_state_keys, stai_state_rev_keys]
-        #
-        #
-        # for x in all:
-        #     for_x = input[x].apply(pd.to_numeric, args=('coerce',))
-        #     # sum the number of forward questions left blank or preferred not to answer
-        #     x_forward_leftblank = for_x.apply(lambda x: sum(x.isnull().values), axis=1)
-        #     x_forward_prefernotanswer = for_x[for_x[x] == nonresp['STAI']].count(axis=1)
-        #     x_forward_unanswered = x_forward_leftblank + x_forward_prefernotanswer
-        #     # sum all the forward scores
-        #     x_forward_score = for_x[(for_x[x] >= 1) & (for_x[x] <= 4)].sum(axis=1)
-
-
         # ------------------------------------------------------------------------------
         # STAI TRAIT SCORE
 
         # change the numbers in forward STAI Trait headers to numeric floats
-        stai_trait_forward = input[stai_trait_keys].apply(pd.to_numeric, args=('coerce',))
+        stai_trait_forward = input[stai_trait_keys].apply(pd.to_numeric, args=('raise',))
 
         # sum the number of forward questions left blank or preferred not to answer
         stai_trait_forward_leftblank = stai_trait_forward.apply(lambda x: sum(x.isnull().values), axis=1)
@@ -80,7 +66,7 @@ def stai(input, nonresp):
                                                       (stai_trait_forward[stai_trait_keys] <= 4)].sum(axis=1)
 
         # change the numbers in reverse STAI Trait headers to numeric floats
-        stai_trait_rev = input[stai_trait_rev_keys].apply(pd.to_numeric, args=('coerce',))
+        stai_trait_rev = input[stai_trait_rev_keys].apply(pd.to_numeric, args=('raise',))
 
         # sum the number of reverse questions left blank or preferred not to answer
         stai_trait_reverse_leftblank = stai_trait_rev.apply(lambda x: sum(x.isnull().values), axis=1)
@@ -122,7 +108,7 @@ def stai(input, nonresp):
         # STAI STATE SCORE
 
         # change the numbers in forward STAI STATE headers to numeric floats
-        stai_state_forward = input[stai_state_keys].apply(pd.to_numeric, args=('coerce',))
+        stai_state_forward = input[stai_state_keys].apply(pd.to_numeric, args=('raise',))
         # sum the number of forward questions left blank or preferred not to answer
         stai_state_forward_leftblank = stai_state_forward.apply(lambda x: sum(x.isnull().values), axis=1)
         stai_state_forward_prefernotanswer = stai_state_forward[stai_state_forward[stai_state_keys] == nonresp['STAI']].count(axis=1)
@@ -133,7 +119,7 @@ def stai(input, nonresp):
                                                       (stai_state_forward[stai_state_keys] <= 4)].sum(axis=1)
 
         # change the numbers in forward STAI STATE headers to numeric floats
-        stai_state_rev = input[stai_state_rev_keys].apply(pd.to_numeric, args=('coerce',))
+        stai_state_rev = input[stai_state_rev_keys].apply(pd.to_numeric, args=('raise',))
 
         # sum the number of forward questions left blank or preferred not to answer
         stai_state_rev_leftblank = stai_state_rev.apply(lambda x: sum(x.isnull().values), axis=1)
@@ -176,6 +162,10 @@ def stai(input, nonresp):
         frames = [staitraitall, staistateall]
         result = pd.concat(frames, axis=1)
         return result
+    except KeyError:
+        print("We could not find the STAI headers in your dataset. Please look at the stai function in this package and put in the correct keys.")
+    except ValueError:
+        print("We found strings in your STAI dataset. Please make sure there are no strings/letters in your input. Otherwise, we can't do our thang.")
 
 
         # if QC_Non_resp_STAI_T < 3:
@@ -184,5 +174,16 @@ def stai(input, nonresp):
         #     STAI_sAnxiety = int(sum(stai_state) / len(stai_state) * 20)
         #
         # QC_Non_resp_STAI = QC_Non_resp_STAI_T + QC_Non_resp_STAI_S
-    except KeyError:
-        print("We could not find the STAI headers in your dataset. Please look at the stai function in this package and put in the correct keys.")
+
+
+        # all = [stai_trait_keys, stai_trait_rev_keys, stai_state_keys, stai_state_rev_keys]
+        #
+        #
+        # for x in all:
+        #     for_x = input[x].apply(pd.to_numeric, args=('raise',))
+        #     # sum the number of forward questions left blank or preferred not to answer
+        #     x_forward_leftblank = for_x.apply(lambda x: sum(x.isnull().values), axis=1)
+        #     x_forward_prefernotanswer = for_x[for_x[x] == nonresp['STAI']].count(axis=1)
+        #     x_forward_unanswered = x_forward_leftblank + x_forward_prefernotanswer
+        #     # sum all the forward scores
+        #     x_forward_score = for_x[(for_x[x] >= 1) & (for_x[x] <= 4)].sum(axis=1)

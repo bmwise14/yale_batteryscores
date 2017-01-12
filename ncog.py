@@ -48,7 +48,7 @@ def ncog(input, nonresp):
         # NCOG SCORE
 
         # FORWARD SCORES AND FORWARD QUESTIONS UNANSWERED
-        ncog_forward = input[ncog_keys].apply(pd.to_numeric, args=('coerce',))
+        ncog_forward = input[ncog_keys].apply(pd.to_numeric, args=('raise',))
 
 
         ncog_forward_leftblank = ncog_forward.apply(lambda x: sum(x.isnull().values), axis=1)
@@ -60,7 +60,7 @@ def ncog(input, nonresp):
                                                         (ncog_forward[ncog_keys] <= 5)].sum(axis=1)
 
         # REVERSE SCORES AND REVERSE QUESTIONS UNANSWERED
-        ncog_rev = input[ncog_rev_keys].apply(pd.to_numeric, args=('coerce',))
+        ncog_rev = input[ncog_rev_keys].apply(pd.to_numeric, args=('raise',))
 
         # sum the number of reverse questions left blank or preferred not to answer
         ncog_reverse_leftblank = ncog_rev.apply(lambda x: sum(x.isnull().values), axis=1)
@@ -105,3 +105,5 @@ def ncog(input, nonresp):
         return result
     except KeyError:
         print("We could not find the ncog headers in your dataset. Please look at the ncog function in this package and put in the correct keys.")
+    except ValueError:
+        print("We found strings in your ncog dataset. Please make sure there are no strings/letters in your input. Otherwise, we can't do our thang.")

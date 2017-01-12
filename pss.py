@@ -50,7 +50,7 @@ def pss(input):
 
 
         # change the numbers to numeric floats
-        pss_reverse = input[pss_positive_keys_rev].apply(pd.to_numeric, args=('coerce',)).replace(to_replace=[1, 2, 3, 4, 5], value=[0, 1, 2, 3, 4])
+        pss_reverse = input[pss_positive_keys_rev].apply(pd.to_numeric, args=('raise',)).replace(to_replace=[1, 2, 3, 4, 5], value=[0, 1, 2, 3, 4])
 
         # These count the number of questions left blank
         pss_rev_leftblank = pss_reverse.apply(lambda x: sum(x.isnull().values), axis=1)
@@ -71,7 +71,7 @@ def pss(input):
 
 
         # change the numbers to numeric floats
-        pss_forward = input[pss_negative_keys_for].apply(pd.to_numeric, args=('coerce',)).replace(to_replace=[1, 2, 3, 4, 5], value=[0, 1, 2, 3, 4])
+        pss_forward = input[pss_negative_keys_for].apply(pd.to_numeric, args=('raise',)).replace(to_replace=[1, 2, 3, 4, 5], value=[0, 1, 2, 3, 4])
 
         # These count the number of questions left blank
         pss_forward_leftblank = pss_forward.apply(lambda x: sum(x.isnull().values), axis=1)
@@ -109,3 +109,5 @@ def pss(input):
         return result
     except KeyError:
         print("We could not find the PSS headers in your dataset. Please look at the pss function in this package and put in the correct keys.")
+    except ValueError:
+        print("We found strings in your PSS dataset. Please make sure there are no strings/letters in your input. Otherwise, we can't do our thang.")

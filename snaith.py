@@ -66,7 +66,7 @@ def snaith(input):
         # SNAITH SCORE - ALL REVERSE, NO FORWARD
 
         # change the numbers in drive headers to numeric floats
-        snaith = input[snaith_headers_rev].apply(pd.to_numeric, args=('coerce',))
+        snaith = input[snaith_headers_rev].apply(pd.to_numeric, args=('raise',))
 
         # These count the number of drive questions left blank or answered as 5 and sums them up as drive_unanswered
         snaith_leftblank = snaith.apply(lambda x: sum(x.isnull().values), axis=1)
@@ -86,3 +86,5 @@ def snaith(input):
         return result
     except KeyError:
         print("We could not find the SNAITH headers in your dataset. Please look at the snaith function in this package and put in the correct keys.")
+    except ValueError:
+        print("We found strings in your SANITH dataset. Please make sure there are no strings/letters in your input. Otherwise, we can't do our thang.")

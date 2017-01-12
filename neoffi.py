@@ -61,7 +61,8 @@ def neoffi(input, nonresp):
         # NEUROTOCISM SCORE
 
         # FORWARD SCORES AND FORWARD QUESTIONS UNANSWERED
-        neuroticism_forward = input[neo_neuroticism_keys].apply(pd.to_numeric, args=('coerce',)).replace(to_replace=[1, 2, 3, 4, 5], value=[0, 1, 2, 3, 4])
+        neuroticism_forward = input[neo_neuroticism_keys].apply(pd.to_numeric, args=('raise',)).replace(
+            to_replace=[1, 2, 3, 4, 5], value=[0, 1, 2, 3, 4])
 
 
         neuroticism_forward_leftblank = neuroticism_forward.apply(lambda x: sum(x.isnull().values), axis=1)
@@ -73,7 +74,7 @@ def neoffi(input, nonresp):
                                                         (neuroticism_forward[neo_neuroticism_keys] <= 4)].sum(axis=1)
 
         # REVERSE SCORES AND REVERSE QUESTIONS UNANSWERED
-        neuroticism_rev = input[neo_neuroticism_rev_keys].apply(pd.to_numeric, args=('coerce',)).replace(to_replace=[1, 2, 3, 4, 5], value=[0, 1, 2, 3, 4])
+        neuroticism_rev = input[neo_neuroticism_rev_keys].apply(pd.to_numeric, args=('raise',)).replace(to_replace=[1, 2, 3, 4, 5], value=[0, 1, 2, 3, 4])
 
         # sum the number of reverse questions left blank or preferred not to answer
         neuroticism_reverse_leftblank = neuroticism_rev.apply(lambda x: sum(x.isnull().values), axis=1)
@@ -114,7 +115,7 @@ def neoffi(input, nonresp):
         # EXTROVERSION SCORE
 
         # FORWARD SCORES AND FORWARD QUESTIONS UNANSWERED
-        extroversion_forward = input[neo_extroversion_keys].apply(pd.to_numeric, args=('coerce',)).replace(to_replace=[1, 2, 3, 4, 5], value=[0, 1, 2, 3, 4])
+        extroversion_forward = input[neo_extroversion_keys].apply(pd.to_numeric, args=('raise',)).replace(to_replace=[1, 2, 3, 4, 5], value=[0, 1, 2, 3, 4])
         extroversion_forward_leftblank = extroversion_forward.apply(lambda x: sum(x.isnull().values), axis=1)
         extroversion_forward_prefernotanswer = extroversion_forward[extroversion_forward[neo_extroversion_keys] == nonresp['neo']].count(axis=1)
         extroversion_forward_unanswered = extroversion_forward_leftblank + extroversion_forward_prefernotanswer
@@ -124,7 +125,7 @@ def neoffi(input, nonresp):
                                                           (extroversion_forward[neo_extroversion_keys] <= 4)].sum(axis=1)
 
         # REVERSE SCORES AND REVERSE QUESTIONS UNANSWERED
-        extroversion_rev = input[neo_extroversion_rev_keys].apply(pd.to_numeric, args=('coerce',)).replace(to_replace=[1, 2, 3, 4, 5], value=[0, 1, 2, 3, 4])
+        extroversion_rev = input[neo_extroversion_rev_keys].apply(pd.to_numeric, args=('raise',)).replace(to_replace=[1, 2, 3, 4, 5], value=[0, 1, 2, 3, 4])
 
         # sum the number of reverse questions left blank or preferred not to answer
         extroversion_reverse_leftblank = extroversion_rev.apply(lambda x: sum(x.isnull().values), axis=1)
@@ -167,7 +168,7 @@ def neoffi(input, nonresp):
         # OPENNESS SCORE
 
         # FORWARD SCORES AND FORWARD QUESTIONS UNANSWERED
-        openness_forward = input[neo_openness_keys].apply(pd.to_numeric, args=('coerce',)).replace(to_replace=[1, 2, 3, 4, 5], value=[0, 1, 2, 3, 4])
+        openness_forward = input[neo_openness_keys].apply(pd.to_numeric, args=('raise',)).replace(to_replace=[1, 2, 3, 4, 5], value=[0, 1, 2, 3, 4])
         openness_forward_leftblank = openness_forward.apply(lambda x: sum(x.isnull().values), axis=1)
         openness_forward_prefernotanswer = openness_forward[openness_forward[neo_openness_keys] == nonresp['neo']].count(axis=1)
         openness_forward_unanswered = openness_forward_leftblank + openness_forward_prefernotanswer
@@ -177,7 +178,7 @@ def neoffi(input, nonresp):
                                                   (openness_forward[neo_openness_keys] <= 4)].sum(axis=1)
 
         # REVERSE SCORES AND REVERSE QUESTIONS UNANSWERED
-        openness_rev = input[neo_openness_rev_keys].apply(pd.to_numeric, args=('coerce',)).replace(to_replace=[1, 2, 3, 4, 5], value=[0, 1, 2, 3, 4])
+        openness_rev = input[neo_openness_rev_keys].apply(pd.to_numeric, args=('raise',)).replace(to_replace=[1, 2, 3, 4, 5], value=[0, 1, 2, 3, 4])
 
         # sum the number of reverse questions left blank or preferred not to answer
         openness_reverse_leftblank = openness_rev.apply(lambda x: sum(x.isnull().values), axis=1)
@@ -220,7 +221,7 @@ def neoffi(input, nonresp):
         # AGREEABLENESS SCORE
 
         # FORWARD SCORES AND FORWARD QUESTIONS UNANSWERED
-        agree_forward = input[neo_agreeableness_keys].apply(pd.to_numeric, args=('coerce',)).replace(to_replace=[1, 2, 3, 4, 5], value=[0, 1, 2, 3, 4])
+        agree_forward = input[neo_agreeableness_keys].apply(pd.to_numeric, args=('raise',)).replace(to_replace=[1, 2, 3, 4, 5], value=[0, 1, 2, 3, 4])
         agree_forward_leftblank = agree_forward.apply(lambda x: sum(x.isnull().values), axis=1)
         agree_forward_prefernotanswer = agree_forward[agree_forward[neo_agreeableness_keys] == nonresp['neo']].count(axis=1)
         agree_forward_unanswered = agree_forward_leftblank + agree_forward_prefernotanswer
@@ -230,7 +231,7 @@ def neoffi(input, nonresp):
                                             (agree_forward[neo_agreeableness_keys] <= 4)].sum(axis=1)
 
         # REVERSE SCORES AND REVERSE QUESTIONS UNANSWERED
-        agree_rev = input[neo_agreeableness_rev_keys].apply(pd.to_numeric, args=('coerce',)).replace(to_replace=[1, 2, 3, 4, 5], value=[0, 1, 2, 3, 4])
+        agree_rev = input[neo_agreeableness_rev_keys].apply(pd.to_numeric, args=('raise',)).replace(to_replace=[1, 2, 3, 4, 5], value=[0, 1, 2, 3, 4])
 
         # sum the number of reverse questions left blank or preferred not to answer
         agree_reverse_leftblank = agree_rev.apply(lambda x: sum(x.isnull().values), axis=1)
@@ -274,7 +275,7 @@ def neoffi(input, nonresp):
         # CONSCIENTIOUSNESS SCORE
 
         # FORWARD SCORES AND FORWARD QUESTIONS UNANSWERED
-        conscien_forward = input[neo_conscientiousness_keys].apply(pd.to_numeric, args=('coerce',)).replace(to_replace=[1, 2, 3, 4, 5], value=[0, 1, 2, 3, 4])
+        conscien_forward = input[neo_conscientiousness_keys].apply(pd.to_numeric, args=('raise',)).replace(to_replace=[1, 2, 3, 4, 5], value=[0, 1, 2, 3, 4])
         conscien_forward_leftblank = conscien_forward.apply(lambda x: sum(x.isnull().values), axis=1)
         conscien_forward_prefernotanswer = conscien_forward[conscien_forward[neo_conscientiousness_keys] == nonresp['neo']].count(axis=1)
         conscien_forward_unanswered = conscien_forward_leftblank + conscien_forward_prefernotanswer
@@ -284,7 +285,7 @@ def neoffi(input, nonresp):
                                                   (conscien_forward[neo_conscientiousness_keys] <= 4)].sum(axis=1)
 
         # REVERSE SCORES AND REVERSE QUESTIONS UNANSWERED
-        conscien_rev = input[neo_conscientiousness_rev_keys].apply(pd.to_numeric, args=('coerce',)).replace(to_replace=[1, 2, 3, 4, 5], value=[0, 1, 2, 3, 4])
+        conscien_rev = input[neo_conscientiousness_rev_keys].apply(pd.to_numeric, args=('raise',)).replace(to_replace=[1, 2, 3, 4, 5], value=[0, 1, 2, 3, 4])
 
         # sum the number of reverse questions left blank or preferred not to answer
         conscien_reverse_leftblank = conscien_rev.apply(lambda x: sum(x.isnull().values), axis=1)
@@ -329,3 +330,6 @@ def neoffi(input, nonresp):
         return result
     except KeyError:
         print("We could not find the NEOFFI headers in your dataset. Please look at the neoffi function in this package and put in the correct keys.")
+    except ValueError:
+        print("We found weird strings and/or values that do match parameter values for calculation in your NEOFFI dataset. "
+              "Please make sure there are no strings/letters or exception values in your input. Otherwise, we cannot calculate the score correctly.")

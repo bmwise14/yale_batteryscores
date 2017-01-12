@@ -59,7 +59,7 @@ def bisbas(input, nonresp):
         # DRIVE SCORE - ALL REVERSE, NO FORWARD
 
         # change the numbers in drive headers to numeric floats
-        drive = input[drive_headers].apply(pd.to_numeric, args=('coerce',))
+        drive = input[drive_headers].apply(pd.to_numeric, args=('raise',))
 
         # These count the number of drive questions left blank or answered as 5 and sums them up as drive_unanswered
         drive_leftblank = drive.apply(lambda x: sum(x.isnull().values), axis=1)
@@ -90,7 +90,7 @@ def bisbas(input, nonresp):
         # FUNSEEKING SCORE - ALL REVERSE, NO FORWARD
 
         # change the numbers in funseeking headers to numeric floats
-        funseeking = input[funseeking_headers].apply(pd.to_numeric, args=('coerce',))
+        funseeking = input[funseeking_headers].apply(pd.to_numeric, args=('raise',))
 
         # These count the number of drive questions left blank or answered as 5 and sums them up as drive_unanswered
         funseeking_leftblank = funseeking.apply(lambda x: sum(x.isnull().values), axis=1)
@@ -120,7 +120,7 @@ def bisbas(input, nonresp):
 
 
         # change the numbers in reward headers to numeric floats
-        reward = input[reward_headers].apply(pd.to_numeric, args=('coerce',))
+        reward = input[reward_headers].apply(pd.to_numeric, args=('raise',))
 
         # These count the number of drive questions left blank or answered as 5 and sums them up as drive_unanswered
         reward_leftblank = reward.apply(lambda x: sum(x.isnull().values), axis=1)
@@ -151,7 +151,7 @@ def bisbas(input, nonresp):
 
 
         # change the numbers in reverse_code_bis to numeric floats
-        bis_reverse = input[reverse_code_bis].apply(pd.to_numeric, args=('coerce',))
+        bis_reverse = input[reverse_code_bis].apply(pd.to_numeric, args=('raise',))
 
         # These count the number of drive questions left blank or answered as 5 and sums them up as drive_unanswered
         bisreverse_leftblank = bis_reverse.apply(lambda x: sum(x.isnull().values), axis=1)
@@ -165,7 +165,7 @@ def bisbas(input, nonresp):
 
 
         # change the numbers in forward_code_bis to numeric floats
-        bis_forward = input[forward_code_bis].apply(pd.to_numeric, args=('coerce',))
+        bis_forward = input[forward_code_bis].apply(pd.to_numeric, args=('raise',))
 
         # These count the number of drive questions left blank or answered as 5 and sums them up as drive_unanswered
         bis_forward_leftblank = bis_forward.apply(lambda x: sum(x.isnull().values), axis=1)
@@ -209,3 +209,5 @@ def bisbas(input, nonresp):
         return result
     except KeyError:
         print("We could not find the BISBAS headers in your dataset. Please look at the bisbas function in this package and put in the correct keys.")
+    except ValueError:
+        print("We found strings in your BISBAS dataset. Please make sure there are no strings/letters in your input. Otherwise, we can't do our thang.")

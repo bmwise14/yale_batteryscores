@@ -48,7 +48,7 @@ def teps(input):
         # ANTICIPATORY SCORE
 
         # FORWARD SCORES AND FORWARD QUESTIONS UNANSWERED
-        anticipatory_forward = input[anticipatory_keys].apply(pd.to_numeric, args=('coerce',))
+        anticipatory_forward = input[anticipatory_keys].apply(pd.to_numeric, args=('raise',))
         anticipatory_forward_leftblank = anticipatory_forward.apply(lambda x: sum(x.isnull().values), axis=1)
 
         # sum all the forward scores
@@ -56,7 +56,7 @@ def teps(input):
                                                           (anticipatory_forward[anticipatory_keys] <= 6)].sum(axis=1)
 
         # REVERSE SCORES AND REVERSE QUESTIONS UNANSWERED
-        anticipatory_rev = input[anticipatory_keys_rev].apply(pd.to_numeric, args=('coerce',))
+        anticipatory_rev = input[anticipatory_keys_rev].apply(pd.to_numeric, args=('raise',))
 
         # sum the number of reverse questions left blank or preferred not to answer
         anticipatory_reverse_leftblank = anticipatory_rev.apply(lambda x: sum(x.isnull().values), axis=1)
@@ -88,7 +88,7 @@ def teps(input):
         # CONSUMMATORY SCORE
 
         # FORWARD SCORES AND FORWARD QUESTIONS UNANSWERED
-        consummatory_forward = input[consummatory_keys].apply(pd.to_numeric, args=('coerce',))
+        consummatory_forward = input[consummatory_keys].apply(pd.to_numeric, args=('raise',))
         consummatory_forward_leftblank = consummatory_forward.apply(lambda x: sum(x.isnull().values), axis=1)
 
         # sum all the forward scores
@@ -115,3 +115,5 @@ def teps(input):
         return result
     except KeyError:
         print("We could not find the TEPS headers in your dataset. Please look at the teps function in this package and put in the correct keys.")
+    except ValueError:
+        print("We found strings in your TEPS dataset. Please make sure there are no strings/letters in your input. Otherwise, we can't do our thang.")
