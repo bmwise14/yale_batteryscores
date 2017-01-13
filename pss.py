@@ -10,6 +10,7 @@ Battery Scores Package for Processing Qualtrics CSV Files
 """
 
 import pandas as pd
+import sys
 
 # input = the data you are using with with the keys listed below as headers
 
@@ -52,6 +53,9 @@ def pss(input):
         # change the numbers to numeric floats
         pss_reverse = input[pss_positive_keys_rev].apply(pd.to_numeric, args=('raise',)).replace(to_replace=[1, 2, 3, 4, 5], value=[0, 1, 2, 3, 4])
 
+        # Are there any values that don't fit in the value parameters
+        pss_reverse_nofit = pss_reverse[(pss_reverse[pss_positive_keys_rev] > 4) | (pss_reverse[pss_positive_keys_rev] < 0)].count(axis=1)
+
         # These count the number of questions left blank
         pss_rev_leftblank = pss_reverse.apply(lambda x: sum(x.isnull().values), axis=1)
 
@@ -73,6 +77,9 @@ def pss(input):
         # change the numbers to numeric floats
         pss_forward = input[pss_negative_keys_for].apply(pd.to_numeric, args=('raise',)).replace(to_replace=[1, 2, 3, 4, 5], value=[0, 1, 2, 3, 4])
 
+        # Are there any values that don't fit in the value parameters
+        pss_forward_nofit = pss_forward[(pss_forward[pss_negative_keys_for] > 4) | (pss_forward[pss_negative_keys_for] < 0)].count(axis=1)
+
         # These count the number of questions left blank
         pss_forward_leftblank = pss_forward.apply(lambda x: sum(x.isnull().values), axis=1)
 
@@ -87,16 +94,23 @@ def pss(input):
 
 
         # ------------------------------------------------------------------------------
+        # Count the number of values that do not fit parameter values
+        nofit = pss_reverse_nofit + pss_forward_nofit
+
+        # If there are any values that do not fit parameters, exit the code and make client find the values that did not work
+        for x in nofit:
+            if x >= 1:
+                sys.exit("We found values that don't match parameter values for calculation in your PSS dataset. "
+                         "Please make sure your values range from 1-5 (see pss script)")
+
+
+        # ------------------------------------------------------------------------------
         # Get the total PSS Score
         total_pss_score = reverse_pss_score + forward_pss_score
-
-        # total_pss_score = ['Discard' if x < 0 else 'Discard' if x > 40 else x for x in total_pss_score]
 
 
         # TOTAL ANSWERS LEFT BLANK
         total_pss_leftblank = pss_rev_leftblank + pss_forward_leftblank
-
-
 
 
         pssall = pd.DataFrame({'PSS Score': total_pss_score, 'PSS Left Blank': total_pss_leftblank})

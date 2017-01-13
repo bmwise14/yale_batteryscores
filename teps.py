@@ -10,6 +10,7 @@ Battery Scores Package for Processing Qualtrics CSV Files
 """
 
 import pandas as pd
+import sys
 
 # input = the data you are using with with the keys listed below as headers
 
@@ -49,6 +50,11 @@ def teps(input):
 
         # FORWARD SCORES AND FORWARD QUESTIONS UNANSWERED
         anticipatory_forward = input[anticipatory_keys].apply(pd.to_numeric, args=('raise',))
+
+        # Are there any values that don't fit in the value parameters
+        anticipatory_forward_nofit = anticipatory_forward[(anticipatory_forward[anticipatory_keys] > 6) |
+                                                          (anticipatory_forward[anticipatory_keys] < 1)].count(axis=1)
+
         anticipatory_forward_leftblank = anticipatory_forward.apply(lambda x: sum(x.isnull().values), axis=1)
 
         # sum all the forward scores
@@ -57,6 +63,10 @@ def teps(input):
 
         # REVERSE SCORES AND REVERSE QUESTIONS UNANSWERED
         anticipatory_rev = input[anticipatory_keys_rev].apply(pd.to_numeric, args=('raise',))
+
+        # Are there any values that don't fit in the value parameters
+        anticipatory_rev_nofit = anticipatory_rev[(anticipatory_rev[anticipatory_keys_rev] > 6) |
+                                                          (anticipatory_rev[anticipatory_keys_rev] < 1)].count(axis=1)
 
         # sum the number of reverse questions left blank or preferred not to answer
         anticipatory_reverse_leftblank = anticipatory_rev.apply(lambda x: sum(x.isnull().values), axis=1)
@@ -77,9 +87,6 @@ def teps(input):
         total_anticipatory_score = total_anticipatory_score + (total_anticipatory_leftblank * total_anticipatory_score /
                                                                (len(anticipatory_keys) + len(anticipatory_keys_rev)-total_anticipatory_leftblank))
 
-        # Discard any value below 10 and above 60
-        total_anticipatory_score = ['Discard' if x < 10 else 'Discard' if x > 60 else x for x in total_anticipatory_score]
-
         anticall = pd.DataFrame(
             {'TEPS_Anticipatory_Score': total_anticipatory_score, 'TEPS_Anticipatory_Left_Blank': total_anticipatory_leftblank})
 
@@ -89,6 +96,11 @@ def teps(input):
 
         # FORWARD SCORES AND FORWARD QUESTIONS UNANSWERED
         consummatory_forward = input[consummatory_keys].apply(pd.to_numeric, args=('raise',))
+
+        # Are there any values that don't fit in the value parameters
+        consummatory_forward_nofit = consummatory_forward[(consummatory_forward[consummatory_keys] > 6) |
+                                                          (consummatory_forward[consummatory_keys] < 1)].count(axis=1)
+
         consummatory_forward_leftblank = consummatory_forward.apply(lambda x: sum(x.isnull().values), axis=1)
 
         # sum all the forward scores
@@ -101,12 +113,19 @@ def teps(input):
         consummatory_forward_score = consummatory_forward_score + (consummatory_forward_leftblank * consummatory_forward_score /
                                                                    (len(consummatory_keys)-consummatory_forward_leftblank))
 
-        # Discard any value below 8 and above 48
-        consummatory_forward_score = ['Discard' if x < 8 else 'Discard' if x > 48 else x for x in consummatory_forward_score]
-
-
         consumall = pd.DataFrame(
             {'TEPS_Consummatory_Score': consummatory_forward_score, 'TEPS_Consummatory_Left_Blank': consummatory_forward_leftblank})
+
+        # ------------------------------------------------------------------------------
+        # Count the number of values that do not fit parameter values
+        nofit = anticipatory_forward_nofit + anticipatory_rev_nofit + consummatory_forward_nofit
+
+        # If there are any values that do not fit parameters, exit the code and make client find the values that did not work
+        for x in nofit:
+            if x >= 1:
+                sys.exit("We found values that don't match parameter values for calculation in your TEPS dataset. "
+                         "Please make sure your values range from 1-6 (see teps script).")
+
 
         # ------------------------------------------------------------------------------
         # Put the scores into one frame

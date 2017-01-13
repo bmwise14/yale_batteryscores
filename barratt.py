@@ -11,7 +11,7 @@ Battery Scores Package for Processing Qualtrics CSV Files
 
 
 import pandas as pd
-
+import sys
 
 # input = the data you are using with with the keys listed below as headers
 # nonresval = the Prefer Not To Answer Choice on your Questionnaire
@@ -86,6 +86,13 @@ def barratt(input, nonresp):
 
         # FORWARD SCORES AND FORWARD QUESTIONS UNANSWERED
         atten1_forward = input[barratt_1atten_keys].apply(pd.to_numeric, args=('raise',))
+
+        # Are there any values that don't fit in the value parameters
+        atten1_forward_nofit = atten1_forward[(atten1_forward[barratt_1atten_keys] != nonresp['barratt']) &
+                                  (atten1_forward[barratt_1atten_keys] > 4) |
+                                  (atten1_forward[barratt_1atten_keys] < 1)].count(axis=1)
+
+
         atten1_forward_leftblank = atten1_forward.apply(lambda x: sum(x.isnull().values), axis=1)
         atten1_forward_prefernotanswer = atten1_forward[atten1_forward[barratt_1atten_keys] == nonresp['barratt']].count(axis=1)
         atten1_forward_unanswered = atten1_forward_leftblank + atten1_forward_prefernotanswer
@@ -96,6 +103,11 @@ def barratt(input, nonresp):
 
         # REVERSE SCORES AND REVERSE QUESTIONS UNANSWERED
         atten1_rev = input[barratt_1atten_rev_keys].apply(pd.to_numeric, args=('raise',))
+
+        # Are there any values that don't fit in the value parameters
+        atten1_rev_nofit = atten1_rev[(atten1_rev[barratt_1atten_rev_keys] != nonresp['barratt']) &
+                                  (atten1_rev[barratt_1atten_rev_keys] > 4) |
+                                  (atten1_rev[barratt_1atten_rev_keys] < 1)].count(axis=1)
 
         # sum the number of reverse questions left blank or preferred not to answer
         atten1_reverse_leftblank = atten1_rev.apply(lambda x: sum(x.isnull().values), axis=1)
@@ -127,6 +139,12 @@ def barratt(input, nonresp):
 
         # SCORES AND QUESTIONS UNANSWERED
         instability = input[barratt_1instability_keys].apply(pd.to_numeric, args=('raise',))
+
+        # Are there any values that don't fit in the value parameters
+        instability_nofit = instability[(instability[barratt_1instability_keys] != nonresp['barratt']) &
+                                  (instability[barratt_1instability_keys] > 4) |
+                                  (instability[barratt_1instability_keys] < 1)].count(axis=1)
+
         instability_leftblank = instability.apply(lambda x: sum(x.isnull().values), axis=1)
         instability_prefernotanswer = instability[instability[barratt_1instability_keys] == nonresp['barratt']].count(axis=1)
 
@@ -148,6 +166,12 @@ def barratt(input, nonresp):
 
         # SCORES AND QUESTIONS UNANSWERED
         motor = input[barratt_1mot_keys].apply(pd.to_numeric, args=('raise',))
+
+        # Are there any values that don't fit in the value parameters
+        motor_nofit = motor[(motor[barratt_1mot_keys] != nonresp['barratt']) &
+                                  (motor[barratt_1mot_keys] > 4) |
+                                  (motor[barratt_1mot_keys] < 1)].count(axis=1)
+
         motor_leftblank = motor.apply(lambda x: sum(x.isnull().values), axis=1)
         motor_prefernotanswer = motor[motor[barratt_1mot_keys] == nonresp['barratt']].count(axis=1)
 
@@ -169,6 +193,12 @@ def barratt(input, nonresp):
 
         # FORWARD SCORES AND FORWARD QUESTIONS UNANSWERED
         selfcontrol1_forward = input[barratt_1selfcontrol_keys].apply(pd.to_numeric, args=('raise',))
+
+        # Are there any values that don't fit in the value parameters
+        selfcontrol1_forward_nofit = selfcontrol1_forward[(selfcontrol1_forward[barratt_1selfcontrol_keys] != nonresp['barratt']) &
+                                  (selfcontrol1_forward[barratt_1selfcontrol_keys] > 4) |
+                                  (selfcontrol1_forward[barratt_1selfcontrol_keys] < 1)].count(axis=1)
+
         selfcontrol1_forward_leftblank = selfcontrol1_forward.apply(lambda x: sum(x.isnull().values), axis=1)
         selfcontrol1_forward_prefernotanswer = selfcontrol1_forward[selfcontrol1_forward[barratt_1selfcontrol_keys] == nonresp['barratt']].count(axis=1)
         selfcontrol1_forward_unanswered = selfcontrol1_forward_leftblank + selfcontrol1_forward_prefernotanswer
@@ -179,6 +209,11 @@ def barratt(input, nonresp):
 
         # REVERSE SCORES AND REVERSE QUESTIONS UNANSWERED
         selfcontrol1_rev = input[barratt_1selfcontrol_rev_keys].apply(pd.to_numeric, args=('raise',))
+
+        # Are there any values that don't fit in the value parameters
+        selfcontrol1_rev_nofit = selfcontrol1_rev[(selfcontrol1_rev[barratt_1selfcontrol_rev_keys] != nonresp['barratt']) &
+                                  (selfcontrol1_rev[barratt_1selfcontrol_rev_keys] > 4) |
+                                  (selfcontrol1_rev[barratt_1selfcontrol_rev_keys] < 1)].count(axis=1)
 
         # sum the number of reverse questions left blank or preferred not to answer
         selfcontrol1_reverse_leftblank = selfcontrol1_rev.apply(lambda x: sum(x.isnull().values), axis=1)
@@ -210,6 +245,12 @@ def barratt(input, nonresp):
 
         # FORWARD SCORES AND FORWARD QUESTIONS UNANSWERED
         complex1_forward = input[barratt_1complex_keys].apply(pd.to_numeric, args=('raise',))
+
+        # Are there any values that don't fit in the value parameters
+        complex1_forward_nofit = complex1_forward[(complex1_forward[barratt_1complex_keys] != nonresp['barratt']) &
+                                  (complex1_forward[barratt_1complex_keys] > 4) |
+                                  (complex1_forward[barratt_1complex_keys] < 1)].count(axis=1)
+
         complex1_forward_leftblank = complex1_forward.apply(lambda x: sum(x.isnull().values), axis=1)
         complex1_forward_prefernotanswer = complex1_forward[complex1_forward[barratt_1complex_keys] == nonresp['barratt']].count(axis=1)
         complex1_forward_unanswered = complex1_forward_leftblank + complex1_forward_prefernotanswer
@@ -221,6 +262,11 @@ def barratt(input, nonresp):
 
         # REVERSE SCORES AND REVERSE QUESTIONS UNANSWERED
         complex1_rev = input[barratt_1complex_rev_keys].apply(pd.to_numeric, args=('raise',))
+
+        # Are there any values that don't fit in the value parameters
+        complex1_rev_nofit = complex1_rev[(complex1_rev[barratt_1complex_rev_keys] != nonresp['barratt']) &
+                                  (complex1_rev[barratt_1complex_rev_keys] > 4) |
+                                  (complex1_rev[barratt_1complex_rev_keys] < 1)].count(axis=1)
 
         # sum the number of reverse questions left blank or preferred not to answer
         complex1_reverse_leftblank = complex1_rev.apply(lambda x: sum(x.isnull().values), axis=1)
@@ -252,6 +298,12 @@ def barratt(input, nonresp):
 
         # FORWARD SCORES AND FORWARD QUESTIONS UNANSWERED
         persever1_forward = input[barratt_1persever_keys].apply(pd.to_numeric, args=('raise',))
+
+        # Are there any values that don't fit in the value parameters
+        persever1_forward_nofit = persever1_forward[(persever1_forward[barratt_1persever_keys] != nonresp['barratt']) &
+                                  (persever1_forward[barratt_1persever_keys] > 4) |
+                                  (persever1_forward[barratt_1persever_keys] < 1)].count(axis=1)
+
         persever1_forward_leftblank = persever1_forward.apply(lambda x: sum(x.isnull().values), axis=1)
         persever1_forward_prefernotanswer = persever1_forward[persever1_forward[barratt_1persever_keys] == nonresp['barratt']].count(axis=1)
         persever1_forward_unanswered = persever1_forward_leftblank + persever1_forward_prefernotanswer
@@ -263,6 +315,11 @@ def barratt(input, nonresp):
 
         # REVERSE SCORES AND REVERSE QUESTIONS UNANSWERED
         persever1_rev = input[barratt_1persever_rev_keys].apply(pd.to_numeric, args=('raise',))
+
+        # Are there any values that don't fit in the value parameters
+        persever1_rev_nofit = persever1_rev[(persever1_rev[barratt_1persever_rev_keys] != nonresp['barratt']) &
+                                  (persever1_rev[barratt_1persever_rev_keys] > 4) |
+                                  (persever1_rev[barratt_1persever_rev_keys] < 1)].count(axis=1)
 
         # sum the number of reverse questions left blank or preferred not to answer
         persever1_reverse_leftblank = persever1_rev.apply(lambda x: sum(x.isnull().values), axis=1)
@@ -290,9 +347,24 @@ def barratt(input, nonresp):
                                                           (len(barratt_1persever_keys)+len(barratt_1persever_rev_keys)-total_persever1_unanswered)))
 
         # ------------------------------------------------------------------------------
+        # Count the number of values that do not fit parameter values
+        nofit = atten1_forward_nofit + atten1_rev_nofit + instability_nofit + motor_nofit + selfcontrol1_forward_nofit + \
+                selfcontrol1_rev_nofit + complex1_forward_nofit + complex1_rev_nofit + persever1_forward_nofit + persever1_rev_nofit
+
+        # If there are any values that do not fit parameters, exit the code and make client find the values that did not work
+        for x in nofit:
+            if x >= 1:
+                sys.exit("We found values that don't match parameter values for calculation in your BARRATT dataset. "
+                         "Please make sure your values range from 1-4 (see barratt script) and have only ONE prefer not to answer value.")
+
+
+
+
+
+
+
+        # ------------------------------------------------------------------------------
         # ATTENTIONAL IMPULSIVENESS
-
-
         # FORWARD SCORES AND FORWARD QUESTIONS UNANSWERED
         atteimpuls2_forward = input[barratt_2attentionalimpulsiveness_keys].apply(pd.to_numeric, args=('raise',))
         atteimpuls2_forward_leftblank = atteimpuls2_forward.apply(lambda x: sum(x.isnull().values), axis=1)

@@ -11,6 +11,7 @@ Battery Scores Package for Processing Qualtrics CSV Files
 
 
 import pandas as pd
+import sys
 
 
 # input = the data you are using with with the keys listed below as headers
@@ -56,6 +57,12 @@ def bapq(input, nonresp):
 
         # FORWARD SCORES AND FORWARD QUESTIONS UNANSWERED
         aloof_forward = input[bapq_aloof_keys].apply(pd.to_numeric, args=('raise',))
+
+        # Are there any values that don't fit in the value parameters
+        aloof_forward_nofit = aloof_forward[(aloof_forward[bapq_aloof_keys] != nonresp['bapq']) &
+                                  (aloof_forward[bapq_aloof_keys] > 6) |
+                                  (aloof_forward[bapq_aloof_keys] < 1)].count(axis=1)
+
         aloof_forward_leftblank = aloof_forward.apply(lambda x: sum(x.isnull().values), axis=1)
         aloof_forward_prefernotanswer = aloof_forward[aloof_forward[bapq_aloof_keys] == nonresp['bapq']].count(axis=1)
 
@@ -65,6 +72,11 @@ def bapq(input, nonresp):
 
         # REVERSE SCORES AND REVERSE QUESTIONS UNANSWERED
         aloof_rev = input[bapq_aloof_rev_keys].apply(pd.to_numeric, args=('raise',))
+
+        # Are there any values that don't fit in the value parameters
+        aloof_rev_nofit = aloof_rev[(aloof_rev[bapq_aloof_rev_keys] != nonresp['bapq']) &
+                                  (aloof_rev[bapq_aloof_rev_keys] > 6) |
+                                  (aloof_rev[bapq_aloof_rev_keys] < 1)].count(axis=1)
 
         # sum the number of reverse questions left blank or preferred not to answer
         aloof_reverse_leftblank = aloof_rev.apply(lambda x: sum(x.isnull().values), axis=1)
@@ -92,6 +104,12 @@ def bapq(input, nonresp):
 
         # FORWARD SCORES AND FORWARD QUESTIONS UNANSWERED
         rigid_forward = input[bapq_rigid_keys].apply(pd.to_numeric, args=('raise',))
+
+        # Are there any values that don't fit in the value parameters
+        rigid_forward_nofit = rigid_forward[(rigid_forward[bapq_rigid_keys] != nonresp['bapq']) &
+                                  (rigid_forward[bapq_rigid_keys] > 6) |
+                                  (rigid_forward[bapq_rigid_keys] < 1)].count(axis=1)
+
         rigid_forward_leftblank = rigid_forward.apply(lambda x: sum(x.isnull().values), axis=1)
         rigid_forward_prefernotanswer = rigid_forward[rigid_forward[bapq_rigid_keys] == nonresp['bapq']].count(axis=1)
 
@@ -101,6 +119,11 @@ def bapq(input, nonresp):
 
         # REVERSE SCORES AND REVERSE QUESTIONS UNANSWERED
         rigid_rev = input[bapq_rigid_rev_keys].apply(pd.to_numeric, args=('raise',))
+
+        # Are there any values that don't fit in the value parameters
+        rigid_rev_nofit = rigid_rev[(rigid_rev[bapq_rigid_rev_keys] != nonresp['bapq']) &
+                                  (rigid_rev[bapq_rigid_rev_keys] > 6) |
+                                  (rigid_rev[bapq_rigid_rev_keys] < 1)].count(axis=1)
 
         # sum the number of reverse questions left blank or preferred not to answer
         rigid_reverse_leftblank = rigid_rev.apply(lambda x: sum(x.isnull().values), axis=1)
@@ -128,6 +151,12 @@ def bapq(input, nonresp):
 
         # FORWARD SCORES AND FORWARD QUESTIONS UNANSWERED
         prag_forward = input[bapq_prag_keys].apply(pd.to_numeric, args=('raise',))
+
+        # Are there any values that don't fit in the value parameters
+        prag_forward_nofit = prag_forward[(prag_forward[bapq_prag_keys] != nonresp['bapq']) &
+                                  (prag_forward[bapq_prag_keys] > 6) |
+                                  (prag_forward[bapq_prag_keys] < 1)].count(axis=1)
+
         prag_forward_leftblank = prag_forward.apply(lambda x: sum(x.isnull().values), axis=1)
         prag_forward_prefernotanswer = prag_forward[prag_forward[bapq_prag_keys] == nonresp['bapq']].count(axis=1)
 
@@ -137,6 +166,11 @@ def bapq(input, nonresp):
 
         # REVERSE SCORES AND REVERSE QUESTIONS UNANSWERED
         prag_rev = input[bapq_prag_rev_keys].apply(pd.to_numeric, args=('raise',))
+
+        # Are there any values that don't fit in the value parameters
+        prag_rev_nofit = prag_rev[(prag_rev[bapq_prag_rev_keys] != nonresp['bapq']) &
+                                  (prag_rev[bapq_prag_rev_keys] > 6) |
+                                  (prag_rev[bapq_prag_rev_keys] < 1)].count(axis=1)
 
         # sum the number of reverse questions left blank or preferred not to answer
         prag_reverse_leftblank = prag_rev.apply(lambda x: sum(x.isnull().values), axis=1)
@@ -178,6 +212,18 @@ def bapq(input, nonresp):
 
 
         # ------------------------------------------------------------------------------
+        # Count the number of values that do not fit parameter values
+        nofit = aloof_forward_nofit + aloof_rev_nofit + rigid_forward_nofit + rigid_rev_nofit + prag_forward_nofit + prag_rev_nofit
+
+        # If there are any values that do not fit parameters, exit the code and make client find the values that did not work
+        for x in nofit:
+            if x >= 1:
+                sys.exit("We found values that don't match parameter values for calculation in your BAPQ dataset. "
+                         "Please make sure your values range from 1-6 (see bapq script) and have only ONE prefer not to answer value.")
+
+
+
+        # ------------------------------------------------------------------------------
         # Put the scores into one frame
         frames = [aloofall, rigidall, pragall, totalscore]
         result = pd.concat(frames, axis=1)
@@ -187,4 +233,4 @@ def bapq(input, nonresp):
     except TypeError:
         print("You need (1) the dataframe and (2) a numeric BAPQ 'Prefer Not To Answer' choice (or stored variable) in your function arguments.")
     except ValueError:
-        print("We found strings in your BAPQ dataset. Please make sure there are no strings/letters in your input. Otherwise, we can't do our thang.")
+        print("We found strings in your BAPQ dataset. Please make sure there are no strings/letters in your dataset. Otherwise, we can't do our thang.")

@@ -10,6 +10,7 @@ Battery Scores Package for Processing Qualtrics CSV Files
 """
 
 import pandas as pd
+import sys
 
 # input = the data you are using with with the keys listed below as headers
 # nonresval = the Prefer Not To Answer Choice on your Questionnaire
@@ -40,10 +41,10 @@ def dospert(input, nonresp):
     try:
         # RISK TAKING MODULE
         # EXTREMELY UNLIKELY - MODERATELY UNLIKELY - SOMEWHAT UNLIKELY - NOT SURE - SOMEWHAT LIKELY - MODERATELY LIKELY - EXTREMELY LIKELY - PREFER NOT TO ANSWER
-        #           1                   2                   3               4             5                    6               7                     8
+        #           1                   2                   3               4             5                    6               7                     YOUR #
         # RISK PERCEPTION MODULE
         # NOT AT ALL RISKY - SLIGHTLY RISKY - SOMEWHAT RISKY - MODERATELY RISKY - RISKY - VERY RISKY - EXTREMELY RISKY - PREFER NOT TO ANSWER
-        #           1              2                3                  4            5          6            7                   8
+        #           1              2                3                  4            5          6            7                   YOUR #
         # ------------------------------------------------------------------------------
         risktaking_keys = ['dospert_1', 'dospert_2', 'dospert_3', 'dospert_4', 'dospert_5', 'dospert_6', 'dospert_7',
                            'dospert_8', 'dospert_9', 'dospert_10', 'dospert_11', 'dospert_12', 'dospert_13', 'dospert_14',
@@ -64,6 +65,12 @@ def dospert(input, nonresp):
 
         # SCORES AND QUESTIONS UNANSWERED
         risktaking = input[risktaking_keys].apply(pd.to_numeric, args=('raise',))
+
+        # Are there any values that don't fit in the value parameters
+        risktaking_nofit = risktaking[(risktaking[risktaking_keys] != nonresp['dospert']) &
+                                  (risktaking[risktaking_keys] > 7) |
+                                  (risktaking[risktaking_keys] < 1)].count(axis=1)
+
         risktaking_leftblank = risktaking.apply(lambda x: sum(x.isnull().values), axis=1)
         risktaking_prefernotanswer = risktaking[risktaking[risktaking_keys] == nonresp['dospert']].count(axis=1)
 
@@ -94,6 +101,12 @@ def dospert(input, nonresp):
 
         # SCORES AND QUESTIONS UNANSWERED
         perception = input[riskperception_keys].apply(pd.to_numeric, args=('raise',))
+
+        # Are there any values that don't fit in the value parameters
+        perception_nofit = perception[(perception[riskperception_keys] != nonresp['dospert']) &
+                                  (perception[riskperception_keys] > 7) |
+                                  (perception[riskperception_keys] < 1)].count(axis=1)
+
         perception_leftblank = perception.apply(lambda x: sum(x.isnull().values), axis=1)
         perception_prefernotanswer = perception[perception[riskperception_keys] == nonresp['dospert']].count(axis=1)
 
@@ -109,13 +122,18 @@ def dospert(input, nonresp):
         # Add all of this to to the original score.
         perception_score = (perception_score + (perception_unanswered * perception_score / (len(riskperception_keys)-perception_unanswered)))
 
-        # Discard any value below 40 and above 280
-        # perception_score = ['Discard' if x < 40 else 'Discard' if x > 280 else x for x in perception_score]
-
         perceptionall = pd.DataFrame(
             {'DOSPERT Risk Perception Score': perception_score, 'DOSPERT Risk Perception Left Blank': perception_leftblank,
              'DOSPERT Risk Perception Prefer Not to Answer': perception_prefernotanswer})
 
+        # ------------------------------------------------------------------------------
+        # Count the number of values that do not fit parameter values
+        nofit = risktaking_nofit + perception_nofit
+        # If there are any values that do not fit parameters, exit the code and make client find the values that did not work
+        for x in nofit:
+            if x >= 1:
+                sys.exit("We found values that don't match parameter values for calculation in your DOSPERT dataset. "
+                         "Please make sure your values range from 1-7 (see dospert script) and have only ONE prefer not to answer value.")
 
 
         # ------------------------------------------------------------------------------

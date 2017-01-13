@@ -11,6 +11,7 @@ Battery Scores Package for Processing Qualtrics CSV Files
 
 """
 import pandas as pd
+import sys
 
 # input = the data you are using with with the keys listed below as headers
 # nonresval = the Prefer Not To Answer Choice on your Questionnaire
@@ -50,6 +51,11 @@ def ncog(input, nonresp):
         # FORWARD SCORES AND FORWARD QUESTIONS UNANSWERED
         ncog_forward = input[ncog_keys].apply(pd.to_numeric, args=('raise',))
 
+        # Are there any values that don't fit in the value parameters
+        ncog_forward_nofit = ncog_forward[(ncog_forward[ncog_keys] != nonresp['ncog']) &
+                                  (ncog_forward[ncog_keys] > 5) |
+                                  (ncog_forward[ncog_keys] < 1)].count(axis=1)
+
 
         ncog_forward_leftblank = ncog_forward.apply(lambda x: sum(x.isnull().values), axis=1)
         ncog_forward_prefernotanswer = ncog_forward[ncog_forward[ncog_keys] == nonresp['ncog']].count(axis=1)
@@ -61,6 +67,11 @@ def ncog(input, nonresp):
 
         # REVERSE SCORES AND REVERSE QUESTIONS UNANSWERED
         ncog_rev = input[ncog_rev_keys].apply(pd.to_numeric, args=('raise',))
+
+        # Are there any values that don't fit in the value parameters
+        ncog_rev_nofit = ncog_rev[(ncog_rev[ncog_rev_keys] != nonresp['ncog']) &
+                                  (ncog_rev[ncog_rev_keys] > 5) |
+                                  (ncog_rev[ncog_rev_keys] < 1)].count(axis=1)
 
         # sum the number of reverse questions left blank or preferred not to answer
         ncog_reverse_leftblank = ncog_rev.apply(lambda x: sum(x.isnull().values), axis=1)
@@ -88,15 +99,20 @@ def ncog(input, nonresp):
         # Add all of this to to the original drive score.
         total_ncog_score = (total_ncog_score + (total_ncog_unanswered * total_ncog_score / (len(ncog_keys)+len(ncog_rev_keys))))
 
-
-        # Discard any value below 18 and above 90
-        total_ncog_score = ['Discard' if x < 18
-                            else 'Discard' if x > 90 else x for x in total_ncog_score]
-
         ncogall = pd.DataFrame(
             {'ncog_Score': total_ncog_score,
              'ncog_Left_Blank': total_ncog_leftblank,
              'ncog_Prefer_Not_to_Answer': total_ncog_prefernotanswer})
+
+        # ------------------------------------------------------------------------------
+        # Count the number of values that do not fit parameter values
+        nofit = ncog_forward_nofit + ncog_rev_nofit
+
+        # If there are any values that do not fit parameters, exit the code and make client find the values that did not work
+        for x in nofit:
+            if x >= 1:
+                sys.exit("We found values that don't match parameter values for calculation in your NCOG dataset. "
+                         "Please make sure your values range from 1-5 (see ncog script) and have only ONE prefer not to answer value.")
 
         # ------------------------------------------------------------------------------
         # Put all the scores into one frame

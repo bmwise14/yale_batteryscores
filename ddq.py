@@ -11,6 +11,7 @@ Battery Scores Package for Processing Qualtrics CSV Files
 
 import pandas as pd
 from math import log
+import sys
 
 # input = the data you are using with with the keys listed below as headers
 
@@ -135,6 +136,9 @@ def ddq(input):
         # Converts keys to numeric values
         smalldr = input[smalldr_keys].apply(pd.to_numeric, args=('raise',))
 
+        # Are there any values that don't fit in the value parameters
+        smalldr_nofit = [(smalldr[smalldr_keys] > 2) | (smalldr[smalldr_keys] < 1)].count(axis=1)
+
         # Counts the number of delayed reward choices and immediate choices among the small delayed reward keys
         smalldr_delayedreward = smalldr[smalldr[smalldr_keys] == 2].count(axis=1)
         smalldr_didnotdelay = smalldr[smalldr[smalldr_keys] == 1].count(axis=1)
@@ -181,6 +185,9 @@ def ddq(input):
         # see smalldr comments. Exact same computation.
         mediumdr = input[mediumdr_keys].apply(pd.to_numeric, args=('raise',))
 
+        # Are there any values that don't fit in the value parameters
+        mediumdr_nofit = [(mediumdr[mediumdr_keys] > 2) | (mediumdr[mediumdr_keys] < 1)].count(axis=1)
+
         mediumdr_delayedreward = mediumdr[mediumdr[mediumdr_keys] == 2].count(axis=1)
         mediumdr_didnotdelay = mediumdr[mediumdr[mediumdr_keys] == 1].count(axis=1)
 
@@ -211,6 +218,9 @@ def ddq(input):
         # -----------------------------------------------------------------------------------------------------------------#
         # see smalldr comments. Exact same computation.
         largedr = input[largedr_keys].apply(pd.to_numeric, args=('raise',))
+
+        # Are there any values that don't fit in the value parameters
+        largedr_nofit = [(largedr[largedr_keys] > 2) | (largedr[largedr_keys] < 1)].count(axis=1)
 
         largedr_delayedreward = largedr[largedr[largedr_keys] == 2].count(axis=1)
         largedr_didnotdelay = largedr[largedr[largedr_keys] == 1].count(axis=1)
@@ -269,6 +279,17 @@ def ddq(input):
         totaldiscountrate = pd.DataFrame({'Total_Discount_Rate': totallogdiscountrate})
         totaldiscountrate.index += 1
 
+        # ------------------------------------------------------------------------------
+        # Count the number of values that do not fit parameter values
+        nofit = smalldr_nofit + mediumdr_nofit + largedr_nofit
+
+        # If there are any values that do not fit parameters, exit the code and make client find the values that did not work
+        for x in nofit:
+            if x >= 1:
+                sys.exit("We found values that don't match parameter values for calculation in your DDQ dataset. "
+                         "Please make sure your values range from 1-2 (see ddq script)")
+
+
 
         # -----------------------------------------------------------------------------------------------------------------#
 
@@ -280,99 +301,3 @@ def ddq(input):
               "Please look at the ddq function in this package and put in the correct keys.")
     except ValueError:
         print("We found strings in your DDQ dataset. Please make sure there are no strings/letters in your input. Otherwise, we can't do our thang.")
-
-
-
-
-
-
-    # # """OLD SCRIPT BELOW"""
-
-    #
-    # import numpy as np
-    # from lxml import etree
-    # import numpy as Numeric
-    # #
-    # # discount rate array for each of 9 questions:
-    # midLDRs_trialKs = [0.0002, 0.0004, 0.1000, 0.0060, 0.0410, 0.0025, 0.0160, 0.0010, 0.2500]
-    # # bins that each answer can speak to:
-    # kbins = [0.0002, 0.0003, 0.0007, 0.0018, 0.0043, 0.0110, 0.0285, 0.0705, 0.1750, 0.2500]
-    # kbins = [0.00016, 0.00025, 0.00063, 0.00158, 0.00387, 0.0098, 0.02561, 0.06403, 0.15811, 0.2500]
-    #
-    # delay_OmissionCount = 0
-    # delay_IncludedCount = 0
-    # delay_Tracker = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    #
-    # ## --- Delay Discounting parsing
-    # quitter = False
-    # for row in array:
-    #     if "DelayDiscounting" in row[1]:
-    #         ## --- check if subject is a quitter
-    #         if (row[5] == ""):
-    #             quitter = True
-    #             break
-    #         if row[5] in omitted:
-    #             delay_OmissionCount += 1
-    #         else:
-    #             delay_IncludedCount += 1
-    #         if int(row[5]) == 1:
-    #             for itemNum in range(0, 10):
-    #                 if kbins[itemNum] <= midLDRs_trialKs[int(row[2]) - 1]:
-    #                     delay_Tracker[itemNum] += 0
-    #                 else:
-    #                     delay_Tracker[itemNum] += 1
-    #         elif int(row[5]) == 2:
-    #             for itemNum in range(0, 10):
-    #                 if kbins[itemNum] >= midLDRs_trialKs[int(row[2]) - 1]:
-    #                     delay_Tracker[itemNum] += 0
-    #                 else:
-    #                     delay_Tracker[itemNum] += 1
-
-
-
-
-    """
-    for a row in the array:
-        if 'DelayDiscounting' in row 2 and if there is a blank choice in the corresponding row 6:
-            print that this dude is a quitter and stop the code.
-    if an integer of row 6 = 1: (if 1 == 1):
-        let's create a range between 0 and 9 (so 10 total ranges):
-            if the kbin associated with 0 (0.0002) is less than or equal to 1-1:
-                don't add anything to the delay tracker array at 0.
-                so add a 1 to the delay tracker at 0
-
-    This doesn't make any sense to me...
-
-    I went into Milgram to run the code. I did not how to input things into the command line. I don't know how XNAT works.
-
-    I don't now how to install the neuro package on my MAC. Had to do it in MILGRAM.
-    """
-
-
-
-    # ## --- Identify and calculate the discounting rates
-    # MaxValue = Numeric.max(delay_Tracker)
-    # MaxCount = 0
-    # DiscountingRate = 0
-    #
-    # for itemNum in range(0, 10):
-    #     if delay_Tracker[itemNum] == MaxValue:
-    #         MaxCount += 1
-    #         DiscountingRate += kbins[itemNum]
-    #
-    # # Divides the discounting rates by the number of discounting rates Rounds to the 5th decimal place
-    # DiscountingRate = round((DiscountingRate / MaxCount), 5)
-    #
-    # DelayExclude = "Keep"
-    # if delay_OmissionCount >= 2:
-    #     DelayExclude = "Drop"
-    #
-    # LogDiscountingRate = round(Numeric.log10(DiscountingRate), 9)
-    #
-    # ## --- DelayDiscounting xml group
-    # group = etree.SubElement(derivs, "group", label="delaydiscounting")
-    # etree.SubElement(group, "deriv", unit="float", label="discounting rate").text = str("%.4f" % DiscountingRate)
-    # etree.SubElement(group, "deriv", unit="float", label="log discounting rate").text = str("%.4f" % LogDiscountingRate)
-    # etree.SubElement(group, "deriv", unit="string", label="delay exclude").text = DelayExclude
-    # etree.SubElement(group, "deriv", unit="float", label="omission count").text = str(delay_OmissionCount)
-    # etree.SubElement(group, "deriv", unit="float", label="included count").text = str(delay_IncludedCount)

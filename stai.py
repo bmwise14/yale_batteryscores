@@ -10,6 +10,7 @@ Battery Scores Package for Processing Qualtrics CSV Files
 """
 
 import pandas as pd
+import sys
 
 # input = the data you are using with with the keys listed below as headers
 # nonresval = the Prefer Not To Answer Choice on your Questionnaire
@@ -56,6 +57,11 @@ def stai(input, nonresp):
         # change the numbers in forward STAI Trait headers to numeric floats
         stai_trait_forward = input[stai_trait_keys].apply(pd.to_numeric, args=('raise',))
 
+        # Are there any values that don't fit in the value parameters
+        stai_trait_forward_nofit = stai_trait_forward[(stai_trait_forward[stai_trait_keys] != nonresp['STAI']) &
+                                  (stai_trait_forward[stai_trait_keys] > 4) |
+                                  (stai_trait_forward[stai_trait_keys] < 1)].count(axis=1)
+
         # sum the number of forward questions left blank or preferred not to answer
         stai_trait_forward_leftblank = stai_trait_forward.apply(lambda x: sum(x.isnull().values), axis=1)
         stai_trait_forward_prefernotanswer = stai_trait_forward[stai_trait_forward[stai_trait_keys] == nonresp['STAI']].count(axis=1)
@@ -67,6 +73,11 @@ def stai(input, nonresp):
 
         # change the numbers in reverse STAI Trait headers to numeric floats
         stai_trait_rev = input[stai_trait_rev_keys].apply(pd.to_numeric, args=('raise',))
+
+        # Are there any values that don't fit in the value parameters
+        stai_trait_rev_nofit = stai_trait_rev[(stai_trait_rev[stai_trait_rev_keys] != nonresp['STAI']) &
+                                  (stai_trait_rev[stai_trait_rev_keys] > 4) |
+                                  (stai_trait_rev[stai_trait_rev_keys] < 1)].count(axis=1)
 
         # sum the number of reverse questions left blank or preferred not to answer
         stai_trait_reverse_leftblank = stai_trait_rev.apply(lambda x: sum(x.isnull().values), axis=1)
@@ -95,8 +106,6 @@ def stai(input, nonresp):
 
                                                            (len(stai_trait_keys)+len(stai_trait_rev_keys) - (total_STAI_Trait_unanswered)))
 
-        # Discard any value below 20 and above 80
-        # total_STAI_Trait_score = ['Discard (<20)' if x < 20 else 'Discard (>80)' if x > 80 else x for x in total_STAI_Trait_score]
 
 
         staitraitall = pd.DataFrame(
@@ -109,6 +118,12 @@ def stai(input, nonresp):
 
         # change the numbers in forward STAI STATE headers to numeric floats
         stai_state_forward = input[stai_state_keys].apply(pd.to_numeric, args=('raise',))
+
+        # Are there any values that don't fit in the value parameters
+        stai_state_forward_nofit = stai_state_forward[(stai_state_forward[stai_state_keys] != nonresp['STAI']) &
+                                  (stai_state_forward[stai_state_keys] > 4) |
+                                  (stai_state_forward[stai_state_keys] < 1)].count(axis=1)
+
         # sum the number of forward questions left blank or preferred not to answer
         stai_state_forward_leftblank = stai_state_forward.apply(lambda x: sum(x.isnull().values), axis=1)
         stai_state_forward_prefernotanswer = stai_state_forward[stai_state_forward[stai_state_keys] == nonresp['STAI']].count(axis=1)
@@ -120,6 +135,11 @@ def stai(input, nonresp):
 
         # change the numbers in forward STAI STATE headers to numeric floats
         stai_state_rev = input[stai_state_rev_keys].apply(pd.to_numeric, args=('raise',))
+
+        # Are there any values that don't fit in the value parameters
+        stai_state_rev_nofit = stai_state_rev[(stai_state_rev[stai_state_rev_keys] != nonresp['STAI']) &
+                                  (stai_state_rev[stai_state_rev_keys] > 4) |
+                                  (stai_state_rev[stai_state_rev_keys] < 1)].count(axis=1)
 
         # sum the number of forward questions left blank or preferred not to answer
         stai_state_rev_leftblank = stai_state_rev.apply(lambda x: sum(x.isnull().values), axis=1)
@@ -147,13 +167,21 @@ def stai(input, nonresp):
                                                            (len(stai_state_keys)+len(stai_state_rev_keys) - (total_STAI_state_unanswered)))
 
 
-        # Discard any value below 20 and above 80
-        # total_STAI_state_score = ['Discard (<20)' if x < 20 else 'Discard (>80)' if x > 80 else x for x in total_STAI_state_score]
-
         staistateall = pd.DataFrame(
             {'STAI_State_Score': total_STAI_state_score, 'STAI_State_Left_Blank': total_stai_state_leftblank,
              'STAI_State_Prefer_Not_to_Answer': total_stai_state_prefernotanswer})
 
+
+
+        # ------------------------------------------------------------------------------
+        # Count the number of values that do not fit parameter values
+        nofit = stai_trait_forward_nofit + stai_trait_rev_nofit + stai_state_forward_nofit + stai_state_rev_nofit
+
+        # If there are any values that do not fit parameters, exit the code and make client find the values that did not work
+        for x in nofit:
+            if x >= 1:
+                sys.exit("We found values that don't match parameter values for calculation in your STAI dataset. "
+                         "Please make sure your values range from 1-4 (see stai script) and have only ONE prefer not to answer value.")
 
 
         # ------------------------------------------------------------------------------
@@ -166,24 +194,3 @@ def stai(input, nonresp):
         print("We could not find the STAI headers in your dataset. Please look at the stai function in this package and put in the correct keys.")
     except ValueError:
         print("We found strings in your STAI dataset. Please make sure there are no strings/letters in your input. Otherwise, we can't do our thang.")
-
-
-        # if QC_Non_resp_STAI_T < 3:
-        #     STAI_tAnxiety = int(sum(stai_trait) / len(stai_trait) * 20)
-        # if QC_Non_resp_STAI_S < 3:
-        #     STAI_sAnxiety = int(sum(stai_state) / len(stai_state) * 20)
-        #
-        # QC_Non_resp_STAI = QC_Non_resp_STAI_T + QC_Non_resp_STAI_S
-
-
-        # all = [stai_trait_keys, stai_trait_rev_keys, stai_state_keys, stai_state_rev_keys]
-        #
-        #
-        # for x in all:
-        #     for_x = input[x].apply(pd.to_numeric, args=('raise',))
-        #     # sum the number of forward questions left blank or preferred not to answer
-        #     x_forward_leftblank = for_x.apply(lambda x: sum(x.isnull().values), axis=1)
-        #     x_forward_prefernotanswer = for_x[for_x[x] == nonresp['STAI']].count(axis=1)
-        #     x_forward_unanswered = x_forward_leftblank + x_forward_prefernotanswer
-        #     # sum all the forward scores
-        #     x_forward_score = for_x[(for_x[x] >= 1) & (for_x[x] <= 4)].sum(axis=1)

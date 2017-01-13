@@ -11,6 +11,7 @@ Battery Scores Package for Processing Qualtrics CSV Files
 
 
 import pandas as pd
+import sys
 
 
 # input = the data you are using with with the keys listed below as headers
@@ -68,6 +69,9 @@ def snaith(input):
         # change the numbers in drive headers to numeric floats
         snaith = input[snaith_headers_rev].apply(pd.to_numeric, args=('raise',))
 
+        # Are there any values that don't fit in the value parameters
+        snaith_nofit = snaith[(snaith[snaith_headers_rev] > 5) | (snaith[snaith_headers_rev] < 0)].count(axis=1)
+
         # These count the number of drive questions left blank or answered as 5 and sums them up as drive_unanswered
         snaith_leftblank = snaith.apply(lambda x: sum(x.isnull().values), axis=1)
 
@@ -77,6 +81,16 @@ def snaith(input):
         snaith_score = snaith_answers_reversed.sum(axis=1, skipna = True)
 
         snaithall = pd.DataFrame({'Snaith_Score' : snaith_score, 'Snaith_Left_Blank': snaith_leftblank})
+
+        # ------------------------------------------------------------------------------
+        # Count the number of values that do not fit parameter values
+        nofit = snaith_nofit
+
+        # If there are any values that do not fit parameters, exit the code and make client find the values that did not work
+        for x in nofit:
+            if x >= 1:
+                sys.exit("We found values that don't match parameter values for calculation in your SNAITH dataset. "
+                         "Please make sure your values range from 1-5 (see snaith script).")
 
 
         # ------------------------------------------------------------------------------

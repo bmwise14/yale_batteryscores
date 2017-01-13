@@ -10,6 +10,7 @@ Battery Scores Package for Processing Qualtrics CSV Files
 """
 
 import pandas as pd
+import sys
 
 # input = the data you are using with with the keys listed below as headers
 # nonresval = the Prefer Not To Answer Choice on your Questionnaire
@@ -42,7 +43,7 @@ def bisbas(input, nonresp):
 
     try:
         # VERY TRUE - SOMEWHAT TRUE - SOMEWHAT FALSE - VERY FALSE - PREFER NOT TO ANSWER
-        #     1             2               3               4               5
+        #     1             2               3               4               YOUR #
 
         # ------------------------------------------------------------------------------
         # These are are the different headers and their corresponding questions
@@ -61,6 +62,11 @@ def bisbas(input, nonresp):
         # change the numbers in drive headers to numeric floats
         drive = input[drive_headers].apply(pd.to_numeric, args=('raise',))
 
+        # Are there any values that don't fit in the value parameters
+        drive_nofit = drive[(drive[drive_headers] != nonresp['BISBAS']) &
+                                  (drive[drive_headers] > 4) |
+                                  (drive[drive_headers] < 1)].count(axis=1)
+
         # These count the number of drive questions left blank or answered as 5 and sums them up as drive_unanswered
         drive_leftblank = drive.apply(lambda x: sum(x.isnull().values), axis=1)
         drive_prefernotanswer = drive[drive[drive_headers] == nonresp['BISBAS']].count(axis=1)
@@ -77,10 +83,6 @@ def bisbas(input, nonresp):
         # Add all of this to to the original score.
         drive_score = drive_score + (drive_unanswered * drive_score / (len(drive_headers)-drive_unanswered))
 
-        # Discard any value below 4 and above 16
-        # drive_score = ['Discard' if x < 4
-        #                else 'Discard' if x > 16 else x for x in drive_score]
-
 
         driveall = pd.DataFrame({'Drive_Score' : drive_score, 'Drive Left Blank': drive_leftblank,
              'Drive Prefer Not to Answer': drive_prefernotanswer})
@@ -91,6 +93,11 @@ def bisbas(input, nonresp):
 
         # change the numbers in funseeking headers to numeric floats
         funseeking = input[funseeking_headers].apply(pd.to_numeric, args=('raise',))
+
+        # Are there any values that don't fit in the value parameters
+        funseeking_nofit = funseeking[(funseeking[funseeking_headers] != nonresp['BISBAS']) &
+                                  (funseeking[funseeking_headers] > 4) |
+                                  (funseeking[funseeking_headers] < 1)].count(axis=1)
 
         # These count the number of drive questions left blank or answered as 5 and sums them up as drive_unanswered
         funseeking_leftblank = funseeking.apply(lambda x: sum(x.isnull().values), axis=1)
@@ -107,9 +114,6 @@ def bisbas(input, nonresp):
         # Add all of this to to the original score.
         funseeking_score = funseeking_score + (funseeking_unanswered * funseeking_score / (len(funseeking_headers)-funseeking_unanswered))
 
-        # Discard any value below 4 and above 16
-        # funseeking_score = ['Discard' if x < 4
-        #                     else 'Discard' if x > 16 else x for x in funseeking_score]
 
         funseekingall = pd.DataFrame({'Funseeking Score': funseeking_score, 'Funseeking Left Blank': funseeking_leftblank,
              'Funseeking Prefer Not to Answer': funseeking_prefernotanswer})
@@ -121,6 +125,11 @@ def bisbas(input, nonresp):
 
         # change the numbers in reward headers to numeric floats
         reward = input[reward_headers].apply(pd.to_numeric, args=('raise',))
+
+        # Are there any values that don't fit in the value parameters
+        reward_nofit = reward[(reward[reward_headers] != nonresp['BISBAS']) &
+                                  (reward[reward_headers] > 4) |
+                                  (reward[reward_headers] < 1)].count(axis=1)
 
         # These count the number of drive questions left blank or answered as 5 and sums them up as drive_unanswered
         reward_leftblank = reward.apply(lambda x: sum(x.isnull().values), axis=1)
@@ -137,11 +146,6 @@ def bisbas(input, nonresp):
         # Add all of this to to the original score.
         reward_score = reward_score + (reward_unanswered * reward_score / (len(reward_headers)-reward_unanswered))
 
-        # Discard any value below 5 and above 20
-        # reward_score = ['Discard' if x < 5
-        #                     else 'Discard' if x > 20 else x for x in reward_score]
-
-
         rewardall = pd.DataFrame({'Reward Score': reward_score, 'Reward Left Blank': reward_leftblank,
              'Reward Prefer Not to Answer': reward_prefernotanswer})
 
@@ -152,6 +156,11 @@ def bisbas(input, nonresp):
 
         # change the numbers in reverse_code_bis to numeric floats
         bis_reverse = input[reverse_code_bis].apply(pd.to_numeric, args=('raise',))
+
+        # Are there any values that don't fit in the value parameters
+        bis_reverse_nofit = bis_reverse[(bis_reverse[reverse_code_bis] != nonresp['BISBAS']) &
+                                  (bis_reverse[reverse_code_bis] > 4) |
+                                  (bis_reverse[reverse_code_bis] < 1)].count(axis=1)
 
         # These count the number of drive questions left blank or answered as 5 and sums them up as drive_unanswered
         bisreverse_leftblank = bis_reverse.apply(lambda x: sum(x.isnull().values), axis=1)
@@ -166,6 +175,11 @@ def bisbas(input, nonresp):
 
         # change the numbers in forward_code_bis to numeric floats
         bis_forward = input[forward_code_bis].apply(pd.to_numeric, args=('raise',))
+
+        # Are there any values that don't fit in the value parameters
+        bis_forward_nofit = bis_forward[(bis_forward[forward_code_bis] != nonresp['BISBAS']) &
+                                  (bis_forward[forward_code_bis] > 4) |
+                                  (bis_forward[forward_code_bis] < 1)].count(axis=1)
 
         # These count the number of drive questions left blank or answered as 5 and sums them up as drive_unanswered
         bis_forward_leftblank = bis_forward.apply(lambda x: sum(x.isnull().values), axis=1)
@@ -187,11 +201,6 @@ def bisbas(input, nonresp):
         # Add all of this to to the original score.
         total_bis_score = (total_bis_score + (bis_unanswered * total_bis_score / (len(reverse_code_bis)+len(forward_code_bis)-bis_unanswered)))
 
-
-        # Discard any value below 7 and above 28
-        # total_bis_score = ['Discard' if x < 7
-        #                     else 'Discard' if x > 28 else x for x in total_bis_score]
-
         # TOTAL ANSWERS LEFT BLANK
         total_bis_leftblank = bis_forward_leftblank + bisreverse_leftblank
         #TOTAL ANSWERS PREFER NOT TO ANSWER
@@ -201,6 +210,15 @@ def bisbas(input, nonresp):
         bisall = pd.DataFrame({'BIS Score': total_bis_score, 'BIS Left Blank': total_bis_leftblank,
              'BIS Prefer Not to Answer': total_bis_prefernotanswer})
 
+        # ------------------------------------------------------------------------------
+        # Count the number of values that do not fit parameter values
+        nofit = drive_nofit + funseeking_nofit + reward_nofit + bis_reverse_nofit + bis_forward_nofit
+
+        # If there are any values that do not fit parameters, exit the code and make client find the values that did not work
+        for x in nofit:
+            if x >= 1:
+                sys.exit("We found values that don't match parameter values for calculation in your BISBAS dataset. "
+                         "Please make sure your values range from 1-4 (see bisbas script) and have only ONE prefer not to answer value.")
 
         # -----------------------------------------------------------------------------
         # Put the scores into one frame

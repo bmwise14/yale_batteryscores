@@ -10,6 +10,7 @@ Battery Scores Package for Processing Qualtrics CSV Files
 """
 
 import pandas as pd
+import sys
 
 # input = the data you are using with with the keys listed below as headers
 # nonresval = the Prefer Not To Answer Choice on your Questionnaire
@@ -51,6 +52,12 @@ def poms(input, nonresp):
 
         # SCORES AND QUESTIONS UNANSWERED
         tension_anxiety = input[tension_anxiety_keys].apply(pd.to_numeric, args=('raise',)).replace(to_replace=[1, 2, 3, 4, 5], value=[0, 1, 2, 3, 4])
+
+        # Are there any values that don't fit in the value parameters
+        tension_anxiety_nofit = tension_anxiety[(tension_anxiety[tension_anxiety_keys] != nonresp['poms']) &
+                                  (tension_anxiety[tension_anxiety_keys] > 4) |
+                                  (tension_anxiety[tension_anxiety_keys] < 0)].count(axis=1)
+
         tension_leftblank = tension_anxiety.apply(lambda x: sum(x.isnull().values), axis=1)
         tension_prefernotanswer = tension_anxiety[tension_anxiety[tension_anxiety_keys] == nonresp['poms']].count(axis=1)
 
@@ -71,6 +78,12 @@ def poms(input, nonresp):
 
         # SCORES AND QUESTIONS UNANSWERED
         depression_dejection = input[depression_dejection_keys].apply(pd.to_numeric, args=('raise',)).replace(to_replace=[1, 2, 3, 4, 5], value=[0, 1, 2, 3, 4])
+
+        # Are there any values that don't fit in the value parameters
+        depression_dejection_nofit = depression_dejection[(depression_dejection[depression_dejection_keys] != nonresp['poms']) &
+                                                (depression_dejection[depression_dejection_keys] > 4) |
+                                                (depression_dejection[depression_dejection_keys] < 0)].count(axis=1)
+
         depression_dejection_leftblank = depression_dejection.apply(lambda x: sum(x.isnull().values), axis=1)
         depression_dejection_prefernotanswer = depression_dejection[depression_dejection[depression_dejection_keys] == nonresp['poms']].count(axis=1)
 
@@ -93,6 +106,13 @@ def poms(input, nonresp):
 
         # SCORES AND QUESTIONS UNANSWERED
         anger_hostility = input[anger_hostility_keys].apply(pd.to_numeric, args=('raise',)).replace(to_replace=[1, 2, 3, 4, 5], value=[0, 1, 2, 3, 4])
+
+        # Are there any values that don't fit in the value parameters
+        anger_hostility_nofit = anger_hostility[(anger_hostility[anger_hostility_keys] != nonresp['poms']) &
+                                                (anger_hostility[anger_hostility_keys] > 4) |
+                                                (anger_hostility[anger_hostility_keys] < 0)].count(axis=1)
+
+
         anger_hostility_leftblank = anger_hostility.apply(lambda x: sum(x.isnull().values), axis=1)
         anger_hostility_prefernotanswer = anger_hostility[anger_hostility[anger_hostility_keys] == nonresp['poms']].count(axis=1)
 
@@ -114,6 +134,12 @@ def poms(input, nonresp):
 
         # SCORES AND QUESTIONS UNANSWERED
         vigor_activity = input[vigor_activity_keys].apply(pd.to_numeric, args=('raise',)).replace(to_replace=[1, 2, 3, 4, 5], value=[0, 1, 2, 3, 4])
+
+        # Are there any values that don't fit in the value parameters
+        vigor_activity_nofit = vigor_activity[(vigor_activity[vigor_activity_keys] != nonresp['poms']) &
+                                                (vigor_activity[vigor_activity_keys] > 4) |
+                                                (vigor_activity[vigor_activity_keys] < 0)].count(axis=1)
+
         vigor_activity_leftblank = vigor_activity.apply(lambda x: sum(x.isnull().values), axis=1)
         vigor_activity_prefernotanswer = vigor_activity[vigor_activity[vigor_activity_keys] == nonresp['poms']].count(axis=1)
 
@@ -136,6 +162,12 @@ def poms(input, nonresp):
 
         # SCORES AND QUESTIONS UNANSWERED
         fatigue_inertia = input[fatigue_inertia_keys].apply(pd.to_numeric, args=('raise',)).replace(to_replace=[1, 2, 3, 4, 5], value=[0, 1, 2, 3, 4])
+
+        # Are there any values that don't fit in the value parameters
+        fatigue_inertia_nofit = fatigue_inertia[(fatigue_inertia[fatigue_inertia_keys] != nonresp['poms']) &
+                                                (fatigue_inertia[fatigue_inertia_keys] > 4) |
+                                                (fatigue_inertia[fatigue_inertia_keys] < 0)].count(axis=1)
+
         fatigue_inertia_leftblank = fatigue_inertia.apply(lambda x: sum(x.isnull().values), axis=1)
         fatigue_inertia_prefernotanswer = fatigue_inertia[fatigue_inertia[fatigue_inertia_keys] == nonresp['poms']].count(axis=1)
 
@@ -158,6 +190,12 @@ def poms(input, nonresp):
 
         # SCORES AND QUESTIONS UNANSWERED
         confusion_bewilderment = input[confusion_bewilderment_keys].apply(pd.to_numeric, args=('raise',)).replace(to_replace=[1, 2, 3, 4, 5], value=[0, 1, 2, 3, 4])
+
+        # Are there any values that don't fit in the value parameters
+        confusion_bewilderment_nofit = confusion_bewilderment[(confusion_bewilderment[confusion_bewilderment_keys] != nonresp['poms']) &
+                                                (confusion_bewilderment[confusion_bewilderment_keys] > 4) |
+                                                (confusion_bewilderment[confusion_bewilderment_keys] < 0)].count(axis=1)
+
         confusion_bewilderment_leftblank = confusion_bewilderment.apply(lambda x: sum(x.isnull().values), axis=1)
         confusion_bewilderment_prefernotanswer = confusion_bewilderment[confusion_bewilderment[confusion_bewilderment_keys] == nonresp['poms']].count(axis=1)
 
@@ -173,6 +211,17 @@ def poms(input, nonresp):
         # Add all of this to to the original score.
         confusion_bewilderment_score = confusion_bewilderment_score + (confusion_bewilderment_unanswered * confusion_bewilderment_score /
                                                                        (len(confusion_bewilderment_keys)-confusion_bewilderment_unanswered))
+
+        # ------------------------------------------------------------------------------
+        # Count the number of values that do not fit parameter values
+        nofit = tension_anxiety_nofit + depression_dejection_nofit + anger_hostility_nofit + vigor_activity_nofit + fatigue_inertia_nofit + confusion_bewilderment_nofit
+
+        # If there are any values that do not fit parameters, exit the code and make client find the values that did not work
+        for x in nofit:
+            if x >= 1:
+                sys.exit("We found values that don't match parameter values for calculation in your POMS dataset. "
+                         "Please make sure your values range from 1-5 (see poms script) and have only ONE prefer not to answer value.")
+
 
         # ------------------------------------------------------------------------------
         # TOTAL MOOD DISTURBANCE SCORE
