@@ -10,8 +10,8 @@ from batteryscores import *
 
 """
 (A) WAYS TO USE THIS TEMPLATE SCRIPT:
-1. Import any or all scripts in the package to use the functions you want to use. All functions are listed
-in the __init__.py script.
+1. Import any or all scripts in the package to use the functions you want to use. All functions are listed in the
+__init__.py script within the batteryscores package
 
 2. Look at each function you are going to use in this package. See what arguments are needed to call the function.
 Next, download your data and input the question headers into the column dictionary that is provided. See (B).

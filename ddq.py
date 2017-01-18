@@ -136,9 +136,6 @@ def ddq(input):
         # Converts keys to numeric values
         smalldr = input[smalldr_keys].apply(pd.to_numeric, args=('raise',))
 
-        # Are there any values that don't fit in the value parameters
-        smalldr_nofit = [(smalldr[smalldr_keys] > 2) | (smalldr[smalldr_keys] < 1)].count(axis=1)
-
         # Counts the number of delayed reward choices and immediate choices among the small delayed reward keys
         smalldr_delayedreward = smalldr[smalldr[smalldr_keys] == 2].count(axis=1)
         smalldr_didnotdelay = smalldr[smalldr[smalldr_keys] == 1].count(axis=1)
@@ -185,9 +182,6 @@ def ddq(input):
         # see smalldr comments. Exact same computation.
         mediumdr = input[mediumdr_keys].apply(pd.to_numeric, args=('raise',))
 
-        # Are there any values that don't fit in the value parameters
-        mediumdr_nofit = [(mediumdr[mediumdr_keys] > 2) | (mediumdr[mediumdr_keys] < 1)].count(axis=1)
-
         mediumdr_delayedreward = mediumdr[mediumdr[mediumdr_keys] == 2].count(axis=1)
         mediumdr_didnotdelay = mediumdr[mediumdr[mediumdr_keys] == 1].count(axis=1)
 
@@ -218,9 +212,6 @@ def ddq(input):
         # -----------------------------------------------------------------------------------------------------------------#
         # see smalldr comments. Exact same computation.
         largedr = input[largedr_keys].apply(pd.to_numeric, args=('raise',))
-
-        # Are there any values that don't fit in the value parameters
-        largedr_nofit = [(largedr[largedr_keys] > 2) | (largedr[largedr_keys] < 1)].count(axis=1)
 
         largedr_delayedreward = largedr[largedr[largedr_keys] == 2].count(axis=1)
         largedr_didnotdelay = largedr[largedr[largedr_keys] == 1].count(axis=1)
@@ -278,18 +269,6 @@ def ddq(input):
         totallogdiscountrate = [round(log(y, 10), 5) if y > 0 and y <= 1 else 'DISCARD' for y in totalk['Total_k-value']]
         totaldiscountrate = pd.DataFrame({'Total_Discount_Rate': totallogdiscountrate})
         totaldiscountrate.index += 1
-
-        # ------------------------------------------------------------------------------
-        # Count the number of values that do not fit parameter values
-        nofit = smalldr_nofit + mediumdr_nofit + largedr_nofit
-
-        # If there are any values that do not fit parameters, exit the code and make client find the values that did not work
-        for x in nofit:
-            if x >= 1:
-                sys.exit("We found values that don't match parameter values for calculation in your DDQ dataset. "
-                         "Please make sure your values range from 1-2 (see ddq script)")
-
-
 
         # -----------------------------------------------------------------------------------------------------------------#
 

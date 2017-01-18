@@ -356,13 +356,6 @@ def barratt(input, nonresp):
             if x >= 1:
                 sys.exit("We found values that don't match parameter values for calculation in your BARRATT dataset. "
                          "Please make sure your values range from 1-4 (see barratt script) and have only ONE prefer not to answer value.")
-
-
-
-
-
-
-
         # ------------------------------------------------------------------------------
         # ATTENTIONAL IMPULSIVENESS
         # FORWARD SCORES AND FORWARD QUESTIONS UNANSWERED
