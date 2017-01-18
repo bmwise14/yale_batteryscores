@@ -10,6 +10,7 @@ Battery Scores Package for Processing Qualtrics CSV Files
 """
 
 import pandas as pd
+import sys
 
 
 # input = the data you are using with with the keys listed below as headers
@@ -41,7 +42,7 @@ def qids(input, nonresp):
 
     2. How to handle prefer not to answer is not explicitly mentioned in the primary resources above, so
     if any subscale value is left blank or PFN among the 6 1-item domains and the 3 multiple item domains,
-    then that value will be filled with a value of 99 and discarded.
+    then that value will be discarded.
 
     3. If the score is below a minimum value range or above a maximum value range for the subscale, it will be discarded.
                                                         Min     Max
@@ -65,75 +66,87 @@ def qids(input, nonresp):
         energy_key = ['QIDS_14']
 
         # ------------------------------------------------------------------------------
-        # For sleep, weight, and psychomotor, just gets the highest score from each domain
-        sleep = input[sleep_keys].apply(pd.to_numeric, args=('raise',), axis=1).replace(to_replace=[1, 2, 3, 4, nonresp['QIDS']],
-                                                                                       value=[0, 1, 2, 3, 99])
+        # COUNTS UP SCORES LEFT BLANK OR PREFER NOT TO ANSWER
+        qids = input[qids_keys].apply(pd.to_numeric, args=('raise',), axis=1)
+
+        # Are there any values that don't fit in the value parameters
+        qids_nofit = qids[(qids[qids_keys] != nonresp['QIDS']) &
+                                  (qids[qids_keys] > 4) |
+                                  (qids[qids_keys] < 1)].count(axis=1)
+
+        qids_leftblank = qids.apply(lambda x: sum(x.isnull().values), axis=1)
+        qids_prefernotanswer = qids[qids[qids_keys] == nonresp['QIDS']].count(axis=1)
+
+        # ------------------------------------------------------------------------------
+        # Count the number of values that do not fit parameter values
+        nofit = qids_nofit
+
+        # If there are any values that do not fit parameters, exit the code and make client find the values that did not work
+        for x in nofit:
+            if x >= 1:
+                sys.exit("We found values that don't match parameter values for calculation in your QIDS dataset. "
+                         "Please make sure your values range from 1-4 (see qids script) and have only ONE prefer not to answer value.")
+        # ------------------------------------------------------------------------------
+
+
+        # For sleep, weight, and psychomotor, just gets the MAX SINGLE SCORE from each domain
+        sleep = input[sleep_keys].apply(pd.to_numeric, args=('raise',), axis=1).replace(to_replace=[1, 2, 3, 4],
+                                                                                       value=[0, 1, 2, 3])
+
         sleepvalue = sleep[(sleep[sleep_keys] >= 0) & (sleep[sleep_keys] <= 3)].max(axis=1, skipna=True)
-        sleepvalue.fillna(value=99)
 
         # ---------------------------
-        weight = input[weight_keys].apply(pd.to_numeric, args=('raise',), axis=1).replace(to_replace=[1, 2, 3, 4, nonresp['QIDS']],
-                                                                                       value=[0, 1, 2, 3, 99])
+        weight = input[weight_keys].apply(pd.to_numeric, args=('raise',), axis=1).replace(to_replace=[1, 2, 3, 4],
+                                                                                       value=[0, 1, 2, 3])
+
         weightvalue = weight[(weight[weight_keys] >= 0) & (weight[weight_keys] <= 3)].max(axis=1, skipna=True)
-        weightvalue.fillna(value=99)
 
         # ---------------------------
-        psychomotor = input[psychomotor_keys].apply(pd.to_numeric, args=('raise',), axis=1).replace(to_replace=[1, 2, 3, 4, nonresp['QIDS']],
-                                                                                       value=[0, 1, 2, 3, 99])
+        psychomotor = input[psychomotor_keys].apply(pd.to_numeric, args=('raise',), axis=1).replace(to_replace=[1, 2, 3, 4],
+                                                                                       value=[0, 1, 2, 3])
+
         psychvalue = psychomotor[(psychomotor[psychomotor_keys] >= 0) & (psychomotor[psychomotor_keys] <= 3)].max(axis=1, skipna=True)
-        psychvalue.fillna(value=99)
-
-
 
         # ------------------------------------------------------------------------------
         # replaces the qualtrics value with the scoring value for each domain
-        mood = input[mood_key].apply(pd.to_numeric, args=('raise',), axis=1).replace(to_replace=[1, 2, 3, 4, nonresp['QIDS']],
-                                                                                       value=[0, 1, 2, 3, 99])
-        moodscore = mood[(mood[mood_key] >= 0)].sum(axis=1, skipna=True)
-        moodscore.fillna(value=99)
-        # ---------------------------
-        concentration = input[concentration_key].apply(pd.to_numeric, args=('raise',), axis=1).replace(to_replace=[1, 2, 3, 4, nonresp['QIDS']],
-                                                                                       value=[0, 1, 2, 3, 99])
-        concscore = concentration[(concentration[concentration_key] >= 0)].sum(axis=1, skipna=True)
-        concscore.fillna(value=99)
+        mood = input[mood_key].apply(pd.to_numeric, args=('raise',), axis=1).replace(to_replace=[1, 2, 3, 4],
+                                                                                       value=[0, 1, 2, 3])
+
+        moodscore = mood[(mood[mood_key] >= 0) & (mood[mood_key] <= 3)].sum(axis=1, skipna=True)
 
         # ---------------------------
-        selfcrit = input[self_criticism_key].apply(pd.to_numeric, args=('raise',), axis=1).replace(to_replace=[1, 2, 3, 4, nonresp['QIDS']],
-                                                                                       value=[0, 1, 2, 3, 99])
-        critscore = selfcrit[(selfcrit[self_criticism_key] >= 0)].sum(axis=1,skipna=True)
-        critscore.fillna(value=99)
+        concentration = input[concentration_key].apply(pd.to_numeric, args=('raise',), axis=1).replace(to_replace=[1, 2, 3, 4],
+                                                                                       value=[0, 1, 2, 3])
+
+        concscore = concentration[(concentration[concentration_key] >= 0) & (concentration[concentration_key] <= 3)].sum(axis=1, skipna=True)
 
         # ---------------------------
-        suicidal = input[suicidal_key].apply(pd.to_numeric, args=('raise',), axis=1).replace(to_replace=[1, 2, 3, 4, nonresp['QIDS']],
-                                                                                       value=[0, 1, 2, 3, 99])
+        selfcrit = input[self_criticism_key].apply(pd.to_numeric, args=('raise',), axis=1).replace(to_replace=[1, 2, 3, 4],
+                                                                                       value=[0, 1, 2, 3])
 
-        suicidescore = suicidal[(suicidal[suicidal_key] >= 0)].sum(axis=1, skipna=True)
-        suicidescore.fillna(value=99)
-
-        # ---------------------------
-        interest = input[interest_key].apply(pd.to_numeric, args=('raise',), axis=1).replace(to_replace=[1, 2, 3, 4, nonresp['QIDS']],
-                                                                                       value=[0, 1, 2, 3, 99])
-        interestscore = interest[(interest[interest_key] >= 0)].sum(axis=1, skipna=True)
-        interestscore.fillna(value=99)
+        critscore = selfcrit[(selfcrit[self_criticism_key] >= 0) & (selfcrit[self_criticism_key] <= 3)].sum(axis=1,skipna=True)
 
         # ---------------------------
-        energy = input[energy_key].apply(pd.to_numeric, args=('raise',), axis=1).replace(to_replace=[1, 2, 3, 4, nonresp['QIDS']],
-                                                                                       value=[0, 1, 2, 3, 99])
+        suicidal = input[suicidal_key].apply(pd.to_numeric, args=('raise',), axis=1).replace(to_replace=[1, 2, 3, 4],
+                                                                                       value=[0, 1, 2, 3])
+
+        suicidescore = suicidal[(suicidal[suicidal_key] >= 0) & (suicidal[suicidal_key] <= 3)].sum(axis=1, skipna=True)
+
+        # ---------------------------
+        interest = input[interest_key].apply(pd.to_numeric, args=('raise',), axis=1).replace(to_replace=[1, 2, 3, 4],
+                                                                                       value=[0, 1, 2, 3])
+
+        interestscore = interest[(interest[interest_key] >= 0) & (interest[interest_key] <= 3)].sum(axis=1, skipna=True)
+
+        # ---------------------------
+        energy = input[energy_key].apply(pd.to_numeric, args=('raise',), axis=1).replace(to_replace=[1, 2, 3, 4],
+                                                                                       value=[0, 1, 2, 3])
+
         energyscore = energy[(energy[energy_key] >= 0) & (energy[energy_key] <= 3)].sum(axis=1, skipna=True)
-        energyscore.fillna(value=99)
-
-
 
         # ------------------------------------------------------------------------------
         # SUMS THE SCORES UP!
         qids_score = sleepvalue + weightvalue + psychvalue + moodscore + concscore + critscore + suicidescore + interestscore + energyscore
-
-        # COUNTS UP SCORES LEFT BLANK OR PREFER NOT TO ANSWER
-        qids = input[qids_keys].apply(pd.to_numeric, args=('raise',), axis=1)
-        qids_leftblank = qids.apply(lambda x: sum(x.isnull().values), axis=1)
-        qids_prefernotanswer = qids[qids[qids_keys] == nonresp['QIDS']].count(axis=1)
-
-        # qids_score = ['Discard' if x < 0 else 'Discard' if x > 27 else x for x in qids_score]
 
         qidsall = pd.DataFrame(
             {'QIDS_Score': qids_score, 'QIDS_Left_Blank': qids_leftblank,
