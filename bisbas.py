@@ -55,6 +55,20 @@ def bisbas(input, nonresp):
         forward_code_bis = ["BISBAS_2", "BISBAS_22"]
         reverse_code_bis = ["BISBAS_8", "BISBAS_13", "BISBAS_16",
                             "BISBAS_19", "BISBAS_24"]
+        fillerheaders = ["BISBAS_1", "BISBAS_6", "BISBAS_11", "BISBAS_17"]
+
+
+        # ------------------------------------------------------------------------------
+        # FILLERS
+
+        # change the numbers in drive headers to numeric floats
+        fillers = input[fillerheaders].apply(pd.to_numeric, args=('raise',))
+
+        # Are there any values that don't fit in the value parameters
+        fillers_nofit = fillers[(fillers[fillerheaders] != nonresp['BISBAS']) &
+                                  (fillers[fillerheaders] > 4) |
+                                  (fillers[fillerheaders] < 1)].count(axis=1)
+
 
         # ------------------------------------------------------------------------------
         # DRIVE SCORE - ALL REVERSE, NO FORWARD
@@ -212,7 +226,7 @@ def bisbas(input, nonresp):
 
         # ------------------------------------------------------------------------------
         # Count the number of values that do not fit parameter values
-        nofit = drive_nofit + funseeking_nofit + reward_nofit + bis_reverse_nofit + bis_forward_nofit
+        nofit = drive_nofit + funseeking_nofit + reward_nofit + bis_reverse_nofit + bis_forward_nofit + fillers_nofit
 
         # If there are any values that do not fit parameters, exit the code and make client find the values that did not work
         for x in nofit:

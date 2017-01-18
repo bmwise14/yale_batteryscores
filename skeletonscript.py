@@ -61,12 +61,20 @@ nonresp = inputs[3]
 subjects = subjectid.subjectid(df)
 bisbas = bisbas.bisbas(df, nonresp)
 stai = stai.stai(df, nonresp)
-tci = tci.tci(df, nonresp)
-neoffi = neoffi.neoffi(df, nonresp)
-shipley = shipley.shipley(df)
-pss = pss.pss(df)
 barratt = barratt.barratt(df, nonresp)
+bapq = bapq.bapq(df, nonresp)
+neoffi = neoffi.neoffi(df, nonresp)
+dospert = dospert.dospert(df, nonresp)
+poms = poms.poms(df, nonresp)
+pss = pss.pss(df)
+shipley = shipley.shipley(df)
+tci = tci.tci(df, nonresp)
+teps = teps.teps(df)
+snaith = snaith.snaith(df)
 ddq = ddq.ddq(df)
+qids = qids.qids(df, nonresp)
+ncog = ncog.ncog(df, nonresp)
+
 
 # put the variables you created above into the dataholder variable
 dataholder = [subjects, neoffi]

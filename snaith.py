@@ -101,4 +101,4 @@ def snaith(input):
     except KeyError:
         print("We could not find the SNAITH headers in your dataset. Please look at the snaith function in this package and put in the correct keys.")
     except ValueError:
-        print("We found strings in your SANITH dataset. Please make sure there are no strings/letters in your input. Otherwise, we can't do our thang.")
+        print("We found strings in your SNAITH dataset. Please make sure there are no strings/letters in your input. Otherwise, we can't do our thang.")
